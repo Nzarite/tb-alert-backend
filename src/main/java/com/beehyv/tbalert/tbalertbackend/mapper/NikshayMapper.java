@@ -4,20 +4,18 @@ import com.beehyv.tbalert.tbalertbackend.dto.NikshayMitraDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.NikshayMitra;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Builder
-public class DtoToEntity {
+public class NikshayMapper {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final PatientRepo patientRepo;
 
-    public NikshayMitra nikshayDtoToEntity(NikshayMitraDTO nikshayMitraDto) {
+    public NikshayMitra DtoToEntity(NikshayMitraDTO nikshayMitraDto) {
 
         Patient patient = patientRepo.findById(nikshayMitraDto.getPatientId()).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + nikshayMitraDto.getPatientId()));
 
@@ -31,6 +29,22 @@ public class DtoToEntity {
                 .nikshayMitraStatus(nikshayMitraDto.getNikshayMitraStatus())
                 .nikshayMitraDate(LocalDate.parse(nikshayMitraDto.getNikshayMitraDate(),formatter))
                 .patient(patient)
+                .build();
+    }
+
+    public NikshayMitraDTO EntityToDto(NikshayMitra nikshayMitra) {
+        return NikshayMitraDTO.builder()
+                .id(nikshayMitra.getId())
+                .nikshayId(nikshayMitra.getNikshayId())
+                .udstStatus(nikshayMitra.getUdstStatus())
+                .dateOfUdst(nikshayMitra.getDateOfUdst().toString())
+                .resultOfUdst(nikshayMitra.getResultOfUdst())
+                .dbtStatus(nikshayMitra.getDbtStatus())
+                .dateOfDbt(nikshayMitra.getDateOfDbt().toString())
+                .nikshayMitraStatus(nikshayMitra.getNikshayMitraStatus())
+                .nikshayMitraDate(nikshayMitra.getNikshayMitraDate().toString())
+                .nikshayMitraName(nikshayMitra.getNikshayMitraName())
+                .patientId(nikshayMitra.getPatient().getId())
                 .build();
     }
 }
