@@ -38,7 +38,7 @@ public class TBDetails {
     @JoinColumn(name = "nikshay_id", nullable = false)
     private NikshayMitra nikshayMitra;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 }
