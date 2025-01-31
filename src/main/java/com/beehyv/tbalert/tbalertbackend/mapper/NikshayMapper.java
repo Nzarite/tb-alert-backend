@@ -4,16 +4,19 @@ import com.beehyv.tbalert.tbalertbackend.dto.NikshayMitraDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.NikshayMitra;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@Builder
+@Component
+@AllArgsConstructor
 public class NikshayMapper {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final PatientRepo patientRepo;
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public NikshayMitra DtoToEntity(NikshayMitraDTO nikshayMitraDto) {
 
@@ -22,12 +25,12 @@ public class NikshayMapper {
         return NikshayMitra.builder()
                 .nikshayId(nikshayMitraDto.getNikshayId())
                 .udstStatus(nikshayMitraDto.getUdstStatus())
-                .dateOfUdst(LocalDate.parse(nikshayMitraDto.getDateOfUdst(),formatter))
+                .dateOfUdst(LocalDate.parse(nikshayMitraDto.getDateOfUdst(), formatter))
                 .resultOfUdst(nikshayMitraDto.getResultOfUdst())
                 .dbtStatus(nikshayMitraDto.getDbtStatus())
-                .dateOfDbt(LocalDate.parse(nikshayMitraDto.getDateOfDbt(),formatter))
+                .dateOfDbt(LocalDate.parse(nikshayMitraDto.getDateOfDbt(), formatter))
                 .nikshayMitraStatus(nikshayMitraDto.getNikshayMitraStatus())
-                .nikshayMitraDate(LocalDate.parse(nikshayMitraDto.getNikshayMitraDate(),formatter))
+                .nikshayMitraDate(LocalDate.parse(nikshayMitraDto.getNikshayMitraDate(), formatter))
                 .patient(patient)
                 .build();
     }
