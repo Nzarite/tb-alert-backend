@@ -12,6 +12,6 @@ public class NikshayMitraController {
 
     @PostMapping("/nikshaymitra")
     public ResponseEntity<NikshayMitraDTO> registerNikshayDetails(@RequestBody NikshayMitraDTO nikshayMitraDTO) {
-
+        return null;
     }
 }
