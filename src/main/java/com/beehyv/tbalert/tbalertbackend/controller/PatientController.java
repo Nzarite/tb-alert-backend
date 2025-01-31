@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/patient")
 @AllArgsConstructor
@@ -19,8 +21,7 @@ public class PatientController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerPatient(@RequestBody @Valid PatientInputDTO patientInputDTO) {
-        patientRegistrationService.register(patientInputDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(patientRegistrationService.register(patientInputDTO),HttpStatus.CREATED);
 
     }
 
@@ -41,4 +42,8 @@ public class PatientController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<PatientOutputDTO>> getAllPatients() {
+        return new ResponseEntity<>(patientRegistrationService.getAll(),HttpStatus.OK);
+    }
 }

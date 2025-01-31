@@ -1,12 +1,9 @@
 package com.beehyv.tbalert.tbalertbackend.dto;
 
-import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor

@@ -46,7 +46,7 @@ public class NikshayMitra {
     @Column(name = "nikshay_mitra_name")
     private String nikshayMitraName;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 }

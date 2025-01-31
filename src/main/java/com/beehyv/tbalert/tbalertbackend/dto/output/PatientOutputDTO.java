@@ -18,4 +18,12 @@ public class PatientOutputDTO {
     private String gender;
 
     private String phone;
+
+    private String block;
+
+    private String gp;
+
+    private String village;
+
+    private String district;
 }
