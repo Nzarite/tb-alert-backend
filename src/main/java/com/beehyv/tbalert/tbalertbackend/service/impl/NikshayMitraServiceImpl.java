@@ -1,6 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.service.impl;
 
-import com.beehyv.tbalert.tbalertbackend.dto.NikshayMitraDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.NikshayInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.NikshayOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.NikshayMitra;
 import com.beehyv.tbalert.tbalertbackend.mapper.NikshayMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.NikshayMitraRepo;
@@ -18,9 +19,19 @@ public class NikshayMitraServiceImpl implements NikshayMitraService {
 
     @Transactional
     @Override
-    public NikshayMitraDTO registerNikshayDetails(NikshayMitraDTO nikshayMitraDTO) {
-        NikshayMitra nikshayMitra = nikshayMapper.DtoToEntity(nikshayMitraDTO);
+    public NikshayOutputDTO registerNikshayDetails(NikshayInputDTO nikshayInputDTO) {
+        NikshayMitra nikshayMitra = nikshayMapper.ToEntity(nikshayInputDTO);
         nikshayMitraRepo.save(nikshayMitra);
-        return nikshayMapper.EntityToDto(nikshayMitra);
+        return nikshayMapper.ToOutputDto(nikshayMitra);
+    }
+
+    @Transactional
+    @Override
+    public NikshayOutputDTO updateNikshayDetails(int patientId, NikshayInputDTO nikshayInputDTO) {
+        NikshayMitra nikshayMitra = nikshayMitraRepo.findByPatient_Id(patientId).orElseThrow(()-> new IllegalArgumentException("" +
+                "Patient with id " + patientId + " not found"));
+
+        // incomplete update service
+        return null;
     }
 }

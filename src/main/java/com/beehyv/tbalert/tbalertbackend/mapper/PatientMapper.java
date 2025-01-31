@@ -29,6 +29,7 @@ public class PatientMapper {
             throw new IllegalArgumentException("Patient with id " + patient.getId() + " not found");
         }
         return PatientOutputDTO.builder()
+                .id(patient.getId())
                 .phone(patient.getPhone())
                 .gender(patient.getGender())
                 .firstName(patient.getFirstName())

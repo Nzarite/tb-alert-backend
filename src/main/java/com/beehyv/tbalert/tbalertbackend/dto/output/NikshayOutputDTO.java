@@ -1,12 +1,11 @@
-package com.beehyv.tbalert.tbalertbackend.dto;
+package com.beehyv.tbalert.tbalertbackend.dto.output;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 @Data
 @Builder
-public class NikshayMitraDTO {
+public class NikshayOutputDTO {
 
     private Integer id;
     private String nikshayId;
