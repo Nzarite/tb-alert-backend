@@ -19,6 +19,8 @@ public class PatientOutputDTO {
 
     private String gender;
 
+    private String dateOfBirth;
+
     private String phone;
 
     private String block;

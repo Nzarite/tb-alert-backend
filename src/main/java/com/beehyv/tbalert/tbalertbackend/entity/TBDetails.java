@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Table(name = "tb_details")
 public class TBDetails {
     @Id
-    @GeneratedValue(strategy =  GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column(nullable = false, name = "date_of_diagnosis")
@@ -25,7 +25,7 @@ public class TBDetails {
     @Column(nullable = false, name = "date_of_treatment_initiation")
     private LocalDate dateOfTreatmentInitiation;
 
-    @Column(nullable = false,  name = "type_of_pwtb")
+    @Column(nullable = false, name = "type_of_pwtb")
     private String typeOfPwtb;
 
     @Column(nullable = false, name = "type_of_tb")
@@ -33,10 +33,6 @@ public class TBDetails {
 
     @Column(nullable = false, name = "dstb_drtb")
     private String dstbOrDrtb;
-
-    @OneToOne
-    @JoinColumn(name = "nikshay_id", nullable = false)
-    private NikshayMitra nikshayMitra;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id", nullable = false)

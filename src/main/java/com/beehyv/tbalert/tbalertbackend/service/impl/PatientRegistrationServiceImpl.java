@@ -26,15 +26,17 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
         Patient patient=patientMapper.toPatient(patientInputDTO);
+        Patient savedPatient = patientRepo.save(patient);
+
         Address address=Address.builder()
                 .gp(patientInputDTO.getGp())
                 .block(patientInputDTO.getBlock())
                 .district(patientInputDTO.getDistrict())
                 .village(patientInputDTO.getVillage())
-                .patient(patient)
+                .patient(savedPatient)
                 .build();
         addressRepo.save(address);
-        patientRepo.save(patient);
+
         return patientMapper.toPatientOutputDTO(patient);
     }
 
@@ -51,14 +53,16 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         patient.setLastName(patientInputDTO.getLastName());
         patient.setGender(patientInputDTO.getGender());
         patient.setPhone(patientInputDTO.getPhone());
+        Patient updatedPatient = patientRepo.save(patient);
 
         Address address=addressRepo.findByPatient(patient);
         address.setGp(patientInputDTO.getGp());
         address.setBlock(patientInputDTO.getBlock());
         address.setDistrict(patientInputDTO.getDistrict());
         address.setVillage(patientInputDTO.getVillage());
+        address.setPatient(updatedPatient);
         addressRepo.save(address);
-        patientRepo.save(patient);
+
     }
 
     @Override
@@ -71,7 +75,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Override
     public List<PatientOutputDTO> getAll() {
         List<Patient>patients=patientRepo.findAll();
-        if(patients.size()>0){
+        if(!patients.isEmpty()){
             return patients.stream().map(patientMapper::toPatientOutputDTO).collect(Collectors.toList());
         }
         return null;

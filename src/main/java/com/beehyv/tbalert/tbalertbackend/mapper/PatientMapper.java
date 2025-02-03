@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 @AllArgsConstructor
 public class PatientMapper {
@@ -19,13 +21,13 @@ public class PatientMapper {
     private final AddressRepo addressRepo;
 
     public Patient findPatient(int patientId) {
-        return patientRepo.findById(patientId).orElseThrow(()-> new IllegalArgumentException("" +
+        return patientRepo.findById(patientId).orElseThrow(() -> new IllegalArgumentException("" +
                 "Patient with id " + patientId + " not found"));
     }
 
     public PatientOutputDTO toPatientOutputDTO(Patient patient) {
-        Address address=addressRepo.findByPatient(patient);
-        if(address==null) {
+        Address address = addressRepo.findByPatient(patient);
+        if (address == null) {
             throw new IllegalArgumentException("Patient with id " + patient.getId() + " not found");
         }
         return PatientOutputDTO.builder()
@@ -34,6 +36,7 @@ public class PatientMapper {
                 .gender(patient.getGender())
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
+                .dateOfBirth(patient.getDateOfBirth().toString())
                 .gp(address.getGp())
                 .block(address.getBlock())
                 .village(address.getVillage())
@@ -48,6 +51,7 @@ public class PatientMapper {
                 .lastName(patientInputDTO.getLastName())
                 .gender(patientInputDTO.getGender())
                 .phone(patientInputDTO.getPhone())
+                .dateOfBirth(LocalDate.parse(patientInputDTO.getDateOfBirth()))
                 .build();
     }
 }

@@ -20,7 +20,6 @@ public class NikshayMapper {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public NikshayMitra ToEntity(NikshayInputDTO nikshayInputDTO) {
-
         Patient patient = patientRepo.findById(nikshayInputDTO.getPatientId()).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + nikshayInputDTO.getPatientId()));
 
         return NikshayMitra.builder()
@@ -31,6 +30,7 @@ public class NikshayMapper {
                 .dbtStatus(nikshayInputDTO.getDbtStatus())
                 .dateOfDbt(LocalDate.parse(nikshayInputDTO.getDateOfDbt(), formatter))
                 .nikshayMitraStatus(nikshayInputDTO.getNikshayMitraStatus())
+                .nikshayMitraName(nikshayInputDTO.getNikshayMitraName())
                 .nikshayMitraDate(LocalDate.parse(nikshayInputDTO.getNikshayMitraDate(), formatter))
                 .patient(patient)
                 .build();

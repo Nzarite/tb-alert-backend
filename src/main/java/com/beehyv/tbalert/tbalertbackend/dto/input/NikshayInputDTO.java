@@ -1,6 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.dto.input;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,7 +12,7 @@ public class NikshayInputDTO {
     @NotEmpty(message = "Nikshay Id cannot be empty")
     private String nikshayId;
 
-    @NotEmpty(message = "udst status cannot be empty")
+    @NotNull
     private Boolean udstStatus;
 
     private String dateOfUdst;
@@ -28,6 +29,5 @@ public class NikshayInputDTO {
 
     private String nikshayMitraName;
 
-    @NotEmpty(message = "Patient ID cannot be empty")
     private Integer patientId;
 }

@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -51,8 +53,19 @@ public class NikshayMitraServiceImpl implements NikshayMitraService {
         NikshayMitra nikshayMitra = nikshayMitraRepo.findByPatient_Id(patientId).orElseThrow(()-> new IllegalArgumentException("" +
                 "Patient with id " + patientId + " not found"));
 
-        // incomplete update service
-        return null;
+        nikshayMitra.setNikshayId(nikshayInputDTO.getNikshayId());
+        nikshayMitra.setUdstStatus(nikshayInputDTO.getUdstStatus());
+        nikshayMitra.setDateOfUdst(LocalDate.parse(nikshayInputDTO.getDateOfUdst()));
+        nikshayMitra.setResultOfUdst(nikshayInputDTO.getResultOfUdst());
+        nikshayMitra.setDbtStatus(nikshayInputDTO.getDbtStatus());
+        nikshayMitra.setDateOfDbt(LocalDate.parse(nikshayInputDTO.getDateOfDbt()));
+        nikshayMitra.setNikshayMitraStatus(nikshayInputDTO.getNikshayMitraStatus());
+        nikshayMitra.setNikshayMitraDate(LocalDate.parse(nikshayInputDTO.getNikshayMitraDate()));
+        nikshayMitra.setNikshayMitraName(nikshayInputDTO.getNikshayMitraName());
+        NikshayMitra updatedNikshayMitra = nikshayMitraRepo.save(nikshayMitra);
+        nikshayMitraRepo.save(updatedNikshayMitra);
+
+        return nikshayMapper.ToOutputDto(updatedNikshayMitra);
     }
 
     @Override

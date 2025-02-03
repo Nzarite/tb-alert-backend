@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @Builder
@@ -28,4 +30,7 @@ public class Patient {
 
     @Column(name = "phone", nullable = false)
     private String phone;
+
+    @Column(name = "dob", nullable = false)
+    private LocalDate dateOfBirth;
 }
