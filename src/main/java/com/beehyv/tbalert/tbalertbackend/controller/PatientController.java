@@ -2,12 +2,10 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +49,7 @@ public class PatientController {
         try {
             log.info("Controller being called for Updating patient: {}", patientInputDTO.toString());
             patientRegistrationService.updatePatient(patientId, patientInputDTO);
-            log.info("Patient successfully updated: {}", patientInputDTO.toString());
+            log.info("Patient successfully updated: {}", patientInputDTO);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
         catch (Exception e) {

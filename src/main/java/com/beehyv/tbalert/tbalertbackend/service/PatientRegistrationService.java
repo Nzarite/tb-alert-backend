@@ -2,9 +2,7 @@ package com.beehyv.tbalert.tbalertbackend.service;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 

@@ -7,8 +7,6 @@ import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,7 +17,7 @@ public class PatientMapper {
     private final AddressRepo addressRepo;
 
     public Patient findPatient(int patientId) {
-        return patientRepo.findById(patientId).orElseThrow(()-> new IllegalArgumentException("" +
+        return patientRepo.findById(patientId).orElseThrow(()-> new IllegalArgumentException(
                 "Patient with id " + patientId + " not found"));
     }
 
