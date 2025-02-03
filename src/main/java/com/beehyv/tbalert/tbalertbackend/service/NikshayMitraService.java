@@ -8,4 +8,8 @@ public interface NikshayMitraService {
     NikshayOutputDTO registerNikshayDetails(@Valid NikshayInputDTO nikshayInputDTO);
 
     NikshayOutputDTO updateNikshayDetails(int patientId, @Valid NikshayInputDTO nikshayInputDTO);
+
+    NikshayOutputDTO getNikshayDetails(int patientId);
+
+    void deleteNikshayDetails(int patientId);
 }

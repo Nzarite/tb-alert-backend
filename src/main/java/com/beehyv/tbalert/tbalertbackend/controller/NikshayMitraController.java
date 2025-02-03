@@ -11,19 +11,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/register")
+@RequestMapping("/nikshaymitra")
 @AllArgsConstructor
 public class NikshayMitraController {
 
     private final NikshayMitraService nikshayMitraService;
 
-    @PostMapping("/nikshaymitra")
+    @GetMapping("/{patientId}")
+    public ResponseEntity<?> getNikshayMitraDetails(@PathVariable int patientId) {
+        return new ResponseEntity<>(nikshayMitraService.getNikshayDetails(patientId), HttpStatus.OK);
+    }
+
+    @PostMapping("/register")
     public ResponseEntity<?> registerNikshayDetails(@RequestBody @Valid NikshayInputDTO nikshayInputDTO) {
         return new ResponseEntity<>(nikshayMitraService.registerNikshayDetails(nikshayInputDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/nikshaymitra/{patientId}")
+    @PutMapping("/{patientId}")
     public ResponseEntity<?> updateNikshayDetails(@PathVariable int patientId, @RequestBody @Valid NikshayInputDTO nikshayInputDTO) {
         return new ResponseEntity<>(nikshayMitraService.updateNikshayDetails(patientId, nikshayInputDTO), HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/{patientId}")
+    public ResponseEntity<?> deleteNikshayDetails(@PathVariable int patientId) {
+        nikshayMitraService.deleteNikshayDetails(patientId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
