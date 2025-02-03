@@ -6,12 +6,15 @@ import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/patient")
 @AllArgsConstructor
@@ -21,29 +24,65 @@ public class PatientController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerPatient(@RequestBody @Valid PatientInputDTO patientInputDTO) {
-        return new ResponseEntity<>(patientRegistrationService.register(patientInputDTO),HttpStatus.CREATED);
+        try {
+            log.info("Controller called for Registering patient: {}", patientInputDTO.toString());
+            return new ResponseEntity<>(patientRegistrationService.register(patientInputDTO), HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.info("Error encountered: {}",e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
 
     @GetMapping("/{patientId}")
     public ResponseEntity<PatientOutputDTO> getPatient(@PathVariable int patientId) {
-        return new ResponseEntity<>(patientRegistrationService.getPatient(patientId),HttpStatus.FOUND);
+        try {
+            log.info("Controller called for Getting patient: {}", patientId);
+            return new ResponseEntity<>(patientRegistrationService.getPatient(patientId), HttpStatus.FOUND);
+        }
+        catch (Exception e) {
+            log.info("Error encountered: {}",e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/update/{patientId}")
     public ResponseEntity<?> updatePatient(@PathVariable int patientId,@RequestBody @Valid PatientInputDTO patientInputDTO) {
-        patientRegistrationService.updatePatient(patientId,patientInputDTO);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        try {
+            log.info("Controller being called for Updating patient: {}", patientInputDTO.toString());
+            patientRegistrationService.updatePatient(patientId, patientInputDTO);
+            log.info("Patient successfully updated: {}", patientInputDTO.toString());
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+        catch (Exception e) {
+            log.info("Error encountered: {}",e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/{patientId}")
     public ResponseEntity<?> deletePatient(@PathVariable int patientId) {
-        patientRegistrationService.deletePatient(patientId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            log.info("Controller called for deleting patient: {}", patientId);
+            patientRegistrationService.deletePatient(patientId);
+            log.info("Patient successfully deleted: {}", patientId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (Exception e) {
+            log.info("Error encountered: {}",e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<PatientOutputDTO>> getAllPatients() {
-        return new ResponseEntity<>(patientRegistrationService.getAll(),HttpStatus.OK);
+        try {
+            log.info("Controller called for Getting all patients");
+            return new ResponseEntity<>(patientRegistrationService.getAll(), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            log.info("Error encountered: {}",e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

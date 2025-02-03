@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ContactScreeningRepository extends JpaRepository<ContactScreening, Long> {
     ContactScreening findByPatientId(Integer patientId);
+
+    void deleteByPatientId(int patientId);
 }

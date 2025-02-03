@@ -11,6 +11,8 @@ import lombok.Data;
 @Builder
 public class PatientOutputDTO {
 
+    private int patientId;
+
     private String firstName;
 
     private String lastName;

@@ -6,15 +6,18 @@ import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
+import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class PatientRegistrationServiceImpl implements PatientRegistrationService {
@@ -22,9 +25,11 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final PatientRepo patientRepo;
     private final PatientMapper patientMapper;
     private final AddressRepo addressRepo;
+    private final ContactScreeningRepository contactScreeningRepo;
 
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
+       log.info("Service called to Register patient: {}", patientInputDTO);
         Patient patient=patientMapper.toPatient(patientInputDTO);
         Address address=Address.builder()
                 .gp(patientInputDTO.getGp())
@@ -40,12 +45,14 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     @Override
     public PatientOutputDTO getPatient(int patientId) {
+        log.info("Service called to retrieve patient with Id: {}", patientId);
         Patient patient=patientMapper.findPatient(patientId);
         return patientMapper.toPatientOutputDTO(patient);
     }
 
     @Override
     public void updatePatient(int patientId, PatientInputDTO patientInputDTO) {
+        log.info("Service called to update patient with Id: {}", patientId);
         Patient patient=patientMapper.findPatient(patientId);
         patient.setFirstName(patientInputDTO.getFirstName());
         patient.setLastName(patientInputDTO.getLastName());
@@ -63,15 +70,18 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     @Override
     public void deletePatient(int patientId) {
+        log.info("Service called to delete patient with Id: {}", patientId);
         Patient patient=patientMapper.findPatient(patientId);
         addressRepo.delete(addressRepo.findByPatient(patient));
+        contactScreeningRepo.deleteByPatientId(patientId);
         patientRepo.delete(patient);
     }
 
     @Override
     public List<PatientOutputDTO> getAll() {
+        log.info("Service getAll patients");
         List<Patient>patients=patientRepo.findAll();
-        if(patients.size()>0){
+        if(!patients.isEmpty()){
             return patients.stream().map(patientMapper::toPatientOutputDTO).collect(Collectors.toList());
         }
         return null;
