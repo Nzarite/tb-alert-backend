@@ -7,13 +7,18 @@ import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
+import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +34,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
-       log.info("Service called to Register patient: {}", patientInputDTO);
+            log.info("Service called to Register patient: {}", patientInputDTO);
         Patient patient=patientMapper.toPatient(patientInputDTO);
         Address address=Address.builder()
                 .gp(patientInputDTO.getGp())
@@ -40,6 +45,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                 .build();
         addressRepo.save(address);
         patientRepo.save(patient);
+        addressRepo.save(address);
+
         return patientMapper.toPatientOutputDTO(patient);
     }
 
@@ -58,15 +65,16 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         patient.setLastName(patientInputDTO.getLastName());
         patient.setGender(patientInputDTO.getGender());
         patient.setPhone(patientInputDTO.getPhone());
+        Patient updatedPatient = patientRepo.save(patient);
 
         Address address=addressRepo.findByPatient(patient);
         address.setGp(patientInputDTO.getGp());
         address.setBlock(patientInputDTO.getBlock());
         address.setDistrict(patientInputDTO.getDistrict());
         address.setVillage(patientInputDTO.getVillage());
-
-        patientRepo.save(patient);
+        address.setPatient(updatedPatient);
         addressRepo.save(address);
+
     }
 
     @Override

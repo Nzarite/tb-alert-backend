@@ -1,6 +1,8 @@
 package com.beehyv.tbalert.tbalertbackend.dto.input;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,6 +20,9 @@ public class PatientInputDTO {
 
     @NotEmpty(message = "Phone number cannot be empty")
     private String phone;
+
+    @NotNull
+    private String dateOfBirth;
 
     private String block;
 

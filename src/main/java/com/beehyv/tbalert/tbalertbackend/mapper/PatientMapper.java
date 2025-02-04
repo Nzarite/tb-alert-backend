@@ -9,6 +9,8 @@ import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 @AllArgsConstructor
 public class PatientMapper {
@@ -32,6 +34,7 @@ public class PatientMapper {
                 .gender(patient.getGender())
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
+                .dateOfBirth(patient.getDateOfBirth().toString())
                 .gp(address.getGp())
                 .block(address.getBlock())
                 .village(address.getVillage())
@@ -46,6 +49,7 @@ public class PatientMapper {
                 .lastName(patientInputDTO.getLastName())
                 .gender(patientInputDTO.getGender())
                 .phone(patientInputDTO.getPhone())
+                .dateOfBirth(LocalDate.parse(patientInputDTO.getDateOfBirth()))
                 .build();
     }
 }

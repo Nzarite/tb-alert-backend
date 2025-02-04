@@ -1,17 +1,40 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
-import com.beehyv.tbalert.tbalertbackend.dto.NikshayMitraDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.NikshayMitra;
+import com.beehyv.tbalert.tbalertbackend.dto.input.NikshayInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.NikshayOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.service.NikshayMitraService;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/register")
+@RestController
+@RequestMapping("/nikshaymitra")
+@AllArgsConstructor
 public class NikshayMitraController {
 
-    @PostMapping("/nikshaymitra")
-    public ResponseEntity<NikshayMitraDTO> registerNikshayDetails(@RequestBody NikshayMitraDTO nikshayMitraDTO) {
-        return null;
+    private final NikshayMitraService nikshayMitraService;
+
+    @GetMapping("/{patientId}")
+    public ResponseEntity<?> getNikshayMitraDetails(@PathVariable int patientId) {
+        return new ResponseEntity<>(nikshayMitraService.getNikshayDetails(patientId), HttpStatus.OK);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerNikshayDetails(@RequestBody @Valid NikshayInputDTO nikshayInputDTO) {
+        return new ResponseEntity<>(nikshayMitraService.registerNikshayDetails(nikshayInputDTO), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{patientId}")
+    public ResponseEntity<?> updateNikshayDetails(@PathVariable int patientId, @RequestBody @Valid NikshayInputDTO nikshayInputDTO) {
+        return new ResponseEntity<>(nikshayMitraService.updateNikshayDetails(patientId, nikshayInputDTO), HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/{patientId}")
+    public ResponseEntity<?> deleteNikshayDetails(@PathVariable int patientId) {
+        nikshayMitraService.deleteNikshayDetails(patientId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

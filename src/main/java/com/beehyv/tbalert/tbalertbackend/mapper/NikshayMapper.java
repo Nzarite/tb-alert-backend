@@ -1,39 +1,43 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
-import com.beehyv.tbalert.tbalertbackend.dto.NikshayMitraDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.NikshayInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.NikshayOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.NikshayMitra;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@Builder
+@Component
+@AllArgsConstructor
 public class NikshayMapper {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final PatientRepo patientRepo;
 
-    public NikshayMitra DtoToEntity(NikshayMitraDTO nikshayMitraDto) {
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        Patient patient = patientRepo.findById(nikshayMitraDto.getPatientId()).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + nikshayMitraDto.getPatientId()));
+    public NikshayMitra ToEntity(NikshayInputDTO nikshayInputDTO) {
+        Patient patient = patientRepo.findById(nikshayInputDTO.getPatientId()).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + nikshayInputDTO.getPatientId()));
 
         return NikshayMitra.builder()
-                .nikshayId(nikshayMitraDto.getNikshayId())
-                .udstStatus(nikshayMitraDto.getUdstStatus())
-                .dateOfUdst(LocalDate.parse(nikshayMitraDto.getDateOfUdst(),formatter))
-                .resultOfUdst(nikshayMitraDto.getResultOfUdst())
-                .dbtStatus(nikshayMitraDto.getDbtStatus())
-                .dateOfDbt(LocalDate.parse(nikshayMitraDto.getDateOfDbt(),formatter))
-                .nikshayMitraStatus(nikshayMitraDto.getNikshayMitraStatus())
-                .nikshayMitraDate(LocalDate.parse(nikshayMitraDto.getNikshayMitraDate(),formatter))
+                .nikshayId(nikshayInputDTO.getNikshayId())
+                .udstStatus(nikshayInputDTO.getUdstStatus())
+                .dateOfUdst(LocalDate.parse(nikshayInputDTO.getDateOfUdst(), formatter))
+                .resultOfUdst(nikshayInputDTO.getResultOfUdst())
+                .dbtStatus(nikshayInputDTO.getDbtStatus())
+                .dateOfDbt(LocalDate.parse(nikshayInputDTO.getDateOfDbt(), formatter))
+                .nikshayMitraStatus(nikshayInputDTO.getNikshayMitraStatus())
+                .nikshayMitraName(nikshayInputDTO.getNikshayMitraName())
+                .nikshayMitraDate(LocalDate.parse(nikshayInputDTO.getNikshayMitraDate(), formatter))
                 .patient(patient)
                 .build();
     }
 
-    public NikshayMitraDTO EntityToDto(NikshayMitra nikshayMitra) {
-        return NikshayMitraDTO.builder()
+    public NikshayOutputDTO ToOutputDto(NikshayMitra nikshayMitra) {
+        return NikshayOutputDTO.builder()
                 .id(nikshayMitra.getId())
                 .nikshayId(nikshayMitra.getNikshayId())
                 .udstStatus(nikshayMitra.getUdstStatus())
