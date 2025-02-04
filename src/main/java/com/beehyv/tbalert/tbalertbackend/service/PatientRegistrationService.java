@@ -17,4 +17,7 @@ public interface PatientRegistrationService {
     void deletePatient(int patientId);
 
     List<PatientOutputDTO> getAll();
+
+    List<PatientOutputDTO> getPatientByName(String patientName);
+
 }

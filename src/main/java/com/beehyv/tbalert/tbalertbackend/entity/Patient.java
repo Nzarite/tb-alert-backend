@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "patient")
 public class Patient {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;

@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,8 +64,9 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         address.setBlock(patientInputDTO.getBlock());
         address.setDistrict(patientInputDTO.getDistrict());
         address.setVillage(patientInputDTO.getVillage());
-        addressRepo.save(address);
+
         patientRepo.save(patient);
+        addressRepo.save(address);
     }
 
     @Override
@@ -84,6 +86,12 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             return patients.stream().map(patientMapper::toPatientOutputDTO).collect(Collectors.toList());
         }
         return null;
+    }
+
+    @Override
+    public List<PatientOutputDTO> getPatientByName(String patientName) {
+        log.info("Service getPatientByName patientName: {}", patientName);
+        return patientRepo.findAllByFirstNameContainingOrLastNameContaining(patientName,patientName).stream().map(patientMapper::toPatientOutputDTO).toList();
     }
 
 }

@@ -44,6 +44,19 @@ public class PatientController {
         }
     }
 
+    @GetMapping("/name/{patientName}")
+    public ResponseEntity<List<PatientOutputDTO>> getPatientByName(@PathVariable String patientName) {
+        try{
+            log.info("Controller called for Getting patient by name: {}", patientName);
+            return new ResponseEntity<List<PatientOutputDTO>>(patientRegistrationService.getPatientByName(patientName),HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            log.info("Error encountered: {}",e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PutMapping("/update/{patientId}")
     public ResponseEntity<?> updatePatient(@PathVariable int patientId,@RequestBody @Valid PatientInputDTO patientInputDTO) {
         try {
