@@ -34,10 +34,6 @@ public class TBDetails {
     @Column(nullable = false, name = "dstb_drtb")
     private String dstbOrDrtb;
 
-    @OneToOne
-    @JoinColumn(name = "nikshay_id", nullable = false)
-    private NikshayMitra nikshayMitra;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
