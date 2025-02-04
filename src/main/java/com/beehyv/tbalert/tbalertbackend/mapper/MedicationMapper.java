@@ -5,8 +5,10 @@ import com.beehyv.tbalert.tbalertbackend.dto.output.MedicationOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Medication;
 import com.beehyv.tbalert.tbalertbackend.repository.MedicationRepo;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class MedicationMapper {
@@ -14,11 +16,13 @@ public class MedicationMapper {
     private final MedicationRepo medicationRepo;
 
     public Medication findMedicationById(int medicationId) {
+       log.info("Mappper called for Find medication by id: {}", medicationId);
         Medication medication = medicationRepo.findById(medicationId).orElseThrow(()-> new IllegalArgumentException("Medication not found"));
         return medication;
     }
 
     public Medication toMedication (MedicationInputDTO medicationInputDTO) {
+        log.info("Mappper called for to medication by input: {}", medicationInputDTO);
         return Medication.builder()
                 .name(medicationInputDTO.getName())
                 .beforeMeal(medicationInputDTO.isBeforeMeal())
@@ -27,6 +31,7 @@ public class MedicationMapper {
 
     public MedicationOutputDTO toMedicationOutputDTO(Medication medication)
     {
+        log.info("Mappper called for to medicationOutputDto by input: {}", medication);
         return MedicationOutputDTO.builder()
                 .id(medication.getId())
                 .name(medication.getName())

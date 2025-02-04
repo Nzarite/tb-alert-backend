@@ -9,12 +9,14 @@ import com.beehyv.tbalert.tbalertbackend.mapper.PatientMedicationMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientMedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.service.PatientMedicationService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class PatientMedicationServiceImpl implements PatientMedicationService {
@@ -25,12 +27,14 @@ public class PatientMedicationServiceImpl implements PatientMedicationService {
 
     @Override
     public List<PatientMedicationOutputDTO> get(int id) {
+        log.info("Get patient medications by patient id: {}", id);
         List<PatientMedication> patientMedicationList=patientMedicationRepo.getPatientMedicationsByPatient(patientMapper.findPatient(id));
-        return patientMedicationList.stream().map((pm)->patientMedicationMapper.toPatientMedicationOutputDTO(pm)).collect(Collectors.toList());
+        return patientMedicationList.stream().map(patientMedicationMapper::toPatientMedicationOutputDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<PatientMedicationOutputDTO> add(int id, List<PatientMedicationInputDTO> patientMedicationInputDTOList) {
+        log.info("Add patient medications by patient id: {}", id);
         Patient patient=patientMapper.findPatient(id);
         List<PatientMedicationOutputDTO> patientMedicationOutputDTOS=new ArrayList<>();
         patientMedicationInputDTOList.forEach((pm)->{

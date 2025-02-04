@@ -17,14 +17,15 @@ import com.beehyv.tbalert.tbalertbackend.service.MissedMedicationService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class MissedMedicationImpl implements MissedMedicationService {
@@ -43,6 +44,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
 
     @Override
     public List<MissedMedicationOutputDTO> add(int id, @Valid List<MissedMedicationInputDTO> missedMedicationInputDTOS) {
+        log.info("Service called for adding missed medication: {}", missedMedicationInputDTOS);
         Patient patient=patientMapper.findPatient(id);
         List<MissedMedicationOutputDTO>missedMedicationOutputDTOS=new ArrayList<>();
         missedMedicationInputDTOS.forEach(missedMedicationInputDTO -> {
@@ -61,9 +63,8 @@ public class MissedMedicationImpl implements MissedMedicationService {
                 missedMedicationOutputDTOS.add(missedMedicationMapper.toMissedMedicationOutputDTO(missedMedication));
             }
             else {
-
+                log.info("Patient Medication already exist and is being updated");
                 missedMedicationList.forEach(missedMedication -> {
-
                     PatientFollowUp patientFollowUp=patientFollowUpRepo.findByDate(missedMedication.getDate());
                     if(patientFollowUp!=null) {
                         patientFollowUp.setOccured(true);
@@ -85,6 +86,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
 
     @Override
     public List<MissedMedicationOutputDTO> get(int id) {
+        log.info("Service called for get missed medication: {}", id);
         List<PatientMedication> patientMedications=patientMedicationRepo.findPatientMedicationByPatient(patientMapper.findPatient(id));
         List<MissedMedicationOutputDTO>missedMedicationOutputDTOS=new ArrayList<>();
         patientMedications.forEach(patientMedication -> {

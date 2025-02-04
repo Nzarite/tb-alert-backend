@@ -8,11 +8,13 @@ import com.beehyv.tbalert.tbalertbackend.entity.PatientMedication;
 import com.beehyv.tbalert.tbalertbackend.repository.MissedMedicationRepo;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class MissedMedicationMapper {
@@ -20,6 +22,7 @@ public class MissedMedicationMapper {
     private final MissedMedicationRepo missedMedicationRepo;
 
     public MissedMedication toMissedMedication(MissedMedicationInputDTO missedMedicationInputDTO, PatientMedication patientMedication) {
+        log.info("Mapper called for toMissedMedication from missedMedicationInputDTO = {}", missedMedicationInputDTO);
         return MissedMedication.builder()
                 .patientMedication(patientMedication)
                 .missedDosages(missedMedicationInputDTO.getMissedDoses())
@@ -29,6 +32,7 @@ public class MissedMedicationMapper {
     }
 
     public MissedMedicationOutputDTO toMissedMedicationOutputDTO(MissedMedication missedMedication) {
+        log.info("Mapper called for toMissedMedicationOutputDTO from missedMedication = {}", missedMedication);
         return MissedMedicationOutputDTO.builder()
                 .medication(missedMedication.getPatientMedication().getMedication())
                 .patient(missedMedication.getPatientMedication().getPatient())

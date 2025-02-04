@@ -7,11 +7,13 @@ import com.beehyv.tbalert.tbalertbackend.mapper.MedicationMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.MedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.service.MedicationService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class MedicationServiceImpl implements MedicationService {
@@ -20,6 +22,7 @@ public class MedicationServiceImpl implements MedicationService {
 
     @Override
     public MedicationOutputDTO add(MedicationInputDTO medication) {
+        log.info("Service called for Adding medication: {}", medication);
         Medication m = medicationMapper.toMedication(medication);
         medicationRepo.save(m);
         return medicationMapper.toMedicationOutputDTO(m);
@@ -27,6 +30,7 @@ public class MedicationServiceImpl implements MedicationService {
 
     @Override
     public List<MedicationOutputDTO> getAll() {
-        return medicationRepo.findAll().stream().map(m->medicationMapper.toMedicationOutputDTO(m)).collect(Collectors.toList());
+        log.info("Service called for Getting all medications");
+        return medicationRepo.findAll().stream().map(medicationMapper::toMedicationOutputDTO).collect(Collectors.toList());
     }
 }

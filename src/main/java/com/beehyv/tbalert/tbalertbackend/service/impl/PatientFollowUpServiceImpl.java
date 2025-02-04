@@ -14,6 +14,7 @@ import com.beehyv.tbalert.tbalertbackend.repository.PatientFollowUpRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientMedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class PatientFollowUpServiceImpl implements PatientFollowUpService {
@@ -37,6 +39,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
     @Override
     public List<PatientFollowUpOutputDTO> get(int id) {
+        log.info("Service called to Get patient follow up with patient id {}", id);
         List<PatientFollowUp> patientFollowUps = patientFollowUpRepo.findByPatient_Id(id);
         List<PatientFollowUpOutputDTO>patientFollowUpOutputDTOS = new ArrayList<>();
         patientFollowUps.forEach(patientFollowUp -> {
@@ -60,6 +63,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
     @Override
     public PatientFollowUpOutputDTO add(int id, PatientFollowUpInputDTO patientFollowUpInputDTO) {
+        log.info("Service called to Add patient follow up with patient id {}", id);
         Patient patient=patientMapper.findPatient(id);
         System.out.println(patientFollowUpInputDTO);
         List<PatientMedication> patientMedications=patientMedicationRepo.findPatientMedicationByPatient(patient);
@@ -83,6 +87,5 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
                 .date(patientFollowUp.getDate().toString())
                 .followUpStatus(patientFollowUp.getOccured())
                 .build();
-
     }
 }

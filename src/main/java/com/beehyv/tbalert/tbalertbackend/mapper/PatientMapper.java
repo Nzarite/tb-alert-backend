@@ -7,10 +7,12 @@ import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class PatientMapper {
@@ -19,11 +21,13 @@ public class PatientMapper {
     private final AddressRepo addressRepo;
 
     public Patient findPatient(int patientId) {
+        log.info("Mapper called for Find patient with id {}", patientId);
         return patientRepo.findById(patientId).orElseThrow(()-> new IllegalArgumentException(
                 "Patient with id " + patientId + " not found"));
     }
 
     public PatientOutputDTO toPatientOutputDTO(Patient patient) {
+        log.info("Mapper called for toPatientOutputDTO with id {}", patient.getId());
         Address address=addressRepo.findByPatient(patient);
         if(address==null) {
             throw new IllegalArgumentException("Patient with id " + patient.getId() + " not found");
@@ -43,7 +47,7 @@ public class PatientMapper {
     }
 
     public Patient toPatient(PatientInputDTO patientInputDTO) {
-
+        log.info("Mapper called for toPatient from PatientInputDTO: {}", patientInputDTO);
         return Patient.builder()
                 .firstName(patientInputDTO.getFirstName())
                 .lastName(patientInputDTO.getLastName())
