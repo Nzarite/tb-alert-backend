@@ -1,4 +1,4 @@
-package com.beehyv.tbalert.tbalertbackend.dto;
+package com.beehyv.tbalert.tbalertbackend.dto.output;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NikshayMitraDTO {
+public class NikshayOutputDTO {
     private Integer id;
     private String nikshayId;
     private Boolean udstStatus;

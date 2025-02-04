@@ -1,5 +1,6 @@
 package com.beehyv.tbalert.tbalertbackend.service.impl;
 
+import com.beehyv.tbalert.tbalertbackend.dto.input.PatientFollowUpInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
@@ -9,12 +10,14 @@ import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
 import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
+import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,12 +34,13 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final PatientMapper patientMapper;
     private final AddressRepo addressRepo;
     private final ContactScreeningRepository contactScreeningRepo;
+    private final PatientFollowUpService patientFollowUpService;
 
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
-            log.info("Service called to Register patient: {}", patientInputDTO);
-        Patient patient=patientMapper.toPatient(patientInputDTO);
-        Address address=Address.builder()
+        log.info("Service called to Register patient: {}", patientInputDTO);
+        Patient patient = patientMapper.toPatient(patientInputDTO);
+        Address address = Address.builder()
                 .gp(patientInputDTO.getGp())
                 .block(patientInputDTO.getBlock())
                 .district(patientInputDTO.getDistrict())
@@ -46,6 +50,15 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         addressRepo.save(address);
         patientRepo.save(patient);
         addressRepo.save(address);
+        LocalDate localDate = LocalDate.now();
+        int curr=15;
+        for (int i = 0; i < 8; i++)
+        {
+            PatientFollowUpInputDTO patientFollowUpInputDTO = PatientFollowUpInputDTO.builder().date(localDate.toString()).remarks("").build();
+            patientFollowUpService.add(patient.getId(), patientFollowUpInputDTO);
+            localDate = localDate.plusDays(curr);
+            if(i==2) curr=30;
+        }
 
         return patientMapper.toPatientOutputDTO(patient);
     }
