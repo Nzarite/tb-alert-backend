@@ -2,14 +2,13 @@ package com.beehyv.tbalert.tbalertbackend.service.impl;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientFollowUpInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputForFrontEndDto;
+import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputForFrontEndDto.FollowUpDetails;
 import com.beehyv.tbalert.tbalertbackend.entity.MissedMedication;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientFollowUp;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientMedication;
-import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
-import com.beehyv.tbalert.tbalertbackend.mapper.MissedMedicationMapper;
-import com.beehyv.tbalert.tbalertbackend.mapper.PatientFollowUpMapper;
-import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
+import com.beehyv.tbalert.tbalertbackend.mapper.*;
 import com.beehyv.tbalert.tbalertbackend.repository.MissedMedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientFollowUpRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientMedicationRepo;
@@ -41,15 +40,18 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
 
     @Override
-    public List<PatientFollowUpOutputDTO> get(int id) {
+    public PatientFollowUpOutputForFrontEndDto get(int id) {
         log.info("Service called to Get patient follow up with patient id {}", id);
         List<PatientFollowUp> patientFollowUps = patientFollowUpRepo.findByPatient_Id(id);
         if(patientFollowUps.isEmpty()) {
             throw new IllegalArgumentException("No patient follow up for patient id " + id);
         }
-        List<PatientFollowUpOutputDTO>patientFollowUpOutputDTOS = new ArrayList<>();
+        Patient patient = patientFollowUps.getFirst().getPatient();
+        List<PatientFollowUpOutputForFrontEndDto.FollowUpDetails>followUpDetails=new ArrayList<>();
+
+        List<PatientMedication>patientMedications=patientMedicationRepo.getPatientMedicationsByPatient(patient);
+
         patientFollowUps.forEach(patientFollowUp -> {
-            List<PatientMedication>patientMedications=patientMedicationRepo.getPatientMedicationsByPatient(patientFollowUp.getPatient());
             if(patientMedications==null || patientMedications.isEmpty()){
                 throw new IllegalArgumentException("No patient medications found for patient id " + patientFollowUp.getPatient().getId());
             }
@@ -58,9 +60,13 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
                 List<MissedMedication>missedMedications=missedMedicationRepo.findByPatientMedicationAndDate(patientMedication,patientFollowUp.getDate());
                 missedMedicationList.addAll(missedMedications);
             });
-            patientFollowUpOutputDTOS.add(patientFollowUpMapper.toDTO(patientFollowUp,missedMedicationList));
+            FollowUpDetails followUpDetail=patientFollowUpMapper.toFollowUpDetails(patientFollowUp,missedMedicationList);
+            followUpDetails.add(followUpDetail);
         });
-        return patientFollowUpOutputDTOS;
+        return PatientFollowUpOutputForFrontEndDto.builder()
+                .followUpDetails(followUpDetails)
+                .patient(patientMapper.toPatientOutputDTO(patient))
+                .build();
     }
 
     @Override

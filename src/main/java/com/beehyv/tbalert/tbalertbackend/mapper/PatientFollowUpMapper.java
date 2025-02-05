@@ -2,15 +2,14 @@ package com.beehyv.tbalert.tbalertbackend.mapper;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientFollowUpInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputForFrontEndDto.FollowUpDetails;
 import com.beehyv.tbalert.tbalertbackend.entity.MissedMedication;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientFollowUp;
-import com.beehyv.tbalert.tbalertbackend.repository.PatientFollowUpRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -25,7 +24,7 @@ public class PatientFollowUpMapper {
     public PatientFollowUpOutputDTO toDTO(PatientFollowUp patientFollowUp, List<MissedMedication> missedMedicationList) {
         return  PatientFollowUpOutputDTO.builder()
                 .patient(patientMapper.toPatientOutputDTO(patientFollowUp.getPatient()))
-                .medicationDetails(missedMedicationList.stream().map(medicationDetailsMapper::toMedicationDetails).collect(Collectors.toList()))
+                .medicationDetails(missedMedicationList.stream().map(medicationDetailsMapper::toMedicationDetails).toList())
                 .remarks(patientFollowUp.getRemarks())
                 .date(patientFollowUp.getDate().toString())
                 .followUpStatus(patientFollowUp.getOccured() != null && patientFollowUp.getOccured())
@@ -38,6 +37,16 @@ public class PatientFollowUpMapper {
                 .date(localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()))
                 .remarks(patientFollowUpInputDTO.getRemarks())
                 .occured(true)
+                .build();
+    }
+
+
+    public FollowUpDetails toFollowUpDetails(PatientFollowUp patientFollowUp,List<MissedMedication>missedMedicationList) {
+        return   FollowUpDetails.builder()
+                .followUpStatus(patientFollowUp.getOccured() != null && patientFollowUp.getOccured())
+                .medicationDetails(missedMedicationList.stream().map(medicationDetailsMapper::toMedicationDetails).toList())
+                .remarks(patientFollowUp.getRemarks())
+                .date(patientFollowUp.getDate().toString())
                 .build();
     }
 }
