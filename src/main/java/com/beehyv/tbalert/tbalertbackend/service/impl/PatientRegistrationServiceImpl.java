@@ -5,6 +5,7 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
+import com.beehyv.tbalert.tbalertbackend.mapper.AddressMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
@@ -29,20 +30,14 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final AddressRepo addressRepo;
     private final ContactScreeningRepository contactScreeningRepo;
     private final PatientFollowUpService patientFollowUpService;
+    private final AddressMapper addressMapper;
 
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
         log.info("Service called to Register patient: {}", patientInputDTO);
         Patient patient = patientMapper.toPatient(patientInputDTO);
-        Address address = Address.builder()
-                .gp(patientInputDTO.getGp())
-                .block(patientInputDTO.getBlock())
-                .district(patientInputDTO.getDistrict())
-                .village(patientInputDTO.getVillage())
-                .patient(patient)
-                .build();
-        addressRepo.save(address);
         patientRepo.save(patient);
+        Address address = addressMapper.toAddress(patient,patientInputDTO);
         addressRepo.save(address);
         LocalDate localDate = LocalDate.now();
         int curr=15;
@@ -53,7 +48,6 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             localDate = localDate.plusDays(curr);
             if(i==2) curr=30;
         }
-
         return patientMapper.toPatientOutputDTO(patient);
     }
 

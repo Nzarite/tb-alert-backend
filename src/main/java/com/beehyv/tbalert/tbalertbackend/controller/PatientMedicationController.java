@@ -21,27 +21,15 @@ public class PatientMedicationController {
 
     @PostMapping("/{id}")
     public ResponseEntity<List<PatientMedicationOutputDTO>> postPatientMedication(@PathVariable int id,@RequestBody List<PatientMedicationInputDTO> patientMedicationInputDTOList) {
-
-        try {
-            log.info("Contoller for POST Patient Medication Request called for:{} ",patientMedicationInputDTOList);
-            return new ResponseEntity<>(patientMedicationService.add(id, patientMedicationInputDTOList), HttpStatus.CREATED);
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(),e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        log.info("Contoller for POST Patient Medication Request called for:{} ",patientMedicationInputDTOList);
+        return new ResponseEntity<>(patientMedicationService.add(id, patientMedicationInputDTOList), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<List<PatientMedicationOutputDTO>> getPatientMedicationById(@PathVariable int id) {
-        try {
-            log.info("Controller called for GET Patient Medication Request called for:{} ",id);
-            return new ResponseEntity<>(patientMedicationService.get(id), HttpStatus.FOUND);
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(),e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        log.info("Controller called for GET Patient Medication Request called for:{} ",id);
+        return new ResponseEntity<>(patientMedicationService.get(id), HttpStatus.OK);
     }
 
 }

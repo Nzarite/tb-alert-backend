@@ -3,6 +3,7 @@ package com.beehyv.tbalert.tbalertbackend.service.impl;
 import com.beehyv.tbalert.tbalertbackend.dto.input.TBDetailsInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.TBDetailsOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.TBDetails;
+import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.TBDetailsMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.TBDetailsRepo;
 import com.beehyv.tbalert.tbalertbackend.service.TBDetailsService;
@@ -10,8 +11,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 
 @Slf4j
 @Service
@@ -21,6 +20,7 @@ public class TBDetailsServiceImpl implements TBDetailsService {
 
     private final TBDetailsRepo tbDetailsRepo;
     private final TBDetailsMapper tbDetailsMapper;
+    private final LocalDateMapper localDateMapper;
 
     @Override
     public TBDetailsOutputDTO getTBDetails(Integer patientId) {
@@ -51,8 +51,8 @@ public class TBDetailsServiceImpl implements TBDetailsService {
         TBDetails tbDetails = tbDetailsRepo.findByPatient_Id(patientId).orElseThrow(() -> new IllegalArgumentException("" +
                 "Patient with id " + patientId + " not found"));
 
-        tbDetails.setDateOfDiagnosis(LocalDate.parse(tbDetailsInputDTO.getDateOfDiagnosis()));
-        tbDetails.setDateOfTreatmentInitiation(LocalDate.parse(tbDetailsInputDTO.getDateOfTreatmentInitiation()));
+        tbDetails.setDateOfDiagnosis(localDateMapper.toLocalDate(tbDetailsInputDTO.getDateOfDiagnosis()));
+        tbDetails.setDateOfTreatmentInitiation(localDateMapper.toLocalDate(tbDetailsInputDTO.getDateOfTreatmentInitiation()));
         tbDetails.setTypeOfPwtb(tbDetailsInputDTO.getTypeOfPwtb());
         tbDetails.setTypeOfTb(tbDetailsInputDTO.getTypeOfTb());
         tbDetails.setDstbOrDrtb(tbDetailsInputDTO.getDstbOrDrtb());

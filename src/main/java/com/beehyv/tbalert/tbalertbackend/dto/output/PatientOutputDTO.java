@@ -26,4 +26,6 @@ public class PatientOutputDTO {
     private String village;
 
     private String district;
+
+    private String currentStatus;
 }

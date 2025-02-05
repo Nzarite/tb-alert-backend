@@ -6,22 +6,20 @@ import com.beehyv.tbalert.tbalertbackend.entity.MissedMedication;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientFollowUp;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientMedication;
+import com.beehyv.tbalert.tbalertbackend.mapper.MedicationMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.MissedMedicationMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
-import com.beehyv.tbalert.tbalertbackend.mapper.PatientMedicationMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.MedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.MissedMedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientFollowUpRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientMedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.service.MissedMedicationService;
-import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,31 +31,24 @@ public class MissedMedicationImpl implements MissedMedicationService {
     private final PatientMapper patientMapper;
     private final MissedMedicationMapper missedMedicationMapper;
     private final MissedMedicationRepo missedMedicationRepo;
-    private final PatientMedicationMapper patientMedicationMapper;
     private final PatientMedicationRepo patientMedicationRepo;
     private final PatientFollowUpRepo patientFollowUpRepo;
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final MedicationRepo medicationRepo;
-    private final PatientFollowUpService patientFollowUpService;
+    private final MedicationMapper medicationMapper;
 
 
     @Override
-    public List<MissedMedicationOutputDTO> add(int id, @Valid List<MissedMedicationInputDTO> missedMedicationInputDTOS) {
+    public List<MissedMedicationOutputDTO> add(int id, @Valid List<MissedMedicationInputDTO> missedMedicationInputDTOS,LocalDate date) {
         log.info("Service called for adding missed medication: {}", missedMedicationInputDTOS);
         Patient patient=patientMapper.findPatient(id);
         List<MissedMedicationOutputDTO>missedMedicationOutputDTOS=new ArrayList<>();
         missedMedicationInputDTOS.forEach(missedMedicationInputDTO -> {
-            PatientMedication patientMedication=patientMedicationRepo.findPatientMedicationByPatientAndMedication(patient,medicationRepo.findById(missedMedicationInputDTO.getMedicationId()).orElseThrow(()->new RuntimeException("Patient Medication not found")));
-            if(patientMedication==null) throw new RuntimeException("Patient Medication not founddddd");
-            List<MissedMedication> missedMedicationList=missedMedicationRepo.findByPatientMedicationAndDate(patientMedication,LocalDate.parse(missedMedicationInputDTO.getDate(),formatter));
+            PatientMedication patientMedication=patientMedicationRepo.findPatientMedicationByPatientAndMedication(patient,medicationMapper.findMedicationById(missedMedicationInputDTO.getMedicationId()));
+            if(patientMedication==null) throw new IllegalArgumentException("Patient Medication not found for patient "+patient.getId()+" medication "+missedMedicationInputDTO.getMedicationId());
+            List<MissedMedication> missedMedicationList=missedMedicationRepo.findByPatientMedicationAndDate(patientMedication,date);
             if(missedMedicationList.isEmpty()) {
-                MissedMedication missedMedication=MissedMedication.builder()
-                        .patientMedication(patientMedication)
-                        .date(LocalDate.parse(missedMedicationInputDTO.getDate(), formatter))
-                        .missedDosages(missedMedicationInputDTO.getMissedDoses())
-                        .comment(missedMedicationInputDTO.getComment())
-                        .build();
+                MissedMedication missedMedication=missedMedicationMapper.toMissedMedication(missedMedicationInputDTO,patientMedication,date);
                 missedMedicationRepo.save(missedMedication);
                 patientMedicationRepo.save(missedMedication.getPatientMedication());
                 missedMedicationOutputDTOS.add(missedMedicationMapper.toMissedMedicationOutputDTO(missedMedication));
@@ -72,7 +63,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
                     }
                 missedMedication.setPatientMedication(patientMedication);
                 missedMedication.setComment(missedMedicationInputDTO.getComment());
-                missedMedication.setDate(LocalDate.parse(missedMedicationInputDTO.getDate(),formatter));
+                missedMedication.setDate(date);
                 missedMedication.setMissedDosages(missedMedicationInputDTO.getMissedDoses());
                 missedMedicationRepo.save(missedMedication);
                 patientMedicationRepo.save(missedMedication.getPatientMedication());
@@ -89,9 +80,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
         log.info("Service called for get missed medication: {}", id);
         List<PatientMedication> patientMedications=patientMedicationRepo.findPatientMedicationByPatient(patientMapper.findPatient(id));
         List<MissedMedicationOutputDTO>missedMedicationOutputDTOS=new ArrayList<>();
-        patientMedications.forEach(patientMedication -> {
-            missedMedicationOutputDTOS.addAll(missedMedicationRepo.findAllByPatientMedication(patientMedication).stream().map(missedMedicationMapper::toMissedMedicationOutputDTO).toList());
-        });
+        patientMedications.forEach(patientMedication -> missedMedicationOutputDTOS.addAll(missedMedicationRepo.findAllByPatientMedication(patientMedication).stream().map(missedMedicationMapper::toMissedMedicationOutputDTO).toList()));
         return missedMedicationOutputDTOS;
     }
 }

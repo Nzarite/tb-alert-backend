@@ -17,13 +17,6 @@ public class PatientMedicationMapper {
 
     private final PatientMapper patientMapper;
     private final MedicationMapper medicationMapper;
-    private final PatientMedicationRepo patientMedicationRepo;
-
-    public PatientMedication find(int id)
-    {
-        log.info("Mapper called for Find patient medication by id: {}", id);
-        return patientMedicationRepo.findById(id).orElseThrow(()-> new RuntimeException("Patient Medication not found"));
-    }
 
     public PatientMedication toPatientMedication(int id,PatientMedicationInputDTO patientMedication) {
         log.info("Mapper called for toPatientMedication from PatientMedcicatonInputDTO: {}", patientMedication);

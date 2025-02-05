@@ -17,8 +17,7 @@ public class MedicationMapper {
 
     public Medication findMedicationById(int medicationId) {
        log.info("Mappper called for Find medication by id: {}", medicationId);
-        Medication medication = medicationRepo.findById(medicationId).orElseThrow(()-> new IllegalArgumentException("Medication not found"));
-        return medication;
+       return medicationRepo.findById(medicationId).orElseThrow(()-> new IllegalArgumentException("Medication not found for Id: " + medicationId));
     }
 
     public Medication toMedication (MedicationInputDTO medicationInputDTO) {

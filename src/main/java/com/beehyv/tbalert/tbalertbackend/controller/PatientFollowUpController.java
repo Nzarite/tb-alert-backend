@@ -22,25 +22,21 @@ public class PatientFollowUpController {
 
     @GetMapping("/{id}")
     public ResponseEntity<List<PatientFollowUpOutputDTO>> getPatientFollowUp(@PathVariable int id) {
-        try {
             log.info("Controller called for getPatientFollowUp: {}", id);
-            return new ResponseEntity<>(patientFollowUpService.get(id), HttpStatus.FOUND);
-        }
-        catch (Exception e) {
-            log.error("Controller error for getPatientFollowUp: {}", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            return new ResponseEntity<>(patientFollowUpService.get(id), HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
     public ResponseEntity<PatientFollowUpOutputDTO> postPatientFollowUp(@PathVariable int id, @RequestBody @Valid PatientFollowUpInputDTO patientFollowUpInputDTO) {
-        try {
-            log.info("Controller called for postPatientFollowUp: {}", id);
-            return new ResponseEntity<>(patientFollowUpService.add(id, patientFollowUpInputDTO), HttpStatus.CREATED);
-        }
-        catch (Exception e) {
-            log.error("Controller error for postPatientFollowUp: {}", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        log.info("Controller called for postPatientFollowUp: {}", id);
+        return new ResponseEntity<>(patientFollowUpService.add(id, patientFollowUpInputDTO), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PatientFollowUpOutputDTO> updatePatientFollowUp(@PathVariable int id, @RequestBody @Valid PatientFollowUpInputDTO patientFollowUpInputDTO) {
+        log.info("Controller called for updatePatientFollowUp: {}", id);
+        return new ResponseEntity<>(patientFollowUpService.update(id,patientFollowUpInputDTO),HttpStatus.ACCEPTED);
+
     }
 }

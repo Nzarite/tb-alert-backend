@@ -2,7 +2,6 @@ package com.beehyv.tbalert.tbalertbackend.service.impl;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientMedicationInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientMedicationOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientMedication;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMedicationMapper;
@@ -35,9 +34,8 @@ public class PatientMedicationServiceImpl implements PatientMedicationService {
     @Override
     public List<PatientMedicationOutputDTO> add(int id, List<PatientMedicationInputDTO> patientMedicationInputDTOList) {
         log.info("Add patient medications by patient id: {}", id);
-        Patient patient=patientMapper.findPatient(id);
         List<PatientMedicationOutputDTO> patientMedicationOutputDTOS=new ArrayList<>();
-        patientMedicationInputDTOList.forEach((pm)->{
+        patientMedicationInputDTOList.forEach(pm->{
             PatientMedication patientMedication=patientMedicationMapper.toPatientMedication(id, pm);
             patientMedicationRepo.save(patientMedication);
             patientMedicationOutputDTOS.add(patientMedicationMapper.toPatientMedicationOutputDTO(patientMedication));

@@ -10,4 +10,6 @@ public interface PatientFollowUpService {
     List<PatientFollowUpOutputDTO> get(int id);
 
     PatientFollowUpOutputDTO add(int id, @Valid PatientFollowUpInputDTO patientFollowUpInputDTO);
+
+    PatientFollowUpOutputDTO update(int id, @Valid PatientFollowUpInputDTO patientFollowUpInputDTO);
 }

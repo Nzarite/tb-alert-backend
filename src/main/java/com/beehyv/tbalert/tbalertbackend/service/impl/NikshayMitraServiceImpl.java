@@ -3,6 +3,7 @@ package com.beehyv.tbalert.tbalertbackend.service.impl;
 import com.beehyv.tbalert.tbalertbackend.dto.input.NikshayInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.NikshayOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.NikshayMitra;
+import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.NikshayMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.NikshayMitraRepo;
@@ -11,8 +12,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 
 @Slf4j
 @Service
@@ -23,6 +22,7 @@ public class NikshayMitraServiceImpl implements NikshayMitraService {
     private final NikshayMapper nikshayMapper;
     private final NikshayMitraRepo nikshayMitraRepo;
     private final PatientMapper patientMapper;
+    private final LocalDateMapper localDateMapper;
 
     @Override
     public NikshayOutputDTO getNikshayDetails(int patientId) {
@@ -55,12 +55,12 @@ public class NikshayMitraServiceImpl implements NikshayMitraService {
 
         nikshayMitra.setNikshayId(nikshayInputDTO.getNikshayId());
         nikshayMitra.setUdstStatus(nikshayInputDTO.getUdstStatus());
-        nikshayMitra.setDateOfUdst(LocalDate.parse(nikshayInputDTO.getDateOfUdst()));
+        nikshayMitra.setDateOfUdst(localDateMapper.toLocalDate(nikshayInputDTO.getDateOfUdst()));
         nikshayMitra.setResultOfUdst(nikshayInputDTO.getResultOfUdst());
         nikshayMitra.setDbtStatus(nikshayInputDTO.getDbtStatus());
-        nikshayMitra.setDateOfDbt(LocalDate.parse(nikshayInputDTO.getDateOfDbt()));
+        nikshayMitra.setDateOfDbt(localDateMapper.toLocalDate(nikshayInputDTO.getDateOfDbt()));
         nikshayMitra.setNikshayMitraStatus(nikshayInputDTO.getNikshayMitraStatus());
-        nikshayMitra.setNikshayMitraDate(LocalDate.parse(nikshayInputDTO.getNikshayMitraDate()));
+        nikshayMitra.setNikshayMitraDate(localDateMapper.toLocalDate(nikshayInputDTO.getNikshayMitraDate()));
         nikshayMitra.setNikshayMitraName(nikshayInputDTO.getNikshayMitraName());
         NikshayMitra updatedNikshayMitra = nikshayMitraRepo.save(nikshayMitra);
         nikshayMitraRepo.save(updatedNikshayMitra);

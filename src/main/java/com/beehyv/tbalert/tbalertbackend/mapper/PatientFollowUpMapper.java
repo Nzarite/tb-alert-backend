@@ -5,11 +5,10 @@ import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.MissedMedication;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientFollowUp;
+import com.beehyv.tbalert.tbalertbackend.repository.PatientFollowUpRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +19,7 @@ public class PatientFollowUpMapper {
     private final PatientMapper patientMapper;
     private final MedicationDetailsMapper medicationDetailsMapper;
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final LocalDateMapper localDateMapper;
 
 
     public PatientFollowUpOutputDTO toDTO(PatientFollowUp patientFollowUp, List<MissedMedication> missedMedicationList) {
@@ -36,8 +35,7 @@ public class PatientFollowUpMapper {
     public PatientFollowUp toPatientFollowUp(PatientFollowUpInputDTO patientFollowUpInputDTO, Patient patient, List<MissedMedication> missedMedicationList) {
         return PatientFollowUp.builder()
                 .patient(patient)
-                .missedMedicationList(missedMedicationList)
-                .date(LocalDate.parse(patientFollowUpInputDTO.getDate(),formatter))
+                .date(localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()))
                 .remarks(patientFollowUpInputDTO.getRemarks())
                 .occured(true)
                 .build();

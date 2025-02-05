@@ -23,11 +23,15 @@ public class PatientInputDTO {
     @NotNull
     private String dateOfBirth;
 
+    @NotEmpty(message = "Block name cannot be empty")
     private String block;
 
+    @NotEmpty(message = "Gram Panchayat name cannot be empty")
     private String gp;
 
+    @NotEmpty(message = "Village name cannot be empty")
     private String village;
 
+    @NotEmpty(message = "District name cannot be empty")
     private String district;
 }

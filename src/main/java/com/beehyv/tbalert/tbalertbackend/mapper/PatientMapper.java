@@ -10,8 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -19,6 +17,7 @@ public class PatientMapper {
 
     private final PatientRepo patientRepo;
     private final AddressRepo addressRepo;
+    private LocalDateMapper localDateMapper;
 
     public Patient findPatient(int patientId) {
         log.info("Mapper called for Find patient with id {}", patientId);
@@ -43,6 +42,8 @@ public class PatientMapper {
                 .block(address.getBlock())
                 .village(address.getVillage())
                 .district(address.getDistrict())
+                .currentStatus(patient.getCurrentStatus())
+                .dateOfBirth(patient.getDateOfBirth().toString())
                 .build();
     }
 
@@ -53,7 +54,7 @@ public class PatientMapper {
                 .lastName(patientInputDTO.getLastName())
                 .gender(patientInputDTO.getGender())
                 .phone(patientInputDTO.getPhone())
-                .dateOfBirth(LocalDate.parse(patientInputDTO.getDateOfBirth()))
+                .dateOfBirth(localDateMapper.toLocalDate(patientInputDTO.getDateOfBirth()))
                 .build();
     }
 }

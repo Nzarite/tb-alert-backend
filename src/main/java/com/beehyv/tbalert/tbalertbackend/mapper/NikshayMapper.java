@@ -8,16 +8,12 @@ import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 @Component
 @AllArgsConstructor
 public class NikshayMapper {
 
     private final PatientRepo patientRepo;
-
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final LocalDateMapper localDateMapper;
 
     public NikshayMitra ToEntity(NikshayInputDTO nikshayInputDTO) {
         Patient patient = patientRepo.findById(nikshayInputDTO.getPatientId()).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + nikshayInputDTO.getPatientId()));
@@ -25,13 +21,13 @@ public class NikshayMapper {
         return NikshayMitra.builder()
                 .nikshayId(nikshayInputDTO.getNikshayId())
                 .udstStatus(nikshayInputDTO.getUdstStatus())
-                .dateOfUdst(LocalDate.parse(nikshayInputDTO.getDateOfUdst(), formatter))
+                .dateOfUdst(localDateMapper.toLocalDate(nikshayInputDTO.getDateOfUdst()))
                 .resultOfUdst(nikshayInputDTO.getResultOfUdst())
                 .dbtStatus(nikshayInputDTO.getDbtStatus())
-                .dateOfDbt(LocalDate.parse(nikshayInputDTO.getDateOfDbt(), formatter))
+                .dateOfDbt(localDateMapper.toLocalDate(nikshayInputDTO.getDateOfDbt()))
                 .nikshayMitraStatus(nikshayInputDTO.getNikshayMitraStatus())
                 .nikshayMitraName(nikshayInputDTO.getNikshayMitraName())
-                .nikshayMitraDate(LocalDate.parse(nikshayInputDTO.getNikshayMitraDate(), formatter))
+                .nikshayMitraDate(localDateMapper.toLocalDate(nikshayInputDTO.getNikshayMitraDate()))
                 .patient(patient)
                 .build();
     }
