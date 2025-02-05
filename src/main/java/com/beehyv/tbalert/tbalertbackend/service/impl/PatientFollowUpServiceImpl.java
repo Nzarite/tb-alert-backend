@@ -74,7 +74,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         log.info("Service called to Add patient follow up with patient id {}", id);
         Patient patient=patientMapper.findPatient(id);
         List<MissedMedication>missedMedicationList=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()));
-        PatientFollowUp patientFollowUp=patientFollowUpMapper.toPatientFollowUp(patientFollowUpInputDTO,patient,missedMedicationList);
+        PatientFollowUp patientFollowUp=patientFollowUpMapper.toPatientFollowUp(patientFollowUpInputDTO,patient);
         patientFollowUpRepo.save(patientFollowUp);
         return patientFollowUpMapper.toDTO(patientFollowUp,missedMedicationList);
     }

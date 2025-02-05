@@ -30,8 +30,7 @@ public class PatientFollowUpMapper {
                 .followUpStatus(patientFollowUp.getOccured() != null && patientFollowUp.getOccured())
                 .build();
     }
-
-    public PatientFollowUp toPatientFollowUp(PatientFollowUpInputDTO patientFollowUpInputDTO, Patient patient, List<MissedMedication> missedMedicationList) {
+    public PatientFollowUp toPatientFollowUp(PatientFollowUpInputDTO patientFollowUpInputDTO, Patient patient) {
         return PatientFollowUp.builder()
                 .patient(patient)
                 .date(localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()))
