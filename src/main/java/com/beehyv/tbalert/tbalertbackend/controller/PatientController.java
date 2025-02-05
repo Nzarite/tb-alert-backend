@@ -2,8 +2,7 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.ContactScreening;
-import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepo;
+import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
 import com.beehyv.tbalert.tbalertbackend.service.ContactScreeningService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import jakarta.validation.Valid;
@@ -22,7 +21,7 @@ import java.util.List;
 public class PatientController {
 
     private final PatientRegistrationService patientRegistrationService;
-    private final ContactScreeningRepo contactScreeningRepo;
+    private final ContactScreeningRepository contactScreeningRepository;
     private final ContactScreeningService contactScreeningService;
 
     @PostMapping("/register")
