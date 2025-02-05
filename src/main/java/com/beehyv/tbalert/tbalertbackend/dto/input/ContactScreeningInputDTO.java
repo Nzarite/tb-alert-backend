@@ -1,18 +1,17 @@
-package com.beehyv.tbalert.tbalertbackend.dto;
+package com.beehyv.tbalert.tbalertbackend.dto.input;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class ContactScreeningDTO {
+public class ContactScreeningInputDTO {
+    @NotEmpty(message = "Id cannot be empty")
     private Integer id;
+    @NotEmpty(message = "This field cannot be empty")
     private Boolean contactScreeningDone;
     private LocalDate dateOfContactScreening;
     private Integer noOfHHCsAvailable;
@@ -24,5 +23,6 @@ public class ContactScreeningDTO {
     private Integer noOfHHCsUndergoneLTBITest;
     private Integer noOfEligibleForTPT;
     private Integer noOfHHCsInitiatedTPT;
+    @NotEmpty(message = "Patient Id cannot be empty")
     private Integer patientId;
 }
