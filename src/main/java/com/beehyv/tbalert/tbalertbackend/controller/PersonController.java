@@ -2,14 +2,12 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Person;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -2,7 +2,6 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.MissedMedicationInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.MissedMedicationOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.MissedMedication;
 import com.beehyv.tbalert.tbalertbackend.service.MissedMedicationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

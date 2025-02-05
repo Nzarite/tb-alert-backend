@@ -8,20 +8,14 @@ import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
-import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

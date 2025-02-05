@@ -3,7 +3,6 @@ package com.beehyv.tbalert.tbalertbackend.repository;
 import com.beehyv.tbalert.tbalertbackend.entity.Medication;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientMedication;
-import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

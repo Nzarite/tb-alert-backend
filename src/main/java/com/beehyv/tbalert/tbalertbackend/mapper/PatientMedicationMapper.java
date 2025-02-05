@@ -2,13 +2,11 @@ package com.beehyv.tbalert.tbalertbackend.mapper;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientMedicationInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientMedicationOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Medication;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientMedication;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientMedicationRepo;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

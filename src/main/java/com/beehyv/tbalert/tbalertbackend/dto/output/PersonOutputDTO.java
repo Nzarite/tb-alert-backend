@@ -1,7 +1,5 @@
 package com.beehyv.tbalert.tbalertbackend.dto.output;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
 

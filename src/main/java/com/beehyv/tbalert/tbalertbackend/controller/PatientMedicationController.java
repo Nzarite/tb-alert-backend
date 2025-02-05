@@ -2,12 +2,10 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientMedicationInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientMedicationOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.PatientMedication;
 import com.beehyv.tbalert.tbalertbackend.service.PatientMedicationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

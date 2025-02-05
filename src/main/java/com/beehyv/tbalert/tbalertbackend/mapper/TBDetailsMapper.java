@@ -2,7 +2,6 @@ package com.beehyv.tbalert.tbalertbackend.mapper;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.TBDetailsInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.TBDetailsOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.NikshayMitra;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.TBDetails;
 import com.beehyv.tbalert.tbalertbackend.repository.NikshayMitraRepo;

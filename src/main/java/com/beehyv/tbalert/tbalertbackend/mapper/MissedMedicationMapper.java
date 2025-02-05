@@ -2,11 +2,9 @@ package com.beehyv.tbalert.tbalertbackend.mapper;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.MissedMedicationInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.MissedMedicationOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Medication;
 import com.beehyv.tbalert.tbalertbackend.entity.MissedMedication;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientMedication;
 import com.beehyv.tbalert.tbalertbackend.repository.MissedMedicationRepo;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -42,9 +40,4 @@ public class MissedMedicationMapper {
                 .build();
     }
 
-//    public Medication find(@NotEmpty int medicationId) {
-//
-//        MissedMedication missedMedication = missedMedicationRepo.findById(medicationId).orElseThrow(()->new IllegalArgumentException("Missed medication not found"));
-//        return missedMedication;
-//    }
 }

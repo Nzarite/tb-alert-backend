@@ -1,7 +1,6 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
-import com.beehyv.tbalert.tbalertbackend.dto.model.MedicationDetails;
-import com.beehyv.tbalert.tbalertbackend.entity.Medication;
+import com.beehyv.tbalert.tbalertbackend.dto.output.MedicationDetails;
 import com.beehyv.tbalert.tbalertbackend.entity.MissedMedication;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientMedication;
 import lombok.AllArgsConstructor;

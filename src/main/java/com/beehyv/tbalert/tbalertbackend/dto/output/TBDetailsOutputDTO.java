@@ -13,4 +13,18 @@ public class TBDetailsOutputDTO {
     private String typeOfTb;
     private String dstbOrDrtb;
     private Integer patientId;
+
+    @Data
+    @Builder
+    public static class MedicationDetails {
+
+        private int medicationId;
+
+        private String medicationName;
+
+        private int missedDosages;
+
+        private String comments;
+
+    }
 }

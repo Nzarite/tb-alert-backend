@@ -1,8 +1,6 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.NikshayInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.output.NikshayOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.NikshayMitraService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
