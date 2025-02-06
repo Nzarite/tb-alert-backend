@@ -44,6 +44,7 @@ public class PatientMapper {
                 .district(address.getDistrict())
                 .currentStatus(patient.getCurrentStatus())
                 .dateOfBirth(patient.getDateOfBirth().toString())
+                .cured(patient.isCured())
                 .build();
     }
 

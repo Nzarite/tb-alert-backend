@@ -36,7 +36,7 @@ public class PatientFollowUpMapper {
                 .patient(patient)
                 .date(localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()))
                 .remarks(patientFollowUpInputDTO.getRemarks())
-                .occured(true)
+                .occured(false)
                 .build();
     }
 

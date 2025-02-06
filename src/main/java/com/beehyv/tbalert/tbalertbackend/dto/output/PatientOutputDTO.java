@@ -28,4 +28,6 @@ public class PatientOutputDTO {
     private String district;
 
     private String currentStatus;
+
+    private boolean cured;
 }

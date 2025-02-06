@@ -18,4 +18,6 @@ public class PatientFollowUpInputDTO {
     private String currentStatus;
 
     private List<MissedMedicationInputDTO>missedMedications;
+
+    private boolean cured;
 }

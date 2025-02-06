@@ -52,9 +52,6 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         List<PatientMedication>patientMedications=patientMedicationRepo.getPatientMedicationsByPatient(patient);
 
         patientFollowUps.forEach(patientFollowUp -> {
-            if(patientMedications==null || patientMedications.isEmpty()){
-                throw new IllegalArgumentException("No patient medications found for patient id " + patientFollowUp.getPatient().getId());
-            }
             List<MissedMedication>missedMedicationList=new ArrayList<>();
             patientMedications.forEach(patientMedication -> {
                 List<MissedMedication>missedMedications=missedMedicationRepo.findByPatientMedicationAndDate(patientMedication,patientFollowUp.getDate());
@@ -94,6 +91,11 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
             patient.setCurrentStatus(patientFollowUpInputDTO.getCurrentStatus());
             patientRepo.save(patient);
         }
+        if(patientFollowUpInputDTO.isCured()){
+            patient.setCured(true);
+            patientRepo.save(patient);
+        }
+        patientFollowUp.setOccured(true);
         patientFollowUpRepo.save(patientFollowUp);
         List<MissedMedication>missedMedications=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,patientFollowUp.getDate());
         return patientFollowUpMapper.toDTO(patientFollowUp,missedMedications);
