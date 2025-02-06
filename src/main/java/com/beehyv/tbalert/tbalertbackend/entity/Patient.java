@@ -36,4 +36,6 @@ public class Patient {
     private LocalDate dateOfBirth;
 
     private String currentStatus;
+
+    private boolean cured=false;
 }

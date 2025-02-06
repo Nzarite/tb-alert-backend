@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/person")
 @AllArgsConstructor
+@CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
 public class PersonController {
 
     private final PersonService personService;

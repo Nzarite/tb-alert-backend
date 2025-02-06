@@ -8,8 +8,6 @@ import lombok.Data;
 @Builder
 public class PatientMedicationOutputDTO {
 
-    private Patient patient;
-
     private String medication;
 
     private int medicationId;

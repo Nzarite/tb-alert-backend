@@ -31,7 +31,6 @@ public class PatientMedicationMapper {
     public PatientMedicationOutputDTO toPatientMedicationOutputDTO(PatientMedication patientMedication) {
         log.info("Mapper called for toPatientMedicationOutputDTO from PatientMedication: {}", patientMedication);
         return PatientMedicationOutputDTO.builder()
-                .patient(patientMedication.getPatient())
                 .medicationId(patientMedication.getMedication().getId())
                 .medication(patientMedication.getMedication().getName())
                 .frequency(patientMedication.getFrequency())
