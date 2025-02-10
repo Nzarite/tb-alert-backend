@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("contactscreening")
+@RequestMapping("/contactscreening")
 @AllArgsConstructor
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
 public class ContactScreeningController {
@@ -22,7 +22,7 @@ public class ContactScreeningController {
         return new ResponseEntity<>(contactScreeningService.getContactScreeningById(patientId), HttpStatus.FOUND);
     }
 
-    @PostMapping("save")
+    @PostMapping("/save")
     public ResponseEntity<?> saveContactScreeningDetails(@RequestBody @Valid ContactScreeningInputDTO contactScreeningInputDTO) {
         contactScreeningService.saveContactScreening(contactScreeningInputDTO);
 
@@ -30,7 +30,7 @@ public class ContactScreeningController {
     }
 
 
-    @PutMapping("update")
+    @PutMapping("/update")
     public ResponseEntity<?> updateContactScreeningDetails(@RequestBody @Valid ContactScreeningInputDTO contactScreeningInputDTO) {
         contactScreeningService.saveContactScreening(contactScreeningInputDTO);
 
