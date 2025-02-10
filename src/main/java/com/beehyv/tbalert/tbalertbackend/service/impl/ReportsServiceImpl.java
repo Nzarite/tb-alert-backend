@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -140,6 +141,41 @@ public class ReportsServiceImpl implements ReportsService {
         } catch (Exception e) {
             log.error("Error in Excel generation: {}", e.getMessage());
             throw new IOException(e);
+        }
+    }
+
+    @Override
+    public void getPatients(Map<String, Object> input) {
+        List<PatientOutputDTO>patientOutputDTOList=patientRegistrationService.getFilteredPatients(input);
+        String path="Patient_Report_By_Filter.xlsx";
+        try(Workbook workbook=new XSSFWorkbook();
+        FileInputStream fileInputStream = new FileInputStream(path);
+        FileOutputStream fileOutputStream = new FileOutputStream(path);)
+        {
+            Sheet sheet=workbook.getSheet("Patient Report");
+            if(sheet==null)
+            {
+                log.info("No Patient Report Generating sheet");
+                workbook.createSheet("Patient Report");
+                workbook.write(fileOutputStream);
+                sheet=workbook.getSheet("Patient Report");
+            }
+
+            Font font = workbook.createFont();
+            font.setFontName("Arial");
+            font.setFontHeightInPoints((short) 14);
+            font.setBold(false);
+            font.setColor(IndexedColors.LIGHT_BLUE.getIndex());
+
+            CellStyle cellStyle = workbook.createCellStyle();
+            cellStyle.setAlignment(HorizontalAlignment.CENTER);
+            cellStyle.setWrapText(true);
+            cellStyle.setFont(font);
+            populatePatientSheet(sheet, patientOutputDTOList,cellStyle);
+            workbook.write(fileOutputStream);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

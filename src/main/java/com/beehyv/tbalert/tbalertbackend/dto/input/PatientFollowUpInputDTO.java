@@ -1,6 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.dto.input;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,9 +16,13 @@ public class PatientFollowUpInputDTO {
 
     private String remarks;
 
-    private String currentStatus;
+    private String aliveOrDead;
 
     private List<MissedMedicationInputDTO>missedMedications;
 
     private boolean cured;
+
+    @NotNull
+    private int patientCondition;
+
 }

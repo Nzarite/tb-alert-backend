@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface PatientRegistrationService {
 
@@ -21,5 +22,7 @@ public interface PatientRegistrationService {
     List<PatientOutputDTO> getAll();
 
     List<PatientOutputDTO> getPatientByName(String patientName);
+
+    List<PatientOutputDTO>getFilteredPatients(Map<String,Object> filters);
 
 }

@@ -30,4 +30,6 @@ public class PatientOutputDTO {
     private String currentStatus;
 
     private boolean cured;
+
+    private int patientCondition;
 }

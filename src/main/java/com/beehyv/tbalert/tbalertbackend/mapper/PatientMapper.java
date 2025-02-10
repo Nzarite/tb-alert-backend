@@ -42,9 +42,10 @@ public class PatientMapper {
                 .block(address.getBlock())
                 .village(address.getVillage())
                 .district(address.getDistrict())
-                .currentStatus(patient.getCurrentStatus())
+                .currentStatus(patient.getCurrentStatus()==null?"alive":patient.getCurrentStatus())
                 .dateOfBirth(patient.getDateOfBirth().toString())
                 .cured(patient.isCured())
+                .patientCondition(patient.getHealthLevel()==0?-1:patient.getHealthLevel())
                 .build();
     }
 

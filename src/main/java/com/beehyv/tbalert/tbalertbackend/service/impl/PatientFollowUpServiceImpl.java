@@ -86,19 +86,24 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         if(patientFollowUp==null){
             throw new IllegalArgumentException("No follow up exists for the given patient and date");
         }
+
+        if(patientFollowUpInputDTO.getPatientCondition()!=-1)
+            patient.setHealthLevel(patientFollowUpInputDTO.getPatientCondition());
+
         patientFollowUp.setRemarks(patientFollowUpInputDTO.getRemarks());
         patientFollowUp.setDate(date);
-        if(patientFollowUpInputDTO.getCurrentStatus().equals("dead")){
-            patient.setCurrentStatus(patientFollowUpInputDTO.getCurrentStatus());
-            patientRepo.save(patient);
+        if(patientFollowUpInputDTO.getAliveOrDead().equals("dead")){
+            patient.setCurrentStatus(patientFollowUpInputDTO.getAliveOrDead());
         }
         if(patientFollowUpInputDTO.isCured()){
             patient.setCured(true);
-            patientRepo.save(patient);
         }
         patientFollowUp.setOccured(true);
         patientFollowUpRepo.save(patientFollowUp);
         List<MissedMedication>missedMedications=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,patientFollowUp.getDate());
+
+        patientRepo.save(patient);
+
         return patientFollowUpMapper.toDTO(patientFollowUp,missedMedications);
     }
 

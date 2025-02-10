@@ -38,4 +38,6 @@ public class Patient {
     private String currentStatus;
 
     private boolean cured=false;
+
+    private int healthLevel=-1;
 }
