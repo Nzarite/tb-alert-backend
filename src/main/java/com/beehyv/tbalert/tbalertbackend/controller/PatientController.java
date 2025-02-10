@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -69,4 +70,6 @@ public class PatientController {
             log.info("Controller called for Getting all patients");
             return new ResponseEntity<>(patientRegistrationService.getAll(), HttpStatus.OK);
     }
+
+
 }

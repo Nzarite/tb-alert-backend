@@ -9,6 +9,8 @@ import java.util.List;
 public interface PatientRepo extends JpaRepository<Patient, Integer> {
     List<Patient> findAllByFirstNameContainingOrLastNameContaining(String firstName, String lastName);
 
+    int countByCurrentStatus(String currentStatus);
+
 
 //    List<PatientOutputDTO> findAllByFirstNameContaining(String patientName);
 }

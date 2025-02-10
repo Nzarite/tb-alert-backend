@@ -37,6 +37,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     private final PatientRepo patientRepo;
     private final MissedMedicationMapper missedMedicationMapper;
     private final LocalDateMapper localDateMapper;
+    private final MissedMedicationService medicationService;
 
 
     @Override
@@ -99,5 +100,11 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         patientFollowUpRepo.save(patientFollowUp);
         List<MissedMedication>missedMedications=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,patientFollowUp.getDate());
         return patientFollowUpMapper.toDTO(patientFollowUp,missedMedications);
+    }
+
+    @Override
+    public List<PatientFollowUp> findBeforeDate(int id, LocalDate localDate) {
+        Patient patient=patientMapper.findPatient(id);
+        return patientFollowUpRepo.findByPatientAndDateBefore(patient,localDate);
     }
 }

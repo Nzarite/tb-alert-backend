@@ -83,4 +83,13 @@ public class MissedMedicationImpl implements MissedMedicationService {
         patientMedications.forEach(patientMedication -> missedMedicationOutputDTOS.addAll(missedMedicationRepo.findAllByPatientMedication(patientMedication).stream().map(missedMedicationMapper::toMissedMedicationOutputDTO).toList()));
         return missedMedicationOutputDTOS;
     }
+
+    @Override
+    public List<MissedMedicationOutputDTO> findByDate(LocalDate date, Patient patient) {
+        List<PatientMedication>patientMedications=patientMedicationRepo.findPatientMedicationByPatient(patient);
+        List<MissedMedicationOutputDTO>missedMedicationOutputDTOS=new ArrayList<>();
+        patientMedications.forEach(patientMedication -> missedMedicationOutputDTOS.addAll(missedMedicationRepo.findByPatientMedicationAndDate(patientMedication,date).stream().map(missedMedicationMapper::toMissedMedicationOutputDTO).toList()));
+        return missedMedicationOutputDTOS;
+    }
+
 }
