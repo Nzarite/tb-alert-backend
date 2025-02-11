@@ -23,7 +23,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     public String errorMessage(Exception ex) {
-        return String.format("Error Message: {0} Error:{1}", ex.getMessage(), ex.getClass());
+        return String.format("Error Message: %s | Error Type: %s", ex.getMessage(), ex.getClass().getSimpleName());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -34,63 +34,63 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.info(errorMessage(ex));
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        log.info("Error Message: {} Error:{}", e.getMessage(), e.getClass());
+        log.info(errorMessage(e));
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.info(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.info(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<String> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.info(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.info(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.info(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DateTimeParseException.class)
     public ResponseEntity<String> handleDateTimeParseException(DateTimeParseException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.info(errorMessage(ex));
         return new ResponseEntity<>("Invalid Date format "+ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<String> handleIOException(IOException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.info(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralExceptions(Exception e) {
-        log.info("Error Message: {} Error:{}", e.getMessage(), e.getClass());
+        log.info(errorMessage(e));
         return new ResponseEntity<>(e.getMessage()+" "+e.getClass(), HttpStatus.I_AM_A_TEAPOT);
     }
 }
