@@ -9,5 +9,5 @@ public interface ReportsService {
 
     void getAllPatients() throws IOException;
 
-    void getPatients(Map<String, Object> input);
+    void getPatients(Map<String, Object> input) throws Exception;
 }

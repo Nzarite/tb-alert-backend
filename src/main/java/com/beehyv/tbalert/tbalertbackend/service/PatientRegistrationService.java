@@ -4,8 +4,6 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import jakarta.validation.Valid;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 

@@ -21,7 +21,7 @@ public class ReportsController {
 
 
     @GetMapping("/patient/filter")
-    public ResponseEntity<HttpStatus>getReportsFilter(@RequestBody Map<String,Object> filter) throws IOException {
+    public ResponseEntity<HttpStatus>getReportsFilter(@RequestBody Map<String,Object> filter) throws Exception {
         reportsService.getPatients(filter);
         return new ResponseEntity<>(HttpStatus.OK);
     }

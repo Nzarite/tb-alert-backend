@@ -13,7 +13,9 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +75,7 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     @Override
-    public void getPatients(Map<String, Object> input) {
+    public void getPatients(Map<String, Object> input) throws Exception {
         List<PatientOutputDTO> patientList = patientRegistrationService.getFilteredPatients(input);
         log.info(patientList.toString());
         try (Workbook workbook = new XSSFWorkbook()) {
@@ -81,7 +83,7 @@ public class ReportsServiceImpl implements ReportsService {
             applyFontAndPopulateSheet(patientList, workbook, sheet);
             writeWorkbookToFile(workbook, "Patient_Report_Filtered.xlsx");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new Exception(e);
         }
     }
 

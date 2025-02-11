@@ -35,7 +35,7 @@ public class Patient {
     @Column(name = "dob", nullable = false)
     private LocalDate dateOfBirth;
 
-    private String currentStatus;
+    private String currentStatus="alive";
 
     private boolean cured=false;
 
