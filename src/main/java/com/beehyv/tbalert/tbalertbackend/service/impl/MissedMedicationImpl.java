@@ -62,9 +62,9 @@ public class MissedMedicationImpl implements MissedMedicationService {
                         patientFollowUpRepo.save(patientFollowUp);
                     }
                 missedMedication.setPatientMedication(patientMedication);
-                missedMedication.setComment(missedMedicationInputDTO.getComment());
+                missedMedication.setComment(missedMedicationInputDTO.getComments());
                 missedMedication.setDate(date);
-                missedMedication.setMissedDosages(missedMedicationInputDTO.getMissedDoses());
+                missedMedication.setMissedDosages(missedMedicationInputDTO.getMissedDosages());
                 missedMedicationRepo.save(missedMedication);
                 patientMedicationRepo.save(missedMedication.getPatientMedication());
                 missedMedicationOutputDTOS.add(missedMedicationMapper.toMissedMedicationOutputDTO(missedMedication));
