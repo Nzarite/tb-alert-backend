@@ -90,9 +90,6 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
             throw new IllegalArgumentException("No follow up exists for the given patient and date");
         }
 
-        if(patientFollowUpInputDTO.getPatientCondition()!=-1)
-            patient.setHealthLevel(patientFollowUpInputDTO.getPatientCondition());
-
         patientFollowUp.setRemarks(patientFollowUpInputDTO.getRemarks());
         patientFollowUp.setDate(date);
         if(patientFollowUpInputDTO.getAliveOrDead().equals("dead")){

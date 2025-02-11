@@ -45,7 +45,6 @@ public class PatientMapper {
                 .currentStatus(patient.getCurrentStatus()==null?"alive":patient.getCurrentStatus())
                 .dateOfBirth(patient.getDateOfBirth().toString())
                 .cured(patient.isCured())
-                .patientCondition(patient.getHealthLevel()==0?-1:patient.getHealthLevel())
                 .build();
     }
 

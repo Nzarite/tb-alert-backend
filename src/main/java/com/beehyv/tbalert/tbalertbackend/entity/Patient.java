@@ -39,5 +39,4 @@ public class Patient {
 
     private boolean cured=false;
 
-    private int healthLevel=-1;
 }

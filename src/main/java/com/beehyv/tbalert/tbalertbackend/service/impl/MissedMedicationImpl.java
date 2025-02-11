@@ -70,7 +70,6 @@ public class MissedMedicationImpl implements MissedMedicationService {
                 missedMedicationOutputDTOS.add(missedMedicationMapper.toMissedMedicationOutputDTO(missedMedication));
                 });
             }
-
         });
         return missedMedicationOutputDTOS;
     }
