@@ -1,8 +1,9 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
-import com.beehyv.tbalert.tbalertbackend.dto.output.SettingsOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Settings;
-import com.beehyv.tbalert.tbalertbackend.service.SettingsService;
+import com.beehyv.tbalert.tbalertbackend.dto.input.SettingInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.SettingOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.service.SettingService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,41 +20,37 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/settings")
+@RequestMapping("/setting")
 @AllArgsConstructor
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
-public class SettingsController {
+public class SettingController {
 
-    private final SettingsService settingsService;
+    private final SettingService settingService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<SettingsOutputDTO>> getSettings() {
-        return new ResponseEntity<>(settingsService.getSettings(), HttpStatus.OK);
+    public ResponseEntity<List<SettingOutputDTO>> getSettings() {
+
+        return new ResponseEntity<>(settingService.getSettings(), HttpStatus.OK);
     }
 
-    @PostMapping("/add/{key}")
-    public ResponseEntity<?> addSetting(@PathVariable String key, @RequestBody List<String> value) {
-        settingsService.addSetting(Settings.builder()
-                .key(key)
-                .value(String.join(",", value))
-                .build());
+    @PostMapping("/add")
+    public ResponseEntity<?> addSetting(@Valid @RequestBody SettingInputDTO settingInputDTO) {
+        settingService.addSetting(settingInputDTO);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{key}")
-    public ResponseEntity<?> updateSetting(@PathVariable String key, @RequestBody List<String> value) {
-        settingsService.updateSetting(Settings.builder()
-                .key(key)
-                .value(String.join(",", value))
-                .build());
+    @PutMapping("/update")
+    public ResponseEntity<?> updateSetting(@Valid @RequestBody SettingInputDTO settingInputDTO) {
+        settingService.updateSetting(settingInputDTO);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/delete/{key}")
+    @DeleteMapping("/{key}")
     public ResponseEntity<?> deleteSetting(@PathVariable String key) {
-        settingsService.deleteSetting(key);
+        settingService.deleteSetting(key);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
