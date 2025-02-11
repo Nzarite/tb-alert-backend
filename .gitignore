@@ -5,7 +5,11 @@ target/
 !**/src/test/**/target/
 pom.xml
 ./src/main/resources/application.properties
-
+Patient_Report.xlsx
+Patient_Report_Filtered.xlsx
+temp.xlsx
+Patient_ReportDead.xlsx
+mysql_data
 
 ### STS ###
 .apt_generated

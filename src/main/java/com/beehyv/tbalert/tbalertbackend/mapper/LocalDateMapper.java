@@ -12,10 +12,17 @@ public class LocalDateMapper {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public LocalDate toLocalDate(String date) {
+        if(date == null || date.isEmpty()) {
+            return null;
+        }
         return LocalDate.parse(date, formatter);
     }
 
-    public String toDate(LocalDate localDate) {
+    public String toDate(LocalDate localDate)
+    {
+        if(localDate == null) {
+            return "";
+        }
         return localDate.format(formatter);
     }
 

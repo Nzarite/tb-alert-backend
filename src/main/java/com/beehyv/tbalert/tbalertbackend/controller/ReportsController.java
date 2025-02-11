@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Map;
@@ -17,12 +14,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("report")
 @AllArgsConstructor
+@CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
 public class ReportsController {
 
     private final ReportsService reportsService;
 
 
-    @GetMapping("/reports/filter")
+    @GetMapping("/patient/filter")
     public ResponseEntity<HttpStatus>getReportsFilter(@RequestBody Map<String,Object> filter) throws IOException {
         reportsService.getPatients(filter);
         return new ResponseEntity<>(HttpStatus.OK);
