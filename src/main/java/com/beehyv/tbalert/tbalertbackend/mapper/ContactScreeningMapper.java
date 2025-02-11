@@ -21,7 +21,6 @@ public class ContactScreeningMapper {
         Patient patient = patientRepo.findById(contactScreeningInputDTO.getPatientId()).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + contactScreeningInputDTO.getPatientId()));
 
         return ContactScreening.builder()
-                .id(contactScreeningInputDTO.getId())
                 .contactScreeningDone(contactScreeningInputDTO.getContactScreeningDone())
                 .dateOfContactScreening(localDateMapper.toLocalDate(contactScreeningInputDTO.getDateOfContactScreening()))
                 .noOfHHCsAvailable(contactScreeningInputDTO.getNoOfHHCsAvailable())
