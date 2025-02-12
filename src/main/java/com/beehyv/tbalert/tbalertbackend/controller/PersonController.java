@@ -37,8 +37,13 @@ public class PersonController {
     @GetMapping("/{id}")
     public ResponseEntity<PersonOutputDTO> getPersonById(@PathVariable Long id) {
         log.info("Controller called for Getting person by id: {}", id);
-            return new ResponseEntity<PersonOutputDTO>(personService.get(id),HttpStatus.OK);
+        return new ResponseEntity<>(personService.get(id),HttpStatus.OK);
+    }
 
+    @GetMapping("/email")
+    public ResponseEntity<PersonOutputDTO> getPersonByEmail(@RequestBody String email) {
+        log.info("Controller called for Getting person by email: {}", email);
+        return new ResponseEntity<>(personService.getByEmail(email),HttpStatus.OK);
     }
 
 }

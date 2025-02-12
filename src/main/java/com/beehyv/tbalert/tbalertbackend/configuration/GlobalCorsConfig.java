@@ -16,19 +16,13 @@ public class GlobalCorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        // Update allowed origins to match your frontend container's URL
         corsConfiguration.setAllowedOrigins(List.of("*"));
-
-        // Allow standard methods for the API
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-        // Allow headers for authentication
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 
-        // Enable credentials support (cookie/session management)
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        // Apply CORS configuration globally
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;

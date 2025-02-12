@@ -5,24 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "patient")
-public class Patient {
+public class TeleCaller {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "person_id")
     private Person person;
-
-    private String currentStatus="alive";
-
-    private boolean cured=false;
-
 }

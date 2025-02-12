@@ -1,6 +1,8 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
 import com.beehyv.tbalert.tbalertbackend.service.ContactScreeningService;
@@ -26,9 +28,9 @@ public class PatientController {
     private final ContactScreeningService contactScreeningService;
 
     @PostMapping("/register")
-    public ResponseEntity<PatientOutputDTO> registerPatient(@RequestBody @Valid PatientInputDTO patientInputDTO) {
-            log.info("Controller called for Registering patient: {}", patientInputDTO.toString());
-            return new ResponseEntity<>(patientRegistrationService.register(patientInputDTO), HttpStatus.CREATED);
+    public ResponseEntity<PatientOutputDTO> registerPatient(@RequestBody @Valid PersonInputDTO personInputDTO) {
+            log.info("Controller called for Registering patient: {}", personInputDTO.toString());
+            return new ResponseEntity<>(patientRegistrationService.register(personInputDTO), HttpStatus.CREATED);
 
     }
 
@@ -46,10 +48,10 @@ public class PatientController {
     }
 
     @PutMapping("/update/{patientId}")
-    public ResponseEntity<HttpStatus> updatePatient(@PathVariable int patientId,@RequestBody @Valid PatientInputDTO patientInputDTO) {
-            log.info("Controller being called for Updating patient: {}", patientInputDTO.toString());
-            patientRegistrationService.updatePatient(patientId, patientInputDTO);
-            log.info("Patient successfully updated: {}", patientInputDTO);
+    public ResponseEntity<HttpStatus> updatePatient(@PathVariable int patientId,@RequestBody @Valid PatientUpdateInputDTO patientUpdateInputDTO) {
+            log.info("Controller being called for Updating patient: {}", patientUpdateInputDTO.toString());
+            patientRegistrationService.updatePatient(patientId, patientUpdateInputDTO);
+            log.info("Patient successfully updated: {}", patientUpdateInputDTO.toString());
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
     }

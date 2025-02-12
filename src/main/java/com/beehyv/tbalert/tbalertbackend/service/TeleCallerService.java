@@ -1,17 +1,16 @@
 package com.beehyv.tbalert.tbalertbackend.service;
 
+
 import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import jakarta.validation.Valid;
-
 import java.util.List;
 
-public interface PersonService {
-    PersonOutputDTO add(@Valid PersonInputDTO person);
+public interface TeleCallerService {
 
-    PersonOutputDTO get(Long id);
+    PersonOutputDTO add(@Valid PersonInputDTO personInputDTO);
 
-    List<PersonOutputDTO> getAll();
+    PersonOutputDTO getByPersonId(Long id);
 
-    PersonOutputDTO getByEmail(String email);
+    List<PersonOutputDTO> getByState(String name);
 }

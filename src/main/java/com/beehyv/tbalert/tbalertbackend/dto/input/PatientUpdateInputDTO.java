@@ -1,13 +1,11 @@
-package com.beehyv.tbalert.tbalertbackend.dto.output;
+package com.beehyv.tbalert.tbalertbackend.dto.input;
 
-import lombok.Builder;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-@Builder
-public class PersonOutputDTO {
-
-    private Long id;
+public class PatientUpdateInputDTO {
 
     private String firstName;
 
@@ -31,9 +29,8 @@ public class PersonOutputDTO {
 
     private String state;
 
-    private String createdBy;
+    private String currentStatus;
 
-    private String createdOn;
-
+    @Email(message = "Provide email of authorising body for update")
     private String updatedBy;
 }

@@ -17,7 +17,6 @@ public class PatientFollowUpMapper {
 
     private final PatientMapper patientMapper;
     private final MedicationDetailsMapper medicationDetailsMapper;
-
     private final LocalDateMapper localDateMapper;
 
 

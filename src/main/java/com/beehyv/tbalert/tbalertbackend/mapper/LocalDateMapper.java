@@ -3,6 +3,7 @@ package com.beehyv.tbalert.tbalertbackend.mapper;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
@@ -10,6 +11,7 @@ import java.time.temporal.ChronoUnit;
 public class LocalDateMapper {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public LocalDate toLocalDate(String date) {
         if(date == null || date.isEmpty()) {
@@ -31,5 +33,13 @@ public class LocalDateMapper {
         LocalDate localDate1 = LocalDate.parse(date, formatter);
         LocalDate localDate2 = LocalDate.now();
         return ChronoUnit.YEARS.between(localDate1, localDate2);
+    }
+
+    public String toDateTime(LocalDateTime localDateTime)
+    {
+        if(localDateTime == null) {
+            return "";
+        }
+        return localDateTime.format(dateTimeFormatter);
     }
 }

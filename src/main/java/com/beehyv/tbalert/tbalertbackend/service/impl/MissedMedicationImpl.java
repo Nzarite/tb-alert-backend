@@ -76,7 +76,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
 
     @Override
     public List<MissedMedicationOutputDTO> get(int id) {
-        log.info("Service called for get missed medication: {}", id);
+        log.info("Service called for getByPersonId missed medication: {}", id);
         List<PatientMedication> patientMedications=patientMedicationRepo.findPatientMedicationByPatient(patientMapper.findPatient(id));
         List<MissedMedicationOutputDTO>missedMedicationOutputDTOS=new ArrayList<>();
         patientMedications.forEach(patientMedication -> missedMedicationOutputDTOS.addAll(missedMedicationRepo.findAllByPatientMedication(patientMedication).stream().map(missedMedicationMapper::toMissedMedicationOutputDTO).toList()));
