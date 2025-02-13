@@ -9,7 +9,7 @@ public class MissedMedicationInputDTO {
     @NotNull
     private int medicationId;
 
-    private int missedDoses;
+    private int missedDosages;
 
-    private String comment;
+    private String comments;
 }

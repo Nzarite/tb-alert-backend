@@ -6,23 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@Builder
-@NoArgsConstructor
+@Entity
 @AllArgsConstructor
-@Table(name = "patient")
-public class Patient {
+@NoArgsConstructor
+@Builder
+public class StateHead {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "person_id")
     private Person person;
-
-    private String currentStatus="alive";
-
-    private boolean cured=false;
-
 }

@@ -15,14 +15,14 @@ import org.springframework.stereotype.Component;
 public class ContactScreeningMapper {
 
     private final PatientRepo patientRepo;
+    private final LocalDateMapper localDateMapper;
 
     public ContactScreening toContactScreening(ContactScreeningInputDTO contactScreeningInputDTO) {
         Patient patient = patientRepo.findById(contactScreeningInputDTO.getPatientId()).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + contactScreeningInputDTO.getPatientId()));
 
         return ContactScreening.builder()
-                .id(contactScreeningInputDTO.getId())
                 .contactScreeningDone(contactScreeningInputDTO.getContactScreeningDone())
-                .dateOfContactScreening(contactScreeningInputDTO.getDateOfContactScreening())
+                .dateOfContactScreening(localDateMapper.toLocalDate(contactScreeningInputDTO.getDateOfContactScreening()))
                 .noOfHHCsAvailable(contactScreeningInputDTO.getNoOfHHCsAvailable())
                 .noOfHHCsScreened(contactScreeningInputDTO.getNoOfHHCsScreened())
                 .noOfHHCsWithTBSymptoms(contactScreeningInputDTO.getNoOfHHCsWithTBSymptoms())
@@ -40,7 +40,7 @@ public class ContactScreeningMapper {
         return ContactScreeningOutputDTO.builder()
                 .id(contactScreening.getId())
                 .contactScreeningDone(contactScreening.getContactScreeningDone())
-                .dateOfContactScreening(contactScreening.getDateOfContactScreening())
+                .dateOfContactScreening(localDateMapper.toDate(contactScreening.getDateOfContactScreening()))
                 .noOfHHCsAvailable(contactScreening.getNoOfHHCsAvailable())
                 .noOfHHCsScreened(contactScreening.getNoOfHHCsScreened())
                 .noOfHHCsWithTBSymptoms(contactScreening.getNoOfHHCsWithTBSymptoms())
