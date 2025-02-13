@@ -50,7 +50,6 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
                 "username", email,
                 "email", email,
                 "emailVerified", true,
-                "requiredActions", List.of("UPDATE_PASSWORD"),
                 "enabled", true
         );
 
@@ -106,6 +105,9 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
             HttpEntity<List<Map<String, Object>>> roleRequest = new HttpEntity<>(List.of(roleResponse.getBody()), headers);
             restTemplate.postForEntity(assignRoleUrl, roleRequest, Void.class);
 
+            // Step 4: Send password reset email
+            sendPasswordResetEmail(userId, accessToken);
+
             log.info("User created and role assigned successfully");
             return "User created and role assigned successfully";
 
@@ -115,7 +117,21 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
         }
     }
 
-    // Utility method to create HTTP headers with authentication
+    private void sendPasswordResetEmail(String userId, String accessToken) {
+        String emailActionUrl = keycloakUrl + "/admin/realms/" + realm + "/users/" + userId + "/execute-actions-email";
+
+        HttpHeaders headers = createHeaders(accessToken);
+        HttpEntity<List<String>> emailRequest = new HttpEntity<>(List.of("UPDATE_PASSWORD"), headers);
+
+        try {
+            restTemplate.exchange(emailActionUrl, HttpMethod.PUT, emailRequest, Void.class);
+            log.info("Password reset email sent successfully to user ID: {}", userId);
+        } catch (HttpClientErrorException e) {
+            log.error("Failed to send password reset email: {}", e.getMessage());
+        }
+    }
+
+        // Utility method to create HTTP headers with authentication
     private HttpHeaders createHeaders(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

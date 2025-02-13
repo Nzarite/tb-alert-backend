@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @Configuration
 @EnableWebSecurity
-//@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
     private final JwtAuthenticationTokenConverter jwtAuthenticationTokenConverter;
