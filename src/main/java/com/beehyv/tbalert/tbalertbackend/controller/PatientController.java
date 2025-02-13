@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/patient")
 @AllArgsConstructor
-@PreAuthorize("hasRole('Telecaller')")
 public class PatientController {
 
     private final PatientRegistrationService patientRegistrationService;
