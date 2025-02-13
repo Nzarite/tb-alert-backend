@@ -24,6 +24,7 @@ public class PersonInputDTO {
     @NotEmpty(message = "Enter valid Date of Birth")
     private String dateOfBirth;
 
+    @NotEmpty(message = "Creator email is required")
     @Email(message = "Enter valid creator email")
     private String createdBy;
 

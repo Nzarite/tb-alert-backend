@@ -1,13 +1,13 @@
 package com.beehyv.tbalert.tbalertbackend.service.impl;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientFollowUpInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
+import com.beehyv.tbalert.tbalertbackend.entity.PatientFollowUp;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
 import com.beehyv.tbalert.tbalertbackend.mapper.AddressMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
@@ -25,7 +25,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.service.annotation.PatchExchange;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -148,6 +147,16 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         Specification<Patient> specification = PatientSpecification.getPatientsByFilter(filters);
         List<Patient>patients=patientRepo.findAll(specification);
         return patients.stream().map(patientMapper::toPatientOutputDTO).toList();
+    }
+
+    @Override
+    public String determinePatientStatus(PatientOutputDTO patient) {
+        if (patient.getCurrentStatus() != null) {
+            if ("dead".equals(patient.getCurrentStatus())) return "Dead";
+            if (patient.isCured()) return "Cured";
+        }
+        List<PatientFollowUp> followUps = patientFollowUpService.findBeforeDate(patient.getPatientId(), LocalDate.now());
+        return followUps.stream().skip(Math.max(followUps.size() - 3, 0)).anyMatch(PatientFollowUp::getOccured) ? "Treatment ongoing" : "No Contact";
     }
 
 

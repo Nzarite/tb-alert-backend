@@ -3,6 +3,7 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.TeleCallerService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class TeleCallerController {
     }
 
     @GetMapping("/state/{name}")
-    public ResponseEntity<List<PersonOutputDTO>> getByState(@PathVariable String name) {
+    public ResponseEntity<List<TeleCallerOutputDTO>> getByState(@PathVariable String name) {
         return new ResponseEntity<>(teleCallerService.getByState(name),HttpStatus.OK);
     }
 

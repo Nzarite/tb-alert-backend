@@ -26,15 +26,17 @@ public class ReportsController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/patient/all")
-    public ResponseEntity<HttpStatus>getAllPatients() throws IOException{
-        reportsService.getAllPatients();
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @GetMapping("/dead")
     public ResponseEntity<Integer> getDeadPatients() throws IOException {
         log.info("Controller called for Getting dead patients");
         return new ResponseEntity<>(reportsService.getAllDead(), HttpStatus.OK);
+    }
+
+    @GetMapping("/telecaller")
+    public ResponseEntity<HttpStatus>getTeleCallerOfAState(@RequestBody String state)
+    {
+        log.info("Controller called for Getting tele caller for state: {}", state);
+        reportsService.getTeleCallerOfAState(state);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

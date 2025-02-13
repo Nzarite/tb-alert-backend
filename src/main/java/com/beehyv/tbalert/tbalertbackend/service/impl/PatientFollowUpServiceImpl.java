@@ -99,6 +99,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
             patient.setCured(true);
         }
         patientFollowUp.setOccured(true);
+        patientFollowUp.setPatientCondition(patientFollowUpInputDTO.getPatientCondition());
         patientFollowUpRepo.save(patientFollowUp);
         List<MissedMedication>missedMedications=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,patientFollowUp.getDate());
 

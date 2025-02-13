@@ -1,8 +1,8 @@
 package com.beehyv.tbalert.tbalertbackend.service.impl;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.TeleCaller;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.TeleCallerMapper;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -42,10 +41,10 @@ public class TeleCallerServiceImpl implements TeleCallerService {
     }
 
     @Override
-    public List<PersonOutputDTO> getByState(String name) {
+    public List<TeleCallerOutputDTO> getByState(String name) {
         List<TeleCaller>teleCallers=teleCallerRepo.findByTeleCallerByState(name);
         log.info(teleCallers.toString());
-        return teleCallers.stream().map((teleCaller -> personMapper.toPersonOutputDTO(teleCaller.getPerson()))).toList();
+        return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
 
 

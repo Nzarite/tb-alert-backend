@@ -3,7 +3,9 @@ package com.beehyv.tbalert.tbalertbackend.service;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
 import jakarta.validation.Valid;
+
 import java.util.List;
 
 public interface TeleCallerService {
@@ -12,5 +14,5 @@ public interface TeleCallerService {
 
     PersonOutputDTO getByPersonId(Long id);
 
-    List<PersonOutputDTO> getByState(String name);
+    List<TeleCallerOutputDTO> getByState(String name);
 }

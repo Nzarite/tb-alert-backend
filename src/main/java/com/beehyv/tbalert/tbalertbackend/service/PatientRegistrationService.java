@@ -1,6 +1,5 @@
 package com.beehyv.tbalert.tbalertbackend.service;
 
-import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
@@ -24,4 +23,5 @@ public interface PatientRegistrationService {
 
     List<PatientOutputDTO>getFilteredPatients(Map<String,Object> filters);
 
+    String determinePatientStatus(PatientOutputDTO patientOutputDTO);
 }
