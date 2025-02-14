@@ -68,4 +68,11 @@ public class PersonServiceImpl implements PersonService {
         }
         return personMapper.toPersonOutputDTO(person);
     }
+
+    @Override
+    public List<PersonOutputDTO> getByState(String state) {
+
+        List<Person>personList=personRepo.findByState(state);
+        return personList.stream().map(personMapper::toPersonOutputDTO).toList();
+    }
 }

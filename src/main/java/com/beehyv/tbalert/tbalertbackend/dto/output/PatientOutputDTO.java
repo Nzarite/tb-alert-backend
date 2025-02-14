@@ -19,7 +19,7 @@ public class PatientOutputDTO {
 
     private String dateOfBirth;
 
-    private String phone;
+    private String phoneNumber;
 
     private String email;
 
@@ -31,6 +31,8 @@ public class PatientOutputDTO {
 
     private String district;
 
+    private String state;
+
     private String currentStatus;
 
     private boolean cured;
@@ -40,4 +42,5 @@ public class PatientOutputDTO {
     private String createdBy;
 
     private String updatedBy;
+
 }

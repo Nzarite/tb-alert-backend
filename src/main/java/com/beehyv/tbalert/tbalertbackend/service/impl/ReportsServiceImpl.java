@@ -17,7 +17,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -54,16 +54,20 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     @Override
-    public void getPatients(Map<String, Object> input) throws Exception {
+    public byte[] getPatients(Map<String, Object> input) {
         List<PatientOutputDTO> patientList = patientRegistrationService.getFilteredPatients(input);
         log.info(patientList.toString());
-        try (Workbook workbook = new XSSFWorkbook()) {
+        try (Workbook workbook = new XSSFWorkbook();
+             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             Sheet sheet = reportsHelperService.createSheetWithHeader(workbook, "Patient Report", "Patient ID", "Name", "Year of Birth", "Gender", "Status");
             applyFontAndPopulateSheet(patientList, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "Patient_Report_Filtered.xlsx");
-        } catch (Exception e) {
-            throw new Exception(e);
+            workbook.write(outputStream);
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            log.error("Error generating report: {}", e.getMessage());
         }
+        return null;
     }
 
     @Override

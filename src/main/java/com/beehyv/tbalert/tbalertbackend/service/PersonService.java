@@ -14,4 +14,6 @@ public interface PersonService {
     List<PersonOutputDTO> getAll();
 
     PersonOutputDTO getByEmail(String email);
+
+    List<PersonOutputDTO> getByState(String state);
 }

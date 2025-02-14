@@ -40,11 +40,11 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final AddressRepo addressRepo;
     private final ContactScreeningRepository contactScreeningRepo;
     private final PatientFollowUpService patientFollowUpService;
-    private final AddressMapper addressMapper;
     private final PersonMapper personMapper;
     private final LocalDateMapper localDateMapper;
     private final PersonRepo personRepo;
     private final PersonService personService;
+    private final PatientSpecification patientSpecification;
 
     @Override
     public PatientOutputDTO register(PersonInputDTO personInputDTO) {
@@ -147,7 +147,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Override
     public List<PatientOutputDTO> getFilteredPatients(Map<String, Object> filters) {
         log.info("Service getFilteredPatients filters: {}", filters);
-        Specification<Patient> specification = PatientSpecification.getPatientsByFilter(filters);
+        Specification<Patient> specification = patientSpecification.getPatientsByFilter(filters);
         List<Patient>patients=patientRepo.findAll(specification);
         return patients.stream().map(patientMapper::toPatientOutputDTO).toList();
     }
