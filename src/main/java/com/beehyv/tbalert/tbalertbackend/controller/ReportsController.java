@@ -14,13 +14,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("report")
 @AllArgsConstructor
-@CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
 public class ReportsController {
 
     private final ReportsService reportsService;
 
 
-    @GetMapping("/patient/filter")
+    @PostMapping("/patient/filter")
     public ResponseEntity<HttpStatus>getReportsFilter(@RequestBody Map<String,Object> filter) throws Exception {
         reportsService.getPatients(filter);
         return new ResponseEntity<>(HttpStatus.OK);
