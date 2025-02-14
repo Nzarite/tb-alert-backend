@@ -23,7 +23,7 @@ public class NikshayInputDTO {
 
     private String dateOfDbt;
 
-    private String nikshayMitraStatus;
+    private Boolean nikshayMitraStatus;
 
     private String nikshayMitraDate;
 

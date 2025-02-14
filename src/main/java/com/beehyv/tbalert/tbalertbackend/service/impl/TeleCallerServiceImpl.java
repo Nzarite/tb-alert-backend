@@ -7,6 +7,7 @@ import com.beehyv.tbalert.tbalertbackend.entity.TeleCaller;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.TeleCallerMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.TeleCallerRepo;
+import com.beehyv.tbalert.tbalertbackend.service.KeycloakUserService;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import com.beehyv.tbalert.tbalertbackend.service.TeleCallerService;
 import lombok.AllArgsConstructor;
@@ -24,9 +25,20 @@ public class TeleCallerServiceImpl implements TeleCallerService {
     private final TeleCallerRepo teleCallerRepo;
     private final PersonService personService;
     private final TeleCallerMapper teleCallerMapper;
+    private final KeycloakUserService keycloakUserService;
 
     @Override
     public PersonOutputDTO add(PersonInputDTO personInputDTO) {
+
+        String keycloakResponse = keycloakUserService.createUser(
+                personInputDTO.getEmail(),
+                "Telecaller"
+        );
+
+        if (!"User created and role assigned successfully".equals(keycloakResponse)) {
+            log.error("Failed to create user in Keycloak: {}", keycloakResponse);
+            throw new RuntimeException("Failed to create user in Keycloak");
+        }
 
         PersonOutputDTO personOutputDTO = personService.add(personInputDTO);
         TeleCaller teleCaller = new TeleCaller();

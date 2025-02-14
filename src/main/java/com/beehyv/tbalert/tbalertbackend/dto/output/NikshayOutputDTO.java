@@ -17,7 +17,7 @@ public class NikshayOutputDTO {
     private String resultOfUdst;
     private Boolean dbtStatus;
     private String dateOfDbt;
-    private String nikshayMitraStatus;
+    private Boolean nikshayMitraStatus;
     private String nikshayMitraDate;
     private String nikshayMitraName;
     private Integer patientId;

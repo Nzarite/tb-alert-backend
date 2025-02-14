@@ -31,15 +31,15 @@ public class PersonServiceImpl implements PersonService {
     public PersonOutputDTO add(PersonInputDTO person) {
         log.info("Service called for Add person: {}", person);
 
-        String keycloakResponse = keycloakUserService.createUser(
-                person.getEmail(),
-                person.getRole()
-        );
-
-        if (!"User created and role assigned successfully".equals(keycloakResponse)) {
-            log.error("Failed to create user in Keycloak: {}", keycloakResponse);
-            throw new RuntimeException("Failed to create user in Keycloak");
-        }
+//        String keycloakResponse = keycloakUserService.createUser(
+//                person.getEmail(),
+//                person.getRole()
+//        );
+//
+//        if (!"User created and role assigned successfully".equals(keycloakResponse)) {
+//            log.error("Failed to create user in Keycloak: {}", keycloakResponse);
+//            throw new RuntimeException("Failed to create user in Keycloak");
+//        }
 
         Person personSaved = personMapper.toPerson(person);
         personSaved = personRepo.save(personSaved);

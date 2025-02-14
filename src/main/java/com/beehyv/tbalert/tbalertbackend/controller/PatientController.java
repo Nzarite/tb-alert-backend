@@ -21,6 +21,7 @@ import java.util.List;
 @RequestMapping("/patient")
 @AllArgsConstructor
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
+@PreAuthorize("hasAuthority('ROLE_Telecaller')")
 public class PatientController {
 
     private final PatientRegistrationService patientRegistrationService;
