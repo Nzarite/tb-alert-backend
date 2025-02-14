@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/patientmedication")
 @AllArgsConstructor
+@CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
 public class PatientMedicationController {
 
     private final PatientMedicationService patientMedicationService;

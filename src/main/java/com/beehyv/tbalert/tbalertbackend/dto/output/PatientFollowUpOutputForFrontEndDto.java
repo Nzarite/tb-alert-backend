@@ -28,6 +28,8 @@ public class PatientFollowUpOutputForFrontEndDto {
         private String date;
 
         private Boolean followUpStatus;
+
+        private int patientCondition;
     }
 
 }

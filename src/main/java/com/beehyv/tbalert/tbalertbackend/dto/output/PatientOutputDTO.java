@@ -9,6 +9,8 @@ public class PatientOutputDTO {
 
     private int patientId;
 
+    private Long personId;
+
     private String firstName;
 
     private String lastName;
@@ -19,6 +21,8 @@ public class PatientOutputDTO {
 
     private String phone;
 
+    private String email;
+
     private String block;
 
     private String gp;
@@ -28,4 +32,12 @@ public class PatientOutputDTO {
     private String district;
 
     private String currentStatus;
+
+    private boolean cured;
+
+    private String createdAt;
+
+    private String createdBy;
+
+    private String updatedBy;
 }

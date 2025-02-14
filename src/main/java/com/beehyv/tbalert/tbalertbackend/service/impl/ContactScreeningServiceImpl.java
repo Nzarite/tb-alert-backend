@@ -1,6 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.service.impl;
 
-import com.beehyv.tbalert.tbalertbackend.dto.ContactScreeningDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.ContactScreeningInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.ContactScreeningOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.ContactScreening;
 import com.beehyv.tbalert.tbalertbackend.mapper.ContactScreeningMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
@@ -11,19 +12,33 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class ContactScreeningServiceImpl implements ContactScreeningService {
-     private final ContactScreeningRepository contactScreeningRepository;
-     private final ContactScreeningMapper contactScreeningMapper;
+    private final ContactScreeningRepository contactScreeningRepository;
+    private final ContactScreeningMapper contactScreeningMapper;
 
     @Override
-    public ContactScreeningDTO getContactScreeningById(Integer patientId) {
+    public ContactScreeningOutputDTO getContactScreeningById(Integer patientId) {
         ContactScreening contactScreening = contactScreeningRepository.findByPatientId(patientId);
-        return contactScreeningMapper.toContactScreeningDTO(contactScreening);
+        return contactScreeningMapper.toContactScreeningOutputDTO(contactScreening);
 
     }
 
     @Override
-    public void saveContactScreening(ContactScreeningDTO contactScreeningDTO) {
-        ContactScreening contactScreening = contactScreeningMapper.toContactScreening(contactScreeningDTO);
+    public void saveContactScreening(ContactScreeningInputDTO contactScreeningInputDTO) {
+        ContactScreening contactScreening = contactScreeningMapper.toContactScreening(contactScreeningInputDTO);
         contactScreeningRepository.save(contactScreening);
     }
+
+    @Override
+    public void deleteContactScreeningById(Integer id) {
+        ContactScreening contactScreening = contactScreeningRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Contact Screening id: " + id));
+        contactScreeningRepository.delete(contactScreening);
+    }
+
+    @Override
+    public void deleteContactScreeningByPatientId(Integer patientId) {
+        ContactScreening contactScreening = contactScreeningRepository.findByPatientId(patientId);
+        contactScreeningRepository.delete(contactScreening);
+    }
+
+
 }

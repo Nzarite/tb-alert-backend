@@ -1,6 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
-import com.beehyv.tbalert.tbalertbackend.dto.ContactScreeningDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.ContactScreeningInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.ContactScreeningOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.ContactScreening;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
@@ -14,32 +15,32 @@ import org.springframework.stereotype.Component;
 public class ContactScreeningMapper {
 
     private final PatientRepo patientRepo;
+    private final LocalDateMapper localDateMapper;
 
-    public ContactScreening toContactScreening(ContactScreeningDTO contactScreeningDTO) {
-        Patient patient = patientRepo.findById(contactScreeningDTO.getPatientId()).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + contactScreeningDTO.getPatientId()));
+    public ContactScreening toContactScreening(ContactScreeningInputDTO contactScreeningInputDTO) {
+        Patient patient = patientRepo.findById(contactScreeningInputDTO.getPatientId()).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + contactScreeningInputDTO.getPatientId()));
 
         return ContactScreening.builder()
-                .id(contactScreeningDTO.getId())
-                .contactScreeningDone(contactScreeningDTO.getContactScreeningDone())
-                .dateOfContactScreening(contactScreeningDTO.getDateOfContactScreening())
-                .noOfHHCsAvailable(contactScreeningDTO.getNoOfHHCsAvailable())
-                .noOfHHCsScreened(contactScreeningDTO.getNoOfHHCsScreened())
-                .noOfHHCsWithTBSymptoms(contactScreeningDTO.getNoOfHHCsWithTBSymptoms())
-                .noOfHHCsReferredTBTesting(contactScreeningDTO.getNoOfHHCsReferredTBTesting())
-                .noOfHHCsDiagnosedTB(contactScreeningDTO.getNoOfHHCsDiagnosedTB())
-                .noOfHHCsTBInitiatedATT(contactScreeningDTO.getNoOfHHCsTBInitiatedATT())
-                .noOfHHCsUndergoneLTBITest(contactScreeningDTO.getNoOfHHCsUndergoneLTBITest())
-                .noOfEligibleForTPT(contactScreeningDTO.getNoOfEligibleForTPT())
-                .noOfHHCsInitiatedTPT(contactScreeningDTO.getNoOfHHCsInitiatedTPT())
+                .contactScreeningDone(contactScreeningInputDTO.getContactScreeningDone())
+                .dateOfContactScreening(localDateMapper.toLocalDate(contactScreeningInputDTO.getDateOfContactScreening()))
+                .noOfHHCsAvailable(contactScreeningInputDTO.getNoOfHHCsAvailable())
+                .noOfHHCsScreened(contactScreeningInputDTO.getNoOfHHCsScreened())
+                .noOfHHCsWithTBSymptoms(contactScreeningInputDTO.getNoOfHHCsWithTBSymptoms())
+                .noOfHHCsReferredTBTesting(contactScreeningInputDTO.getNoOfHHCsReferredTBTesting())
+                .noOfHHCsDiagnosedTB(contactScreeningInputDTO.getNoOfHHCsDiagnosedTB())
+                .noOfHHCsTBInitiatedATT(contactScreeningInputDTO.getNoOfHHCsTBInitiatedATT())
+                .noOfHHCsUndergoneLTBITest(contactScreeningInputDTO.getNoOfHHCsUndergoneLTBITest())
+                .noOfEligibleForTPT(contactScreeningInputDTO.getNoOfEligibleForTPT())
+                .noOfHHCsInitiatedTPT(contactScreeningInputDTO.getNoOfHHCsInitiatedTPT())
                 .patient(patient)
                 .build();
     }
 
-    public ContactScreeningDTO toContactScreeningDTO(ContactScreening contactScreening) {
-        return ContactScreeningDTO.builder()
+    public ContactScreeningOutputDTO toContactScreeningOutputDTO(ContactScreening contactScreening) {
+        return ContactScreeningOutputDTO.builder()
                 .id(contactScreening.getId())
                 .contactScreeningDone(contactScreening.getContactScreeningDone())
-                .dateOfContactScreening(contactScreening.getDateOfContactScreening())
+                .dateOfContactScreening(localDateMapper.toDate(contactScreening.getDateOfContactScreening()))
                 .noOfHHCsAvailable(contactScreening.getNoOfHHCsAvailable())
                 .noOfHHCsScreened(contactScreening.getNoOfHHCsScreened())
                 .noOfHHCsWithTBSymptoms(contactScreening.getNoOfHHCsWithTBSymptoms())

@@ -5,7 +5,6 @@ import com.beehyv.tbalert.tbalertbackend.dto.output.PatientMedicationOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Medication;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientMedication;
-import com.beehyv.tbalert.tbalertbackend.repository.PatientMedicationRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -32,9 +31,8 @@ public class PatientMedicationMapper {
     public PatientMedicationOutputDTO toPatientMedicationOutputDTO(PatientMedication patientMedication) {
         log.info("Mapper called for toPatientMedicationOutputDTO from PatientMedication: {}", patientMedication);
         return PatientMedicationOutputDTO.builder()
-                .patient(patientMedication.getPatient())
                 .medicationId(patientMedication.getMedication().getId())
-                .medication(patientMedication.getMedication().getName())
+                .medicationName(patientMedication.getMedication().getName())
                 .frequency(patientMedication.getFrequency())
                 .build();
     }

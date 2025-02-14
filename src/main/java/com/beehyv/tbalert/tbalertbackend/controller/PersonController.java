@@ -18,6 +18,7 @@ import java.util.List;
 @RequestMapping("/person")
 @PreAuthorize("hasAuthority('ROLE_Telecaller')")
 @AllArgsConstructor
+@CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
 public class PersonController {
 
     private final PersonService personService;
@@ -25,34 +26,26 @@ public class PersonController {
     @PostMapping("")
     public ResponseEntity<PersonOutputDTO> createPerson(@RequestBody @Valid PersonInputDTO person) {
       log.info("Controller called for Creating person: {}", person);
-      try{
           return new ResponseEntity<>(personService.add(person), HttpStatus.CREATED);
-      } catch (Exception e) {
-          log.error("Controller called for Creating person: {}", person, e);
-          return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-      }
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<PersonOutputDTO>> getAllPersons() {
         log.info("Controller called for Getting all persons");
-        try {
             return new ResponseEntity<>(personService.getAll(),HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("Controller called for Getting all persons", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PersonOutputDTO> getPersonById(@PathVariable Long id) {
         log.info("Controller called for Getting person by id: {}", id);
-        try{
-            return new ResponseEntity<PersonOutputDTO>(personService.get(id),HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("Controller called for Getting person by id: {}", id, e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(personService.get(id),HttpStatus.OK);
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<PersonOutputDTO> getPersonByEmail(@RequestBody String email) {
+        log.info("Controller called for Getting person by email: {}", email);
+        return new ResponseEntity<>(personService.getByEmail(email),HttpStatus.OK);
     }
 
 }

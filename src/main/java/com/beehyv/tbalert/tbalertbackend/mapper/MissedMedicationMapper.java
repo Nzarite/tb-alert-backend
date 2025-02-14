@@ -27,8 +27,8 @@ public class MissedMedicationMapper {
         log.info("Mapper called for toMissedMedication from missedMedicationInputDTO = {}", missedMedicationInputDTO);
         return MissedMedication.builder()
                 .patientMedication(patientMedication)
-                .missedDosages(missedMedicationInputDTO.getMissedDoses())
-                .comment(missedMedicationInputDTO.getComment())
+                .missedDosages(missedMedicationInputDTO.getMissedDosages())
+                .comment(missedMedicationInputDTO.getComments())
                 .date(date)
                 .build();
     }
@@ -45,14 +45,10 @@ public class MissedMedicationMapper {
     }
 
     public List<MissedMedication> findMissedMedicationsByPatientandDate(Patient patient,LocalDate date) {
+        log.info("Missed Medication list being fetched for patient = {} and date = {}", patient, date);
         List<PatientMedication>patientMedicationList=patientMedicationRepo.findPatientMedicationByPatient(patient);
-        if(patientMedicationList.isEmpty()){
-            throw new IllegalArgumentException("Patient medication list is empty for Patient: "+patient);
-        }
         List<MissedMedication>missedMedications=new ArrayList<>();
-        patientMedicationList.forEach(patientMedication -> {
-            missedMedications.addAll(missedMedicationRepo.findByPatientMedicationAndDate(patientMedication,date));
-        });
+        patientMedicationList.forEach(patientMedication -> missedMedications.addAll(missedMedicationRepo.findByPatientMedicationAndDate(patientMedication,date)));
         return missedMedications;
     }
 }

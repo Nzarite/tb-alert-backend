@@ -12,18 +12,35 @@ public class PersonInputDTO {
 
     private String lastName;
 
-    @NotEmpty(message = "Enter valid State")
-    private String State;
-
-    @NotEmpty(message = "Enter valid Role")
-    private String Role;
-
     @NotEmpty(message = "Enter valid phone number")
     private String phoneNumber;
 
     @Email(message = "Invalid Email")
     private String email;
 
+    @NotEmpty(message = "Enter valid gender")
     private String gender;
+
+    @NotEmpty(message = "Enter valid Date of Birth")
+    private String dateOfBirth;
+
+    @NotEmpty(message = "Creator email is required")
+    @Email(message = "Enter valid creator email")
+    private String createdBy;
+
+    @NotEmpty(message = "Block name cannot be empty")
+    private String block;
+
+    @NotEmpty(message = "Gram Panchayat name cannot be empty")
+    private String gp;
+
+    @NotEmpty(message = "Village name cannot be empty")
+    private String village;
+
+    @NotEmpty(message = "District name cannot be empty")
+    private String district;
+
+    @NotEmpty(message = "State name cannot be empty")
+    private String state;
 
 }
