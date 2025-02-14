@@ -50,6 +50,7 @@ public class PatientMapper {
                 .block(address.getBlock())
                 .village(address.getVillage())
                 .district(address.getDistrict())
+                .state(address.getState())
                 .currentStatus(patient.getCurrentStatus()==null?"alive":patient.getCurrentStatus())
                 .cured(patient.isCured())
                 .createdBy(person.getCreatedBy())

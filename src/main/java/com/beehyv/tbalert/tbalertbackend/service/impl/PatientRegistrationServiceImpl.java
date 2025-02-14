@@ -40,11 +40,11 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final AddressRepo addressRepo;
     private final ContactScreeningRepository contactScreeningRepo;
     private final PatientFollowUpService patientFollowUpService;
-    private final AddressMapper addressMapper;
     private final PersonMapper personMapper;
     private final LocalDateMapper localDateMapper;
     private final PersonRepo personRepo;
     private final PersonService personService;
+    private final PatientSpecification patientSpecification;
 
     @Override
     public PatientOutputDTO register(PersonInputDTO personInputDTO) {
@@ -57,7 +57,10 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         int curr=15;
         for (int i = 0; i < 8; i++)
         {
-            PatientFollowUpInputDTO patientFollowUpInputDTO = PatientFollowUpInputDTO.builder().date(localDate.toString()).remarks("").build();
+            PatientFollowUpInputDTO patientFollowUpInputDTO = PatientFollowUpInputDTO.builder()
+                    .date(localDate.toString())
+                    .remarks("")
+                    .build();
             patientFollowUpService.add(patient.getId(), patientFollowUpInputDTO);
             localDate = localDate.plusDays(curr);
             if(i==2) curr=30;
@@ -144,7 +147,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Override
     public List<PatientOutputDTO> getFilteredPatients(Map<String, Object> filters) {
         log.info("Service getFilteredPatients filters: {}", filters);
-        Specification<Patient> specification = PatientSpecification.getPatientsByFilter(filters);
+        Specification<Patient> specification = patientSpecification.getPatientsByFilter(filters);
         List<Patient>patients=patientRepo.findAll(specification);
         return patients.stream().map(patientMapper::toPatientOutputDTO).toList();
     }

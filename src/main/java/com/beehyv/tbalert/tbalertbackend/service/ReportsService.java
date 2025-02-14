@@ -7,7 +7,7 @@ public interface ReportsService {
 
     Integer getAllDead() throws IOException;
 
-    void getPatients(Map<String, Object> input) throws Exception;
+    byte[] getPatients(Map<String, Object> input) ;
 
     void getTeleCallerOfAState(String state);
 }
