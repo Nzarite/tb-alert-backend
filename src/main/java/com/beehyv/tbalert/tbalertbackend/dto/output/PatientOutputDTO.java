@@ -19,7 +19,7 @@ public class PatientOutputDTO {
 
     private String dateOfBirth;
 
-    private String phone;
+    private String phoneNumber;
 
     private String email;
 

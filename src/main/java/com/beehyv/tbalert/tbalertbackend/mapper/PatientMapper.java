@@ -40,7 +40,7 @@ public class PatientMapper {
         return PatientOutputDTO.builder()
                 .patientId(patient.getId())
                 .personId(person.getId())
-                .phone(person.getPhoneNumber())
+                .phoneNumber(person.getPhoneNumber())
                 .gender(person.getGender())
                 .firstName(person.getFirstName())
                 .lastName(person.getLastName())
