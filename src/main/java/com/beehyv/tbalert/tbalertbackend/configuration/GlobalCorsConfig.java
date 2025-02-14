@@ -20,7 +20,7 @@
 //        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 //        corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 //
-//        corsConfiguration.setAllowCredentials(true);
+//        corsConfiguration.setAllowCredentials(false);
 //        corsConfiguration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
 //
 //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

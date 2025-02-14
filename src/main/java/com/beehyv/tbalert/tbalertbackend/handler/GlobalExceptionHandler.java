@@ -5,6 +5,7 @@ import org.hibernate.JDBCException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -101,6 +102,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
         log.error(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        log.error(errorMessage(ex));
+        return new ResponseEntity<>("User with this email already exists", HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InvalidDataAccessResourceUsageException.class)
