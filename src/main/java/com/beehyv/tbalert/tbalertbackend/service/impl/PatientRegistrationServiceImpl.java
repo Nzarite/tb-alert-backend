@@ -57,7 +57,10 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         int curr=15;
         for (int i = 0; i < 8; i++)
         {
-            PatientFollowUpInputDTO patientFollowUpInputDTO = PatientFollowUpInputDTO.builder().date(localDate.toString()).remarks("").build();
+            PatientFollowUpInputDTO patientFollowUpInputDTO = PatientFollowUpInputDTO.builder()
+                    .date(localDate.toString())
+                    .remarks("")
+                    .build();
             patientFollowUpService.add(patient.getId(), patientFollowUpInputDTO);
             localDate = localDate.plusDays(curr);
             if(i==2) curr=30;

@@ -46,4 +46,10 @@ public class PersonController {
         return new ResponseEntity<>(personService.getByEmail(email),HttpStatus.OK);
     }
 
+    @GetMapping("/state/{state}")
+    public ResponseEntity<List<PersonOutputDTO>> getPersonByState(@PathVariable String state) {
+        log.info("Controller called for Getting person by state: {}", state);
+        return new ResponseEntity<>(personService.getByState(state),HttpStatus.OK);
+    }
+
 }

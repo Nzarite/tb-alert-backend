@@ -61,27 +61,21 @@ public class MissedMedicationImpl implements MissedMedicationService {
                 throw new IllegalArgumentException("Patient Medication not found for patient " + patient.getId() + " medication " + medicationId);
             }
 
+            MissedMedication missedMedication;
             if (!missedMedicationMap.containsKey(medicationId)) {
-            log.info("test a");
-                MissedMedication missedMedication = missedMedicationMapper.toMissedMedication(inputDTO, patientMedication, date);
-                toSaveMissedMedications.add(missedMedication);
-                missedMedicationOutputDTOS.add(missedMedicationMapper.toMissedMedicationOutputDTO(missedMedication));
+                missedMedication = missedMedicationMapper.toMissedMedication(inputDTO, patientMedication, date);
             } else {
-                log.info("test b");
-                MissedMedication missedMedication = missedMedicationMap.get(medicationId);
-                List<PatientFollowUp> patientFollowUps = patientFollowUpRepo.findByDate(missedMedication.getDate());
-                for(PatientFollowUp patientFollowUp:patientFollowUps) {
-                    if (patientFollowUp != null) {
-                        patientFollowUp.setOccured(true);
-                        patientFollowUpRepo.save(patientFollowUp);
-                    }
-                }
+                missedMedication = missedMedicationMap.get(medicationId);
+                PatientFollowUp patientFollowUp = patientFollowUpRepo.findByPatientAndDate(patient,missedMedication.getDate());
+                patientFollowUp.setOccured(true);
+                patientFollowUpRepo.save(patientFollowUp);
+
                 log.info("Missed Dosages : {}", inputDTO.getMissedDosages());
                 missedMedication.setComment(inputDTO.getComments());
                 missedMedication.setMissedDosages(inputDTO.getMissedDosages());
-                toSaveMissedMedications.add(missedMedication);
-                missedMedicationOutputDTOS.add(missedMedicationMapper.toMissedMedicationOutputDTO(missedMedication));
             }
+            toSaveMissedMedications.add(missedMedication);
+            missedMedicationOutputDTOS.add(missedMedicationMapper.toMissedMedicationOutputDTO(missedMedication));
         }
             missedMedicationRepo.saveAll(toSaveMissedMedications);
 

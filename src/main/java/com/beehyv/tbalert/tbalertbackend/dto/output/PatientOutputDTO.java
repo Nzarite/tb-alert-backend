@@ -42,4 +42,5 @@ public class PatientOutputDTO {
     private String createdBy;
 
     private String updatedBy;
+
 }
