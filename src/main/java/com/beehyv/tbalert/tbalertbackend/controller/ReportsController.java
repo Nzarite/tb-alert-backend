@@ -3,7 +3,9 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 import com.beehyv.tbalert.tbalertbackend.service.ReportsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +22,13 @@ public class ReportsController {
 
 
     @PostMapping("/patient/filter")
-    public ResponseEntity<HttpStatus>getReportsFilter(@RequestBody Map<String,Object> filter) throws Exception {
-        reportsService.getPatients(filter);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<byte[]>getReportsFilter(@RequestBody Map<String,Object> filter) {
+        byte[] excelData = reportsService.getPatients(filter);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=patients.xlsx")
+                .body(excelData);
     }
 
     @GetMapping("/dead")

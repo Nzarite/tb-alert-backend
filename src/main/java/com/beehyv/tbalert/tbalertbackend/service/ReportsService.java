@@ -1,6 +1,5 @@
 package com.beehyv.tbalert.tbalertbackend.service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -8,7 +7,7 @@ public interface ReportsService {
 
     Integer getAllDead() throws IOException;
 
-    void getPatients(Map<String, Object> input) throws Exception;
+    byte[] getPatients(Map<String, Object> input) ;
 
     void getTeleCallerOfAState(String state);
 }

@@ -45,7 +45,7 @@ public class PatientSpecification {
             if (criteria.containsKey("currentStatus") && criteria.get("currentStatus")!=null) {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("currentStatus"), criteria.get("currentStatus")));
             }
-            if (criteria.containsKey("cured")) {
+            if (criteria.containsKey("cured") && criteria.get("cured")!=null) {
                 boolean curedBool = (boolean) criteria.get("cured");
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("cured"), curedBool));
             }
