@@ -32,7 +32,6 @@ public class Address {
     @Column(nullable = false,name="state")
     private String state;
 
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
