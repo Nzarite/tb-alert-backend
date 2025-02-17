@@ -22,6 +22,7 @@ public class MedicationReminderController {
     private final MedicationReminderService medicationReminderService;
 
     /*
+
      * 1. Get All Reminders (GET = /reminders) (To be deprecated)
      * 2. Get All Active Reminders (GET = /reminders?status=all)
      * 3. Get All Active & Pending Reminders (GET =/reminders?status=pending)

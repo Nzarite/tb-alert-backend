@@ -34,6 +34,8 @@ public class SMSSchedulerServiceImpl implements SMSSchedulerService {
     @Value("${app.threadPoolSize:10}")
     private int threadPoolSize;
 
+    private PlivoSmsService smsService;
+
     private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(threadPoolSize);
     private final Map<Long, ScheduledFuture<?>> scheduledReminders = new ConcurrentHashMap<>();
     private final MedicationReminderService medicationReminderService;
@@ -100,8 +102,12 @@ public class SMSSchedulerServiceImpl implements SMSSchedulerService {
 
     public void processReminder(MedicationReminder reminder) {
         int attempts = 0;
+
+        String message = "";
+
         while (attempts < maxRetryAttempts) {
             try {
+                smsService.sendSms("Source", reminder.getPatient().getPhone(), message);
                 log.info("Processing reminder id:{}", reminder.getReminderId());
 
                 reminder.setNotificationStatus("SENT");
