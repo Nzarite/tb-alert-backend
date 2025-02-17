@@ -25,7 +25,7 @@ public class TeleCallerMapper {
     public TeleCallerOutputDTO toTeleCallerOutputDTO(TeleCaller teleCaller)
     {
         Person person = teleCaller.getPerson();
-        Address address=addressRepo.findByPerson(person);
+        Address address=person.getAddress();
 
         return TeleCallerOutputDTO.builder()
                 .teleCallerId(teleCaller.getId())
