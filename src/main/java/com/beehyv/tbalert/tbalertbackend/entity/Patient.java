@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.engine.internal.Cascade;
 
 @Entity
 @Data
@@ -24,5 +25,6 @@ public class Patient {
     private String currentStatus="alive";
 
     private boolean cured=false;
+
 
 }

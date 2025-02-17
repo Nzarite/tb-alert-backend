@@ -39,4 +39,7 @@ public class Person {
     private LocalDateTime createdOn;
 
     private String updatedBy;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Address address;
 }

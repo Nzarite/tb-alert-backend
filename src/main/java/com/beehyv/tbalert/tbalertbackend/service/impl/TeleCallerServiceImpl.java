@@ -6,6 +6,7 @@ import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.TeleCaller;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.TeleCallerMapper;
+import com.beehyv.tbalert.tbalertbackend.repository.PersonRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.TeleCallerRepo;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import com.beehyv.tbalert.tbalertbackend.service.TeleCallerService;
@@ -41,8 +42,8 @@ public class TeleCallerServiceImpl implements TeleCallerService {
     }
 
     @Override
-    public List<TeleCallerOutputDTO> getByState(String name) {
-        List<TeleCaller>teleCallers=teleCallerRepo.findByTeleCallerByState(name);
+    public List<TeleCallerOutputDTO> getByState(String state) {
+        List<TeleCaller>teleCallers=teleCallerRepo.findByPerson_Address_State(state);
         log.info(teleCallers.toString());
         return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }

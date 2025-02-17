@@ -9,7 +9,6 @@ import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientFollowUp;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
-import com.beehyv.tbalert.tbalertbackend.mapper.AddressMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
@@ -96,7 +95,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         if(patientUpdateInputDTO.getDateOfBirth()!=null)
             person.setDateOfBirth(localDateMapper.toLocalDate(patientUpdateInputDTO.getDateOfBirth()));
 
-        Address address=addressRepo.findByPerson(person);
+        Address address=person.getAddress();
         if(patientUpdateInputDTO.getBlock()!=null)
             address.setBlock(patientUpdateInputDTO.getBlock());
         if(patientUpdateInputDTO.getState()!=null)
@@ -111,19 +110,18 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         if(patientUpdateInputDTO.getCurrentStatus()!=null)
             patient.setCurrentStatus(patientUpdateInputDTO.getCurrentStatus());
 
+        person.setAddress(address);
         person=personRepo.save(person);
         patient.setPerson(person);
+        
         patientRepo.save(patient);
 
-        address.setPerson(person);
-        addressRepo.save(address);
     }
 
     @Override
     public void deletePatient(int patientId) {
         log.info("Service called to delete patient with Id: {}", patientId);
         Patient patient=patientMapper.findPatient(patientId);
-        addressRepo.delete(addressRepo.findByPerson(patient.getPerson()));
         contactScreeningRepo.deleteByPatientId(patientId);
         patientRepo.delete(patient);
     }

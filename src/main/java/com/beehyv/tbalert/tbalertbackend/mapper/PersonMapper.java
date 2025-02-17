@@ -40,7 +40,7 @@ public class PersonMapper {
 
     public PersonOutputDTO toPersonOutputDTO(Person person)
     {
-        Address address=addressRepo.findByPerson(person);
+        Address address=person.getAddress();
         return PersonOutputDTO.builder()
                 .id(person.getId())
                 .firstName(person.getFirstName())

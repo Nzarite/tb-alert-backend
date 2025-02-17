@@ -30,7 +30,7 @@ public class PatientMapper {
         log.info("Mapper called for toPatientOutputDTO with id {}", patient.getId());
 
         Person person = patient.getPerson();
-        Address address=addressRepo.findByPerson(person);
+        Address address=person.getAddress();
 
         if(address==null) {
             throw new IllegalArgumentException("Patient with id " + patient.getId() + " not found");

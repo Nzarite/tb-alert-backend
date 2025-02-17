@@ -29,9 +29,10 @@ public class PersonServiceImpl implements PersonService {
     public PersonOutputDTO add(PersonInputDTO person) {
         log.info("Service called for Add person: {}", person);
         Person personSaved = personMapper.toPerson(person);
+        Address address = addressMapper.toAddress(person);
+        personSaved.setAddress(address);
+//        addressRepo.save(address);
         personSaved = personRepo.save(personSaved);
-        Address address = addressMapper.toAddress(personSaved, person);
-        addressRepo.save(address);
         return personMapper.toPersonOutputDTO(personSaved);
     }
 
@@ -59,7 +60,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public List<PersonOutputDTO> getByState(String state) {
 
-        List<Person>personList=personRepo.findByState(state);
+        List<Person>personList=personRepo.findByAddress_State(state);
         return personList.stream().map(personMapper::toPersonOutputDTO).toList();
     }
 }

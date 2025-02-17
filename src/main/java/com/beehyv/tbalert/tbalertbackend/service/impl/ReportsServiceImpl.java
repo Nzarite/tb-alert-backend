@@ -59,7 +59,7 @@ public class ReportsServiceImpl implements ReportsService {
         log.info(patientList.toString());
         try (Workbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            Sheet sheet = reportsHelperService.createSheetWithHeader(workbook, "Patient Report", "Patient ID", "Name", "Year of Birth", "Gender", "Status");
+            Sheet sheet = reportsHelperService.createSheetWithHeader(workbook, "Patient Report", "Patient ID", "Name", "Year of Birth", "Gender", "Status","Nikshay ID","UDST Status","Date Of UDST","UDST Result","DBT Status","DBT Date","Nikshay Mitra Status","Nikshay Mitra Date","Nikshay Mitra Name");
             applyFontAndPopulateSheet(patientList, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "Patient_Report_Filtered.xlsx");
             workbook.write(outputStream);
