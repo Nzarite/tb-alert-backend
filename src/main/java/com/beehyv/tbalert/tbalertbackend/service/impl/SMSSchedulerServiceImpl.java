@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -23,6 +22,12 @@ import static java.lang.Long.max;
 @RequiredArgsConstructor
 @Slf4j
 public class SMSSchedulerServiceImpl implements SMSSchedulerService {
+    @Value("${app.retry.max-attempts:3}")
+    private int maxRetryAttempts;
+
+    @Value("${app.retry.delay-seconds:300}")
+    private int retryDelaySeconds;
+
     @Value("${app.notification.lead-time-seconds:1800}") // 30 minutes default
     private long NOTIFICATION_LEAD_SECONDS;
 
@@ -34,11 +39,10 @@ public class SMSSchedulerServiceImpl implements SMSSchedulerService {
     private final MedicationReminderService medicationReminderService;
 
     @Override
-    @Transactional
     public void scheduleSMSForToday() {
         LocalDate todayDate = LocalDate.now();
-        LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime endOfDay = todayDate.atTime(LocalTime.MAX);
+        LocalTime currentTime = LocalTime.now();
+        LocalTime endOfDay = LocalTime.MAX;
 
         setAllActiveRemindersToPending();
         cancelScheduledSMS();
@@ -94,17 +98,35 @@ public class SMSSchedulerServiceImpl implements SMSSchedulerService {
         return max(0, delaySeconds);
     }
 
-    @Transactional
     public void processReminder(MedicationReminder reminder) {
-        try {
-            log.info("Processing reminder id:{}", reminder.getReminderId());
-            reminder.setNotificationStatus("SENT");
-            medicationReminderService.saveReminder(reminder);
-            scheduledReminders.remove(reminder.getReminderId());
-        } catch (Exception e) {
-            log.error("Failed to process reminder: {}", reminder.getReminderId(), e);
-            // Could implement retry logic here
+        int attempts = 0;
+        while (attempts < maxRetryAttempts) {
+            try {
+                log.info("Processing reminder id:{}", reminder.getReminderId());
+
+                reminder.setNotificationStatus("SENT");
+                medicationReminderService.saveReminder(reminder);
+                scheduledReminders.remove(reminder.getReminderId());
+
+                return;
+            } catch (Exception e) {
+                attempts++;
+
+                log.error("Attempt {} failed for reminder {}: {}",
+                        attempts, reminder.getReminderId(), e.getMessage());
+
+                if (attempts < maxRetryAttempts) {
+                    try {
+                        Thread.sleep(retryDelaySeconds * 1000L);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+            }
         }
+        reminder.setNotificationStatus("Failed");
+        medicationReminderService.saveReminder(reminder);
     }
 
     @Override
