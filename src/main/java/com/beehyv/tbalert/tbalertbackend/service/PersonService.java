@@ -4,7 +4,6 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.StateHeadInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.TeleCallerInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 
 import java.util.List;

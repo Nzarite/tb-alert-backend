@@ -6,7 +6,6 @@ import com.beehyv.tbalert.tbalertbackend.dto.output.TBDetailsOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.TBDetails;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
-import com.beehyv.tbalert.tbalertbackend.mapper.PatientFollowUpMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.TBDetailsMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.TBDetailsRepo;
