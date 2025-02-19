@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.engine.internal.Cascade;
 
 @Entity
 @Data
@@ -16,8 +15,7 @@ import org.hibernate.engine.internal.Cascade;
 public class Patient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private String id;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Person person;
@@ -26,5 +24,5 @@ public class Patient {
 
     private boolean cured=false;
 
-
+    private int age;
 }

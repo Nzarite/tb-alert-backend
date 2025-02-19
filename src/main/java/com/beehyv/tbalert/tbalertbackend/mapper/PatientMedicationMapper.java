@@ -17,7 +17,7 @@ public class PatientMedicationMapper {
     private final PatientMapper patientMapper;
     private final MedicationMapper medicationMapper;
 
-    public PatientMedication toPatientMedication(int id,PatientMedicationInputDTO patientMedication) {
+    public PatientMedication toPatientMedication(String id,PatientMedicationInputDTO patientMedication) {
         log.info("Mapper called for toPatientMedication from PatientMedcicatonInputDTO: {}", patientMedication);
         Patient patient = patientMapper.findPatient(id);
         Medication medication = medicationMapper.findMedicationById(patientMedication.getMedicationId());

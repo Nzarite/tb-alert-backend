@@ -16,8 +16,8 @@ public class ContactScreeningServiceImpl implements ContactScreeningService {
     private final ContactScreeningMapper contactScreeningMapper;
 
     @Override
-    public ContactScreeningOutputDTO getContactScreeningById(Integer patientId) {
-        ContactScreening contactScreening = contactScreeningRepository.findByPatientId(patientId);
+    public ContactScreeningOutputDTO getContactScreeningById(String patientId) {
+        ContactScreening contactScreening = contactScreeningRepository.findByPatient_Id(patientId).orElseThrow(()->new RuntimeException("Could not find contact screening"));
         return contactScreeningMapper.toContactScreeningOutputDTO(contactScreening);
 
     }
@@ -35,8 +35,8 @@ public class ContactScreeningServiceImpl implements ContactScreeningService {
     }
 
     @Override
-    public void deleteContactScreeningByPatientId(Integer patientId) {
-        ContactScreening contactScreening = contactScreeningRepository.findByPatientId(patientId);
+    public void deleteContactScreeningByPatientId(String patientId) {
+        ContactScreening contactScreening = contactScreeningRepository.findByPatient_Id(patientId).orElseThrow(()->new RuntimeException("Could not find contact screening"));
         contactScreeningRepository.delete(contactScreening);
     }
 

@@ -35,7 +35,6 @@ public class TeleCallerMapper {
                 .email(person.getEmail())
                 .phoneNumber(person.getPhoneNumber())
                 .gender(person.getGender())
-                .dateOfBirth(localDateMapper.toDate(person.getDateOfBirth()))
                 .block(address.getBlock())
                 .village(address.getVillage())
                 .gp(address.getGp())
@@ -44,6 +43,7 @@ public class TeleCallerMapper {
                 .createdBy(person.getCreatedBy())
                 .createdOn(localDateMapper.toDateTime(person.getCreatedOn()))
                 .updatedBy(person.getUpdatedBy())
+                .dateOfJoining(localDateMapper.toDate(teleCaller.getDateOfJoining()))
                 .build();
     }
 }

@@ -21,13 +21,13 @@ public class PatientMedicationController {
     private final PatientMedicationService patientMedicationService;
 
     @PostMapping("/{id}")
-    public ResponseEntity<List<PatientMedicationOutputDTO>> postPatientMedication(@PathVariable int id,@RequestBody List<PatientMedicationInputDTO> patientMedicationInputDTOList) {
+    public ResponseEntity<List<PatientMedicationOutputDTO>> postPatientMedication(@PathVariable String id,@RequestBody List<PatientMedicationInputDTO> patientMedicationInputDTOList) {
         log.info("Contoller for POST Patient Medication Request called for:{} ",patientMedicationInputDTOList);
         return new ResponseEntity<>(patientMedicationService.add(id, patientMedicationInputDTOList), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<PatientMedicationOutputDTO>> getPatientMedicationById(@PathVariable int id) {
+    public ResponseEntity<List<PatientMedicationOutputDTO>> getPatientMedicationById(@PathVariable String id) {
 
         log.info("Controller called for GET Patient Medication Request called for:{} ",id);
         return new ResponseEntity<>(patientMedicationService.get(id), HttpStatus.OK);

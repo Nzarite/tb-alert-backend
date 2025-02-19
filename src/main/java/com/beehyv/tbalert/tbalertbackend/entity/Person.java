@@ -1,6 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,8 +33,6 @@ public class Person {
     @Column(unique = true)
     private String email;
 
-    private LocalDate dateOfBirth;
-
     private String createdBy;
 
     private LocalDateTime createdOn;
@@ -42,4 +41,5 @@ public class Person {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
+
 }

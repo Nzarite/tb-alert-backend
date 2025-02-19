@@ -2,6 +2,7 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.NikshayInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.NikshayOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.NikshayMitraService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ public class NikshayMitraController {
     private final NikshayMitraService nikshayMitraService;
 
     @GetMapping("/{patientId}")
-    public ResponseEntity<NikshayOutputDTO> getNikshayMitraDetails(@PathVariable int patientId) {
+    public ResponseEntity<NikshayOutputDTO> getNikshayMitraDetails(@PathVariable String patientId) {
         return new ResponseEntity<>(nikshayMitraService.getNikshayDetails(patientId), HttpStatus.OK);
     }
 
@@ -28,12 +29,12 @@ public class NikshayMitraController {
     }
 
     @PutMapping("/{patientId}")
-    public ResponseEntity<NikshayOutputDTO> updateNikshayDetails(@PathVariable int patientId, @RequestBody @Valid NikshayInputDTO nikshayInputDTO) {
+    public ResponseEntity<NikshayOutputDTO> updateNikshayDetails(@PathVariable String patientId, @RequestBody @Valid NikshayInputDTO nikshayInputDTO) {
         return new ResponseEntity<>(nikshayMitraService.updateNikshayDetails(patientId, nikshayInputDTO), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{patientId}")
-    public ResponseEntity<HttpStatus> deleteNikshayDetails(@PathVariable int patientId) {
+    public ResponseEntity<HttpStatus> deleteNikshayDetails(@PathVariable String patientId) {
         nikshayMitraService.deleteNikshayDetails(patientId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

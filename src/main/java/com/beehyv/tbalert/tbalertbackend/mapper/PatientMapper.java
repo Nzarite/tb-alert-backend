@@ -20,7 +20,7 @@ public class PatientMapper {
     private final AddressRepo addressRepo;
     private LocalDateMapper localDateMapper;
 
-    public Patient findPatient(int patientId) {
+    public Patient findPatient(String patientId) {
         log.info("Mapper called for Find patient with id {}", patientId);
         return patientRepo.findById(patientId).orElseThrow(()-> new IllegalArgumentException(
                 "Patient with id " + patientId + " not found"));
@@ -44,7 +44,6 @@ public class PatientMapper {
                 .gender(person.getGender())
                 .firstName(person.getFirstName())
                 .lastName(person.getLastName())
-                .dateOfBirth(person.getDateOfBirth().toString())
                 .email(person.getEmail())
                 .gp(address.getGp())
                 .block(address.getBlock())
@@ -56,14 +55,8 @@ public class PatientMapper {
                 .createdBy(person.getCreatedBy())
                 .createdAt(localDateMapper.toDateTime(person.getCreatedOn()))
                 .updatedBy(person.getUpdatedBy())
+                .age(patient.getAge())
                 .build();
     }
 
-    public Patient toPatient(Person person, PatientInputDTO patientInputDTO) {
-        log.info("Mapper called for toPatient from PatientInputDTO: {}", patientInputDTO);
-        return Patient.builder()
-                .person(person)
-                .currentStatus(patientInputDTO.getCurrentStatus())
-                .build();
-    }
 }

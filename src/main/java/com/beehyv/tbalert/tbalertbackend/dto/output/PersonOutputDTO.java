@@ -19,8 +19,6 @@ public class PersonOutputDTO {
 
     private String gender;
 
-    private String dateOfBirth;
-
     private String block;
 
     private String gp;

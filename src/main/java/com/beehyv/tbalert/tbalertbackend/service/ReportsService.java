@@ -7,7 +7,9 @@ public interface ReportsService {
 
     Integer getAllDead() throws IOException;
 
-    byte[] getPatients(Map<String, Object> input) ;
+    byte[] getPatients(Map<String, Object> input) throws IOException;
 
-    void getTeleCallerOfAState(String state);
+    byte[] getTeleCallerOfAState(String state) throws IOException;
+
+    byte[] getStateHeads() throws IOException;
 }

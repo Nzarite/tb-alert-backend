@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
-public interface PatientRepo extends JpaRepository<Patient, Integer>, JpaSpecificationExecutor<Patient> {
+public interface PatientRepo extends JpaRepository<Patient, String>, JpaSpecificationExecutor<Patient> {
 
     int countByCurrentStatus(String currentStatus);
 

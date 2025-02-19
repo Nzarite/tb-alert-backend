@@ -25,7 +25,7 @@ public class NikshayMitraServiceImpl implements NikshayMitraService {
     private final LocalDateMapper localDateMapper;
 
     @Override
-    public NikshayOutputDTO getNikshayDetails(int patientId) {
+    public NikshayOutputDTO getNikshayDetails(String patientId) {
 
         log.info("inside getNikshayDetails");
 
@@ -46,7 +46,7 @@ public class NikshayMitraServiceImpl implements NikshayMitraService {
     }
 
     @Override
-    public NikshayOutputDTO updateNikshayDetails(int patientId, NikshayInputDTO nikshayInputDTO) {
+    public NikshayOutputDTO updateNikshayDetails(String patientId, NikshayInputDTO nikshayInputDTO) {
 
         log.info("inside updateNikshayDetails");
 
@@ -69,7 +69,7 @@ public class NikshayMitraServiceImpl implements NikshayMitraService {
     }
 
     @Override
-    public void deleteNikshayDetails(int patientId) {
+    public void deleteNikshayDetails(String patientId) {
 
         log.info("inside deleteNikshayDetails");
 

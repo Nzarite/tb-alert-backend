@@ -38,7 +38,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
 
 
     @Override
-    public List<MissedMedicationOutputDTO> add(int id, @Valid List<MissedMedicationInputDTO> missedMedicationInputDTOS,LocalDate date) {
+    public List<MissedMedicationOutputDTO> add(String id, @Valid List<MissedMedicationInputDTO> missedMedicationInputDTOS,LocalDate date) {
         log.info("Service called for adding missed medication: {}", missedMedicationInputDTOS);
         Patient patient=patientMapper.findPatient(id);
 
@@ -84,7 +84,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
     }
 
     @Override
-    public List<MissedMedicationOutputDTO> get(int id) {
+    public List<MissedMedicationOutputDTO> get(String id) {
         log.info("Service called for getByPersonId missed medication: {}", id);
         List<PatientMedication> patientMedications=patientMedicationRepo.findPatientMedicationByPatient(patientMapper.findPatient(id));
         List<MissedMedicationOutputDTO>missedMedicationOutputDTOS=new ArrayList<>();
