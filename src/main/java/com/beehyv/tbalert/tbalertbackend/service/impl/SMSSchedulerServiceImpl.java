@@ -107,7 +107,7 @@ public class SMSSchedulerServiceImpl implements SMSSchedulerService {
 
         while (attempts < maxRetryAttempts) {
             try {
-                smsService.sendSms("Source", reminder.getPatient().getPhone(), message);
+                smsService.sendSms("Source", reminder.getPatient().getPerson().getPhoneNumber(), message);
                 log.info("Processing reminder id:{}", reminder.getReminderId());
 
                 reminder.setNotificationStatus("SENT");

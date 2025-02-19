@@ -3,13 +3,13 @@ package com.beehyv.tbalert.tbalertbackend.dto.input;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class MedicationReminderInputDTO {
 
     @NotEmpty(message = "Patient ID is required")

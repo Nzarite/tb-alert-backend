@@ -1,12 +1,11 @@
 package com.beehyv.tbalert.tbalertbackend.dto.output;
 
-import com.beehyv.tbalert.tbalertbackend.entity.Patient;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Builder
 public class MedicationReminderOutputDTO {
 
