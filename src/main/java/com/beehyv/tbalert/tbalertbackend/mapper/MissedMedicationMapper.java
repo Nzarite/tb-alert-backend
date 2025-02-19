@@ -27,8 +27,8 @@ public class MissedMedicationMapper {
         log.info("Mapper called for toMissedMedication from missedMedicationInputDTO = {}", missedMedicationInputDTO);
         return MissedMedication.builder()
                 .patientMedication(patientMedication)
-                .missedDosages(missedMedicationInputDTO.getMissedDoses())
-                .comment(missedMedicationInputDTO.getComment())
+                .missedDosages(missedMedicationInputDTO.getMissedDosages())
+                .comment(missedMedicationInputDTO.getComments())
                 .date(date)
                 .build();
     }

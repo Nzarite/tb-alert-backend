@@ -19,27 +19,9 @@ public class MissedMedicationController {
 
     private final MissedMedicationService missedMedicationService;
 
-//    @PostMapping("/{id}")
-//    public ResponseEntity<List<MissedMedicationOutputDTO>> missedMedication(@RequestBody @Valid List<MissedMedicationInputDTO> missedMedicationInputDTOS, @PathVariable int id) {
-//        try {
-//            log.info("Controller for called adding missed medication for : {}", missedMedicationInputDTOS);
-//            return new ResponseEntity<>(missedMedicationService.add(id, missedMedicationInputDTOS), HttpStatus.CREATED);
-//        }
-//        catch (Exception e) {
-//            log.error(e.getMessage());
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//
-//    }
-
     @GetMapping("/{id}")
     public ResponseEntity<List<MissedMedicationOutputDTO>> missedMedication(@PathVariable int id) {
-        try {
             log.info("Controller for called getting missed medication for : {}", id);
-            return new ResponseEntity<List<MissedMedicationOutputDTO>>(missedMedicationService.get(id), HttpStatus.FOUND);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            return new ResponseEntity<>(missedMedicationService.get(id), HttpStatus.FOUND);
     }
 }

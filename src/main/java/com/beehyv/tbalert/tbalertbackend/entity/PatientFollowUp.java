@@ -31,5 +31,6 @@ public class PatientFollowUp {
 
     private String remarks;
 
+    private int patientCondition;
 
 }
