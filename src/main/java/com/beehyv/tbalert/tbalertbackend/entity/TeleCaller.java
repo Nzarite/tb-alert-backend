@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "telecaller")
 public class TeleCaller {
 
     @Id
