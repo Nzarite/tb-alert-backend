@@ -1,6 +1,9 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
+import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.StateHeadInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.TeleCallerInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
@@ -32,15 +35,51 @@ public class PersonMapper {
                 .email(personInputDTO.getEmail())
                 .phoneNumber(personInputDTO.getPhoneNumber())
                 .gender(personInputDTO.getGender())
-                .dateOfBirth(localDateMapper.toLocalDate(personInputDTO.getDateOfBirth()))
+                .createdOn(LocalDateTime.now())
+                .createdBy(personInputDTO.getCreatedBy())
+                .build();
+    }
+    public Person toPerson(TeleCallerInputDTO personInputDTO)
+    {
+        return Person.builder()
+                .firstName(personInputDTO.getFirstName())
+                .lastName(personInputDTO.getLastName())
+                .email(personInputDTO.getEmail())
+                .phoneNumber(personInputDTO.getPhoneNumber())
+                .gender(personInputDTO.getGender())
                 .createdOn(LocalDateTime.now())
                 .createdBy(personInputDTO.getCreatedBy())
                 .build();
     }
 
+    public Person toPerson(StateHeadInputDTO personInputDTO)
+    {
+        return Person.builder()
+                .firstName(personInputDTO.getFirstName())
+                .lastName(personInputDTO.getLastName())
+                .email(personInputDTO.getEmail())
+                .phoneNumber(personInputDTO.getPhoneNumber())
+                .gender(personInputDTO.getGender())
+                .createdOn(LocalDateTime.now())
+                .createdBy(personInputDTO.getCreatedBy())
+                .build();
+    }
+    public Person toPerson(PatientInputDTO patientInputDTO)
+    {
+        return Person.builder()
+                .firstName(patientInputDTO.getFirstName())
+                .lastName(patientInputDTO.getLastName())
+                .email(patientInputDTO.getEmail())
+                .phoneNumber(patientInputDTO.getPhoneNumber())
+                .gender(patientInputDTO.getGender())
+                .createdOn(LocalDateTime.now())
+                .createdBy(patientInputDTO.getCreatedBy())
+                .build();
+    }
+
     public PersonOutputDTO toPersonOutputDTO(Person person)
     {
-        Address address=addressRepo.findByPerson(person);
+        Address address=person.getAddress();
         return PersonOutputDTO.builder()
                 .id(person.getId())
                 .firstName(person.getFirstName())
@@ -48,7 +87,6 @@ public class PersonMapper {
                 .email(person.getEmail())
                 .phoneNumber(person.getPhoneNumber())
                 .gender(person.getGender())
-                .dateOfBirth(localDateMapper.toDate(person.getDateOfBirth()))
                 .state(address.getState())
                 .gp(address.getGp())
                 .block(address.getBlock())

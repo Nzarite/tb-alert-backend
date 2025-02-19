@@ -20,7 +20,7 @@ public class MissedMedicationController {
     private final MissedMedicationService missedMedicationService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<MissedMedicationOutputDTO>> missedMedication(@PathVariable int id) {
+    public ResponseEntity<List<MissedMedicationOutputDTO>> missedMedication(@PathVariable String id) {
             log.info("Controller for called getting missed medication for : {}", id);
             return new ResponseEntity<>(missedMedicationService.get(id), HttpStatus.FOUND);
     }

@@ -1,7 +1,8 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
-import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.StateHeadInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.StateHeadOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.StateHeadService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,9 +20,9 @@ public class StateHeadController {
     private final StateHeadService stateHeadService;
 
     @PostMapping("/register")
-    public ResponseEntity<PersonOutputDTO> add(@RequestBody @Valid PersonInputDTO personInputDTO)
+    public ResponseEntity<StateHeadOutputDTO> add(@RequestBody @Valid StateHeadInputDTO stateHeadInputDTO)
     {
-        return new ResponseEntity<>(stateHeadService.add(personInputDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(stateHeadService.add(stateHeadInputDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

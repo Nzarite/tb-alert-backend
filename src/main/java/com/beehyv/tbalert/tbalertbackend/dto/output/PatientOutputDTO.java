@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class PatientOutputDTO {
 
-    private int patientId;
+    private String patientId;
 
     private Long personId;
 
@@ -17,7 +17,7 @@ public class PatientOutputDTO {
 
     private String gender;
 
-    private String dateOfBirth;
+    private int age;
 
     private String phoneNumber;
 

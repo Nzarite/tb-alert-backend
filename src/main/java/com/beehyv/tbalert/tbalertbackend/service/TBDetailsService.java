@@ -6,11 +6,11 @@ import jakarta.validation.Valid;
 
 public interface TBDetailsService {
 
-    TBDetailsOutputDTO getTBDetails(Integer patientId);
+    TBDetailsOutputDTO getTBDetails(String patientId);
 
     TBDetailsOutputDTO registerTBDetails(@Valid TBDetailsInputDTO tbDetailsInputDTO);
 
-    TBDetailsOutputDTO updateTBDetails(@Valid TBDetailsInputDTO tbDetailsInputDTO, Integer patientId);
+    TBDetailsOutputDTO updateTBDetails(@Valid TBDetailsInputDTO tbDetailsInputDTO, String patientId);
 
-    void deleteTBDetails(Integer patientId);
+    void deleteTBDetails(String patientId);
 }

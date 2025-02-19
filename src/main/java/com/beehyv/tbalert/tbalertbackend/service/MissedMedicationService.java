@@ -9,9 +9,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface MissedMedicationService {
-    List<MissedMedicationOutputDTO> add(int id, @Valid List<MissedMedicationInputDTO> missedMedicationInputDTOS, LocalDate date);
+    List<MissedMedicationOutputDTO> add(String id, @Valid List<MissedMedicationInputDTO> missedMedicationInputDTOS, LocalDate date);
 
-    List<MissedMedicationOutputDTO> get(int id);
+    List<MissedMedicationOutputDTO> get(String id);
 
     List<MissedMedicationOutputDTO> findByDate(LocalDate date, Patient patient);
 }

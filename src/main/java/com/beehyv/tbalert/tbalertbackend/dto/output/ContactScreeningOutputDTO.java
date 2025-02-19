@@ -31,5 +31,5 @@ public class ContactScreeningOutputDTO {
 
     private Integer noOfHHCsInitiatedTPT;
 
-    private Integer patientId;
+    private String patientId;
 }

@@ -21,20 +21,20 @@ public class PatientFollowUpController {
     private final PatientFollowUpService patientFollowUpService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PatientFollowUpOutputForFrontEndDto> getPatientFollowUp(@PathVariable int id) {
+    public ResponseEntity<PatientFollowUpOutputForFrontEndDto> getPatientFollowUp(@PathVariable String id) {
             log.info("Controller called for getPatientFollowUp: {}", id);
             return new ResponseEntity<>(patientFollowUpService.get(id), HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<PatientFollowUpOutputDTO> postPatientFollowUp(@PathVariable int id, @RequestBody @Valid PatientFollowUpInputDTO patientFollowUpInputDTO) {
+    public ResponseEntity<PatientFollowUpOutputDTO> postPatientFollowUp(@PathVariable String id, @RequestBody @Valid PatientFollowUpInputDTO patientFollowUpInputDTO) {
 
         log.info("Controller called for postPatientFollowUp: {}", id);
         return new ResponseEntity<>(patientFollowUpService.add(id, patientFollowUpInputDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PatientFollowUpOutputDTO> updatePatientFollowUp(@PathVariable int id, @RequestBody @Valid PatientFollowUpInputDTO patientFollowUpInputDTO) {
+    public ResponseEntity<PatientFollowUpOutputDTO> updatePatientFollowUp(@PathVariable String id, @RequestBody @Valid PatientFollowUpInputDTO patientFollowUpInputDTO) {
         log.info("Controller called for updatePatientFollowUp: {}", id);
         return new ResponseEntity<>(patientFollowUpService.update(id,patientFollowUpInputDTO),HttpStatus.ACCEPTED);
 

@@ -21,8 +21,6 @@ public class TeleCallerOutputDTO {
 
     private String gender;
 
-    private String dateOfBirth;
-
     private String block;
 
     private String gp;
@@ -38,4 +36,6 @@ public class TeleCallerOutputDTO {
     private String createdOn;
 
     private String updatedBy;
+
+    private String dateOfJoining;
 }

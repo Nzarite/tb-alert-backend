@@ -18,7 +18,7 @@ public class TBDetailsController {
     private final TBDetailsService tbDetailsService;
 
     @GetMapping("/{patientId}")
-    public ResponseEntity<TBDetailsOutputDTO> getTBDetails(@PathVariable("patientId") Integer patientId) {
+    public ResponseEntity<TBDetailsOutputDTO> getTBDetails(@PathVariable("patientId") String patientId) {
         return new ResponseEntity<>(tbDetailsService.getTBDetails(patientId), HttpStatus.OK);
     }
 
@@ -28,12 +28,12 @@ public class TBDetailsController {
     }
 
     @PutMapping("/{patientId}")
-    public ResponseEntity<TBDetailsOutputDTO> updateTBDetails(@RequestBody @Valid TBDetailsInputDTO tbDetailsInputDTO, @PathVariable Integer patientId) {
+    public ResponseEntity<TBDetailsOutputDTO> updateTBDetails(@RequestBody @Valid TBDetailsInputDTO tbDetailsInputDTO, @PathVariable String patientId) {
         return new ResponseEntity<>(tbDetailsService.updateTBDetails(tbDetailsInputDTO, patientId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{patientId}")
-    public ResponseEntity<HttpStatus> deleteTBDetails(@PathVariable Integer patientId) {
+    public ResponseEntity<HttpStatus> deleteTBDetails(@PathVariable String patientId) {
         tbDetailsService.deleteTBDetails(patientId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

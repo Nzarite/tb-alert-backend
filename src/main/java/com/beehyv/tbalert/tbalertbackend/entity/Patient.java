@@ -15,8 +15,7 @@ import lombok.NoArgsConstructor;
 public class Patient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private String id;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Person person;
@@ -25,4 +24,5 @@ public class Patient {
 
     private boolean cured=false;
 
+    private int age;
 }
