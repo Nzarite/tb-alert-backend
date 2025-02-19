@@ -18,4 +18,6 @@ public interface PatientFollowUpService {
     PatientFollowUpOutputDTO update(String id, @Valid PatientFollowUpInputDTO patientFollowUpInputDTO);
 
     List<PatientFollowUp> findBeforeDate(String id, LocalDate localDate );
+
+    List<PatientFollowUpOutputForFrontEndDto> getAll();
 }

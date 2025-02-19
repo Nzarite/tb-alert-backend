@@ -12,4 +12,6 @@ public interface ReportsService {
     byte[] getTeleCallerOfAState(String state) throws IOException;
 
     byte[] getStateHeads() throws IOException;
+
+    byte[] getPatientFollowUp(Map<String, Object> filter) throws IOException;
 }

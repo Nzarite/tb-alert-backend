@@ -113,4 +113,10 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         Patient patient=patientMapper.findPatient(id);
         return patientFollowUpRepo.findByPatientAndDateBefore(patient,localDate);
     }
+
+    @Override
+    public List<PatientFollowUpOutputForFrontEndDto> getAll() {
+        List<Patient>patients=patientRepo.findAll();
+        return new ArrayList<>();
+    }
 }

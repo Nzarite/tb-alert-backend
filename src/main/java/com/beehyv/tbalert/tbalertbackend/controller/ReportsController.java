@@ -60,4 +60,15 @@ public class ReportsController {
                 .body(excelData);
     }
 
+    @PostMapping("/patient/followup")
+    public ResponseEntity<byte[]>getPatientFollowUps(@RequestBody Map<String,Object> filter) throws IOException {
+        log.info("Controller called for Getting patient follow ups");
+        byte[] excelData=reportsService.getPatientFollowUp(filter);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=patientfollowup.xlsx")
+                .body(excelData);
+
+    }
+
 }

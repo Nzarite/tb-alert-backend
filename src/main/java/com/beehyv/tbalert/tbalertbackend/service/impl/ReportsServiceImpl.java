@@ -2,10 +2,7 @@ package com.beehyv.tbalert.tbalertbackend.service.impl;
 
 import com.beehyv.tbalert.tbalertbackend.dto.output.*;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputForFrontEndDto.FollowUpDetails;
-import com.beehyv.tbalert.tbalertbackend.entity.ContactScreening;
-import com.beehyv.tbalert.tbalertbackend.entity.NikshayMitra;
-import com.beehyv.tbalert.tbalertbackend.entity.Person;
-import com.beehyv.tbalert.tbalertbackend.entity.TBDetails;
+import com.beehyv.tbalert.tbalertbackend.entity.*;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
@@ -141,6 +138,24 @@ public class ReportsServiceImpl implements ReportsService {
         }
         catch (IOException e)
         {
+            log.error("Error generating report: {}", e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    @Override
+    public byte[] getPatientFollowUp(Map<String, Object> filter) throws IOException {
+
+        try(Workbook workbook=new XSSFWorkbook();
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
+        {
+            List<PatientFollowUpOutputForFrontEndDto>patientFollowUpOutputForFrontEndDtos;
+            if(filter==null || filter.isEmpty())
+            {
+                patientFollowUpOutputForFrontEndDtos=patientFollowUpService.getAll();
+            }
+            return null;
+        } catch (IOException e) {
             log.error("Error generating report: {}", e.getMessage());
             throw new IOException(e.getMessage());
         }
