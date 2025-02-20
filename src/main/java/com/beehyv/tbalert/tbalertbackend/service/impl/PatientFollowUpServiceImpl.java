@@ -41,7 +41,6 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     private final PatientRepo patientRepo;
     private final MissedMedicationMapper missedMedicationMapper;
     private final LocalDateMapper localDateMapper;
-    private final MissedMedicationService medicationService;
 
 
     @Override
@@ -91,13 +90,22 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
         patientFollowUp.setRemarks(patientFollowUpInputDTO.getRemarks());
         patientFollowUp.setDate(date);
-        if(patientFollowUpInputDTO.getAliveOrDead().equals("dead")){
+        if(patientFollowUpInputDTO.getAliveOrDead()!=null){
             patient.setCurrentStatus(patientFollowUpInputDTO.getAliveOrDead());
+
         }
         if(patientFollowUpInputDTO.isCured()){
             patient.setCured(true);
         }
-        patientFollowUp.setOccured(true);
+        if(patientFollowUpInputDTO.getAliveOrDead()!=null && patientFollowUpInputDTO.isCured() && patientFollowUpInputDTO.getAliveOrDead().equals("dead")){
+            List<PatientFollowUp>followUps=patientFollowUpRepo.findAllByPatient_Id(patient.getId());
+            for(PatientFollowUp followUp:followUps){
+                followUp.setStatus("Cancelled");
+            }
+            patientFollowUpRepo.saveAll(followUps.stream().toList());
+        }
+        else
+            patientFollowUp.setStatus("Occured");
         patientFollowUp.setPatientCondition(patientFollowUpInputDTO.getPatientCondition());
         patientFollowUpRepo.save(patientFollowUp);
         List<MissedMedication>missedMedications=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,patientFollowUp.getDate());

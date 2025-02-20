@@ -67,7 +67,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
             } else {
                 missedMedication = missedMedicationMap.get(medicationId);
                 PatientFollowUp patientFollowUp = patientFollowUpRepo.findByPatientAndDate(patient,missedMedication.getDate());
-                patientFollowUp.setOccured(true);
+                patientFollowUp.setStatus("Occured");
                 patientFollowUpRepo.save(patientFollowUp);
 
                 log.info("Missed Dosages : {}", inputDTO.getMissedDosages());

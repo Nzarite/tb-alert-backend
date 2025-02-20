@@ -14,8 +14,6 @@ public interface PatientRepo extends JpaRepository<Patient, String>, JpaSpecific
 
     int countByCurrentStatus(String currentStatus);
 
-    List<Patient> findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(String patientName, String patientName1);
-
     @Query(value = "SELECT p FROM Patient p LEFT JOIN NikshayMitra n " +
             "ON p.id = n.patient.id " +
             "WHERE LOWER(p.person.firstName) LIKE LOWER(CONCAT('%', :patientName, '%')) " +
