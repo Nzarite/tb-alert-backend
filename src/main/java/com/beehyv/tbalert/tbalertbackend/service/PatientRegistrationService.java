@@ -19,7 +19,7 @@ public interface PatientRegistrationService {
 
     List<PatientOutputDTO> getAll();
 
-    List<PatientOutputDTO> getPatientByName(String patientName);
+    List<PatientOutputDTO> getPatientByNameOrNikshayIdOrPatientId(String patientName);
 
     List<PatientOutputDTO>getFilteredPatients(Map<String,Object> filters);
 

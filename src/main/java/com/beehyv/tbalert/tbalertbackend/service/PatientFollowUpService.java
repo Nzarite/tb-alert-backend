@@ -3,6 +3,8 @@ package com.beehyv.tbalert.tbalertbackend.service;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientFollowUpInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputForFrontEndDto;
+import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientFollowUp;
 import jakarta.validation.Valid;
 
@@ -19,5 +21,5 @@ public interface PatientFollowUpService {
 
     List<PatientFollowUp> findBeforeDate(String id, LocalDate localDate );
 
-    List<PatientFollowUpOutputForFrontEndDto> getAll();
+    List<PatientFollowUpOutputForFrontEndDto> getFollowUpForPatientList(List<PatientOutputDTO>patientList);
 }
