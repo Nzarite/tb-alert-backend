@@ -20,7 +20,7 @@ public class NikshayMitraController {
     private final NikshayMitraService nikshayMitraService;
 
     @GetMapping("/{patientId}")
-    public ResponseEntity<NikshayOutputDTO> getNikshayMitraDetails(@PathVariable int patientId) {
+    public ResponseEntity<NikshayOutputDTO> getNikshayMitraDetails(@PathVariable String patientId) {
         return new ResponseEntity<>(nikshayMitraService.getNikshayDetails(patientId), HttpStatus.OK);
     }
 
@@ -30,12 +30,12 @@ public class NikshayMitraController {
     }
 
     @PutMapping("/{patientId}")
-    public ResponseEntity<NikshayOutputDTO> updateNikshayDetails(@PathVariable int patientId, @RequestBody @Valid NikshayInputDTO nikshayInputDTO) {
+    public ResponseEntity<NikshayOutputDTO> updateNikshayDetails(@PathVariable String patientId, @RequestBody @Valid NikshayInputDTO nikshayInputDTO) {
         return new ResponseEntity<>(nikshayMitraService.updateNikshayDetails(patientId, nikshayInputDTO), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{patientId}")
-    public ResponseEntity<HttpStatus> deleteNikshayDetails(@PathVariable int patientId) {
+    public ResponseEntity<HttpStatus> deleteNikshayDetails(@PathVariable String patientId) {
         nikshayMitraService.deleteNikshayDetails(patientId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

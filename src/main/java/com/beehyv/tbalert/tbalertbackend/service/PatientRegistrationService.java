@@ -1,7 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.service;
 
+import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 
 import java.util.List;
@@ -9,13 +9,13 @@ import java.util.Map;
 
 public interface PatientRegistrationService {
 
-    PatientOutputDTO register(PersonInputDTO personInputDTO);
+    PatientOutputDTO register(PatientInputDTO patientInputDTO);
 
-    PatientOutputDTO getPatient(int patientId);
+    PatientOutputDTO getPatient(String patientId);
 
-    void updatePatient(int patientId, PatientUpdateInputDTO patientUpdateInputDTO);
+    void updatePatient(String patientId, PatientUpdateInputDTO patientUpdateInputDTO);
 
-    void deletePatient(int patientId);
+    void deletePatient(String patientId);
 
     List<PatientOutputDTO> getAll();
 
@@ -24,4 +24,6 @@ public interface PatientRegistrationService {
     List<PatientOutputDTO>getFilteredPatients(Map<String,Object> filters);
 
     String determinePatientStatus(PatientOutputDTO patientOutputDTO);
+
+    PatientOutputDTO getPatientByNikshayId(String nikhsayId);
 }

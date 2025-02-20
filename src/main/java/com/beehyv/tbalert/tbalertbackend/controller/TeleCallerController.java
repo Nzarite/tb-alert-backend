@@ -1,7 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
 
-import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.TeleCallerInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.TeleCallerService;
@@ -25,8 +25,8 @@ public class TeleCallerController {
     private final TeleCallerService teleCallerService;
 
     @PostMapping("/register")
-    public ResponseEntity<PersonOutputDTO>add(@RequestBody @Valid PersonInputDTO personInputDTO) {
-        return new ResponseEntity<>(teleCallerService.add(personInputDTO), HttpStatus.CREATED);
+    public ResponseEntity<TeleCallerOutputDTO>add(@RequestBody @Valid TeleCallerInputDTO teleCallerInputDTO) {
+        return new ResponseEntity<>(teleCallerService.add(teleCallerInputDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

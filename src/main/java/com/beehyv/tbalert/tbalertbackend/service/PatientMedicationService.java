@@ -6,7 +6,7 @@ import com.beehyv.tbalert.tbalertbackend.dto.output.PatientMedicationOutputDTO;
 import java.util.List;
 
 public interface PatientMedicationService {
-    List<PatientMedicationOutputDTO> get(int id);
+    List<PatientMedicationOutputDTO> get(String id);
 
-    List<PatientMedicationOutputDTO> add(int id, List<PatientMedicationInputDTO> patientMedicationInputDTOList);
+    List<PatientMedicationOutputDTO> add(String id, List<PatientMedicationInputDTO> patientMedicationInputDTOList);
 }

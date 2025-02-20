@@ -44,7 +44,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
 
     @Override
-    public PatientFollowUpOutputForFrontEndDto get(int id) {
+    public PatientFollowUpOutputForFrontEndDto get(String id) {
         log.info("Service called to Get patient follow up with patient id {}", id);
         List<PatientFollowUp> patientFollowUps = patientFollowUpRepo.findByPatient_Id(id);
         if(patientFollowUps.isEmpty()) {
@@ -71,7 +71,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     }
 
     @Override
-    public PatientFollowUpOutputDTO add(int id, PatientFollowUpInputDTO patientFollowUpInputDTO) {
+    public PatientFollowUpOutputDTO add(String id, PatientFollowUpInputDTO patientFollowUpInputDTO) {
         log.info("Service called to Add patient follow up with patient id {}", id);
         Patient patient=patientMapper.findPatient(id);
         List<MissedMedication>missedMedicationList=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()));
@@ -81,7 +81,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     }
 
     @Override
-    public PatientFollowUpOutputDTO update(int id, PatientFollowUpInputDTO patientFollowUpInputDTO) {
+    public PatientFollowUpOutputDTO update(String id, PatientFollowUpInputDTO patientFollowUpInputDTO) {
         LocalDate date=localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate());
         missedMedicationService.add(id,patientFollowUpInputDTO.getMissedMedications(),date);
         Patient patient=patientMapper.findPatient(id);
@@ -109,8 +109,14 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     }
 
     @Override
-    public List<PatientFollowUp> findBeforeDate(int id, LocalDate localDate) {
+    public List<PatientFollowUp> findBeforeDate(String id, LocalDate localDate) {
         Patient patient=patientMapper.findPatient(id);
         return patientFollowUpRepo.findByPatientAndDateBefore(patient,localDate);
+    }
+
+    @Override
+    public List<PatientFollowUpOutputForFrontEndDto> getAll() {
+        List<Patient>patients=patientRepo.findAll();
+        return new ArrayList<>();
     }
 }

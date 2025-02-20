@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -32,8 +31,6 @@ public class Person {
     @Column(unique = true)
     private String email;
 
-    private LocalDate dateOfBirth;
-
     private String createdBy;
 
     private LocalDateTime createdOn;
@@ -42,4 +39,5 @@ public class Person {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
+
 }

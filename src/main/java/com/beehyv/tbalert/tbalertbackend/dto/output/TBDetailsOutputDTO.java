@@ -12,7 +12,7 @@ public class TBDetailsOutputDTO {
     private String typeOfPwtb;
     private String typeOfTb;
     private String dstbOrDrtb;
-    private Integer patientId;
+    private String patientId;
 
     @Data
     @Builder

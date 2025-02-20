@@ -29,5 +29,5 @@ public class NikshayInputDTO {
 
     private String nikshayMitraName;
 
-    private Integer patientId;
+    private String patientId;
 }

@@ -2,9 +2,11 @@ package com.beehyv.tbalert.tbalertbackend.dto.input;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class PersonInputDTO {
 
     @NotEmpty(message = "First name cannot be empty")
@@ -21,26 +23,18 @@ public class PersonInputDTO {
     @NotEmpty(message = "Enter valid gender")
     private String gender;
 
-    @NotEmpty(message = "Enter valid Date of Birth")
-    private String dateOfBirth;
-
     @NotEmpty(message = "Creator email is required")
     @Email(message = "Enter valid creator email")
     private String createdBy;
 
-    @NotEmpty(message = "Block name cannot be empty")
     private String block;
 
-    @NotEmpty(message = "Gram Panchayat name cannot be empty")
     private String gp;
 
-    @NotEmpty(message = "Village name cannot be empty")
     private String village;
 
-    @NotEmpty(message = "District name cannot be empty")
     private String district;
 
-    @NotEmpty(message = "State name cannot be empty")
+    @NotEmpty(message = "State Name cannot be empty")
     private String state;
-
 }

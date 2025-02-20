@@ -11,11 +11,13 @@ import java.util.List;
 
 
 public interface PatientFollowUpService {
-    PatientFollowUpOutputForFrontEndDto get(int id);
+    PatientFollowUpOutputForFrontEndDto get(String id);
 
-    PatientFollowUpOutputDTO add(int id, @Valid PatientFollowUpInputDTO patientFollowUpInputDTO);
+    PatientFollowUpOutputDTO add(String id, @Valid PatientFollowUpInputDTO patientFollowUpInputDTO);
 
-    PatientFollowUpOutputDTO update(int id, @Valid PatientFollowUpInputDTO patientFollowUpInputDTO);
+    PatientFollowUpOutputDTO update(String id, @Valid PatientFollowUpInputDTO patientFollowUpInputDTO);
 
-    List<PatientFollowUp> findBeforeDate(int id, LocalDate localDate );
+    List<PatientFollowUp> findBeforeDate(String id, LocalDate localDate );
+
+    List<PatientFollowUpOutputForFrontEndDto> getAll();
 }

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Entity
 @AllArgsConstructor
@@ -21,4 +23,6 @@ public class StateHead {
     @OneToOne
     @JoinColumn(name = "person_id")
     private Person person;
+
+    private LocalDate dateOfJoining;
 }

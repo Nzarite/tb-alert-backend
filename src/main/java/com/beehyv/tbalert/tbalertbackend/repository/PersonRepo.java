@@ -11,4 +11,6 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
     Person findByEmail(String email);
 
     List<Person> findByAddress_State(String state);
+
+    int countByCreatedBy(String createdBy);
 }
