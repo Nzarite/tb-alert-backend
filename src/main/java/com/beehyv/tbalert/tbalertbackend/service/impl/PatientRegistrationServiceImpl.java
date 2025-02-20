@@ -136,9 +136,9 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     }
 
     @Override
-    public List<PatientOutputDTO> getPatientByName(String patientName) {
-        log.info("Service getPatientByName patientName: {}", patientName);
-        return patientRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(patientName,patientName).stream().map(patientMapper::toPatientOutputDTO).toList();
+    public List<PatientOutputDTO> getPatientByNameOrNikshayIdOrPatientId(String patientName) {
+        log.info("Service getPatientByNameOrNikshayIdOrPatientId patientName: {}", patientName);
+        return patientRepo.findAllByPatientIdOrNameOrNikshayId(patientName).stream().map(patientMapper::toPatientOutputDTO).toList();
     }
 
     @Override

@@ -24,7 +24,7 @@ public class ReportsHelperService {
         return style;
     }
 
-    public Sheet createSheetWithHeader(Workbook workbook, String sheetName, String... headers) {
+    public Sheet createSheetWithHeader(int columnWidth,Workbook workbook, String sheetName, String... headers) {
         Sheet sheet = workbook.createSheet(sheetName);
         Row headerRow = sheet.createRow(0);
         CellStyle headerStyle = createHeaderStyle(workbook);
@@ -33,7 +33,7 @@ public class ReportsHelperService {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(headers[i]);
             cell.setCellStyle(headerStyle);
-            sheet.setColumnWidth(i, 7000);
+            sheet.setColumnWidth(i, columnWidth);
         }
         return sheet;
     }

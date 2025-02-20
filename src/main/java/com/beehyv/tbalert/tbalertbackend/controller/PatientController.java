@@ -37,9 +37,9 @@ public class PatientController {
     }
 
     @GetMapping("/name/{patientName}")
-    public ResponseEntity<List<PatientOutputDTO>> getPatientByName(@PathVariable String patientName) {
-            log.info("Controller called for Getting patient by name: {}", patientName);
-            return new ResponseEntity<>(patientRegistrationService.getPatientByName(patientName),HttpStatus.OK);
+    public ResponseEntity<List<PatientOutputDTO>> getPatientByNameOrNikshayIdOrPatientId(@PathVariable String patientName) {
+            log.info("Controller called for Getting patient by name or nikshayId or patientID: {}", patientName);
+            return new ResponseEntity<>(patientRegistrationService.getPatientByNameOrNikshayIdOrPatientId(patientName),HttpStatus.OK);
 
     }
 
