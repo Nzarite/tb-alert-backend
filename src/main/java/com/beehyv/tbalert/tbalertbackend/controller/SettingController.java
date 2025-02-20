@@ -33,23 +33,19 @@ public class SettingController {
         return new ResponseEntity<>(settingService.getSettings(), HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addSetting(@Valid @RequestBody SettingInputDTO settingInputDTO) {
-        settingService.addSetting(settingInputDTO);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<SettingOutputDTO> addSetting(@Valid @RequestBody SettingInputDTO settingInputDTO) {
+        return new ResponseEntity<>(settingService.addSetting(settingInputDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateSetting(@Valid @RequestBody SettingInputDTO settingInputDTO) {
-        settingService.updateSetting(settingInputDTO);
-
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    @PutMapping
+    public ResponseEntity<SettingOutputDTO> updateSetting(@Valid @RequestBody SettingInputDTO settingInputDTO) {
+        return new ResponseEntity<>(settingService.updateSetting(settingInputDTO), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/{key}")
-    public ResponseEntity<?> deleteSetting(@PathVariable String key) {
-        settingService.deleteSetting(key);
+    @DeleteMapping("/{keyName}")
+    public ResponseEntity<HttpStatus> deleteSetting(@PathVariable String keyName) {
+        settingService.deleteSetting(keyName);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

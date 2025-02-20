@@ -18,16 +18,21 @@ public class SettingServiceImpl implements SettingService {
     private SettingMapper settingMapper;
 
     @Override
-    public void addSetting(SettingInputDTO settingInputDTO) {
+    public SettingOutputDTO addSetting(SettingInputDTO settingInputDTO) {
+        if(settingRepo.findByKeyName(settingInputDTO.getKeyName()) != null){
+            throw new IllegalArgumentException("Setting already exists");
+        }
         Setting setting = settingMapper.toSetting(settingInputDTO);
         settingRepo.save(setting);
+
+        return settingMapper.toSettingOutputDTO(setting);
     }
 
     @Override
     public List<SettingOutputDTO> getSettings() {
         return settingRepo.findAll().stream()
                 .map(setting -> SettingOutputDTO.builder()
-                        .key(setting.getKey())
+                        .keyName(setting.getKeyName())
                         .value(setting.getValue())
                         .type(setting.getType())
                         .build())
@@ -35,8 +40,8 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public void updateSetting(SettingInputDTO settingInputDTO) {
-        Setting setting = settingRepo.findByKey(settingInputDTO.getKey());
+    public SettingOutputDTO updateSetting(SettingInputDTO settingInputDTO) {
+        Setting setting = settingRepo.findByKeyName(settingInputDTO.getKeyName());
         if (setting != null) {
             setting.setValue(settingInputDTO.getValue());
         }
@@ -45,11 +50,13 @@ public class SettingServiceImpl implements SettingService {
         }
 
         settingRepo.save(setting);
+
+        return settingMapper.toSettingOutputDTO(setting);
     }
 
     @Override
-    public void deleteSetting(String key) {
-        Setting setting = settingRepo.findByKey(key);
+    public void deleteSetting(String keyName) {
+        Setting setting = settingRepo.findByKeyName(keyName);
         if (setting != null) {
             settingRepo.delete(setting);
         }

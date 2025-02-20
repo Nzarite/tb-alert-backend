@@ -6,12 +6,12 @@ import com.beehyv.tbalert.tbalertbackend.dto.output.SettingOutputDTO;
 import java.util.List;
 
 public interface SettingService {
-    void addSetting(SettingInputDTO settingInputDTO);
+    SettingOutputDTO addSetting(SettingInputDTO settingInputDTO);
 
     List<SettingOutputDTO> getSettings();
 
-    void updateSetting(SettingInputDTO settingInputDTO);
+    SettingOutputDTO updateSetting(SettingInputDTO settingInputDTO);
 
-    void deleteSetting(String key);
+    void deleteSetting(String keyName);
 
 }
