@@ -13,7 +13,7 @@ import lombok.Data;
 public class MedicationReminderInputDTO {
 
     @NotEmpty(message = "Patient ID is required")
-    private Integer patientId;
+    private String patientId;
 
     @NotEmpty(message = "Medication ID is required")
     private Integer medicationId;

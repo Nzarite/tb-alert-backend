@@ -17,7 +17,8 @@ public interface MedicationReminderRepo extends JpaRepository<MedicationReminder
 
     @Query("SELECT m FROM MedicationReminder m " +
             "WHERE m.medicationDeadline >= :today " +
-            "AND (m.medicationTime BETWEEN :startOfDay AND :endOfDay OR m.notificationStatus = 'PENDING')")
+            "AND (m.medicationTime BETWEEN :startOfDay AND :endOfDay " +
+            "OR m.notificationStatus = 'PENDING')")
     List<MedicationReminder> findUnsentRemindersForDay(@Param("startOfDay") LocalTime startOfDay,
                                                        @Param("endOfDay") LocalTime endOfDay,
                                                        @Param("today") LocalDate today);

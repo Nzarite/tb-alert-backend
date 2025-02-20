@@ -86,7 +86,7 @@ public class MedicationReminderServiceImpl implements MedicationReminderService 
 
     @Override
     @Transactional(readOnly = true)
-    public List<MedicationReminderOutputDTO> getActiveMedicationRemindersFilteredByPatientID(Integer patientId) {
+    public List<MedicationReminderOutputDTO> getActiveMedicationRemindersFilteredByPatientID(String patientId) {
         List<MedicationReminder> medicationReminders = medicationReminderRepo.findAllByPatientAndMedicationDeadlineAfter(patientMapper.findPatient(patientId), LocalDate.now());
 
         return medicationReminders.stream()
@@ -106,7 +106,7 @@ public class MedicationReminderServiceImpl implements MedicationReminderService 
 
     @Override
     @Transactional(readOnly = true)
-    public List<MedicationReminderOutputDTO> getActiveMedicationRemindersFilteredByPatientIDAndMedicationID(Integer patientId, Integer medicationId) {
+    public List<MedicationReminderOutputDTO> getActiveMedicationRemindersFilteredByPatientIDAndMedicationID(String patientId, Integer medicationId) {
         List<MedicationReminder> medicationReminders = medicationReminderRepo.findAllByMedicationAndPatient(medicationMapper.findMedicationById(medicationId), patientMapper.findPatient(patientId));
 
         return medicationReminders.stream()

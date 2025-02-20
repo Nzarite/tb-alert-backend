@@ -25,11 +25,11 @@ public interface MedicationReminderService {
 
     List<MedicationReminderOutputDTO> getAllActiveAndPendingMedicationReminders();
 
-    List<MedicationReminderOutputDTO> getActiveMedicationRemindersFilteredByPatientID(Integer patientId);
+    List<MedicationReminderOutputDTO> getActiveMedicationRemindersFilteredByPatientID(String patientId);
 
     List<MedicationReminderOutputDTO> getActiveMedicationRemindersFilteredByMedicationID(Integer medicationId);
 
-    List<MedicationReminderOutputDTO> getActiveMedicationRemindersFilteredByPatientIDAndMedicationID(Integer patientId, Integer medicationId);
+    List<MedicationReminderOutputDTO> getActiveMedicationRemindersFilteredByPatientIDAndMedicationID(String patientId, Integer medicationId);
 
     void updateReminder(Long id, @Valid MedicationReminderInputDTO medicationReminder);
 }

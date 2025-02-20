@@ -45,7 +45,7 @@ public class MedicationReminderController {
     }
 
     @GetMapping("patient/{patientId}")
-    public ResponseEntity<List<MedicationReminderOutputDTO>> getAllMedicationRemindersForPatient(@PathVariable Integer patientId) {
+    public ResponseEntity<List<MedicationReminderOutputDTO>> getAllMedicationRemindersForPatient(@PathVariable String patientId) {
         log.info("Getting all medication reminders for patient {}", patientId);
 
         return ResponseEntity.ok(medicationReminderService.getActiveMedicationRemindersFilteredByPatientID(patientId));
@@ -59,7 +59,7 @@ public class MedicationReminderController {
     }
 
     @GetMapping("patient/{patientId}/medication/{medicationId}")
-    public ResponseEntity<List<MedicationReminderOutputDTO>> getAllMedicationRemindersForPatientAndMedication(@PathVariable Integer patientId, @PathVariable Integer medicationId) {
+    public ResponseEntity<List<MedicationReminderOutputDTO>> getAllMedicationRemindersForPatientAndMedication(@PathVariable String patientId, @PathVariable Integer medicationId) {
         log.info("Getting all medication reminders for patient {} & medication {}", patientId, medicationId);
 
         return ResponseEntity.ok(medicationReminderService.getActiveMedicationRemindersFilteredByPatientIDAndMedicationID(patientId, medicationId));

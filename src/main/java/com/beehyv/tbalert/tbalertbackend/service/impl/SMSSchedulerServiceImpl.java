@@ -16,29 +16,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 
-import static java.lang.Long.max;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SMSSchedulerServiceImpl implements SMSSchedulerService {
-    @Value("${app.retry.max-attempts:3}")
-    private int maxRetryAttempts;
-
-    @Value("${app.retry.delay-seconds:300}")
-    private int retryDelaySeconds;
-
     @Value("${app.notification.lead-time-seconds:1800}") // 30 minutes default
     private long NOTIFICATION_LEAD_SECONDS;
 
-    @Value("${app.threadPoolSize:10}")
+    @Value("${app.notification.sender-id}")
+    private String senderId;
+
+    @Value("${app.notification.threadPoolSize:10}")
     private int threadPoolSize;
 
-    private PlivoSmsService smsService;
+    private final PlivoSmsService smsService;
+    private final MedicationReminderService medicationReminderService;
 
+    // Required to manage SMS scheduling for the day
     private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(threadPoolSize);
     private final Map<Long, ScheduledFuture<?>> scheduledReminders = new ConcurrentHashMap<>();
-    private final MedicationReminderService medicationReminderService;
 
     @Override
     public void scheduleSMSForToday() {
@@ -51,10 +47,10 @@ public class SMSSchedulerServiceImpl implements SMSSchedulerService {
 
         try {
             List<MedicationReminder> medicationReminders = medicationReminderService.getPendingMedicationRemindersForToday(currentTime, endOfDay, todayDate);
-
             log.info("Scheduling {} reminders for today", medicationReminders.size());
-            for (MedicationReminder reminder : medicationReminders) scheduleReminder(reminder, todayDate);
 
+            for (MedicationReminder reminder : medicationReminders)
+                scheduleReminder(reminder, todayDate);
         } catch (Exception e) {
             log.error("Failed to schedule SMS for today", e);
         }
@@ -79,60 +75,44 @@ public class SMSSchedulerServiceImpl implements SMSSchedulerService {
 
             long delaySeconds = getDelayTimeForReminder(todayDate, reminder);
 
+            // This is to instruct a function to run after some seconds
             ScheduledFuture<?> future = scheduledExecutorService.schedule(() ->
                     processReminder(reminder), delaySeconds, TimeUnit.SECONDS);
-
             scheduledReminders.put(reminder.getReminderId(), future);
-            log.debug("Scheduled reminder {}", reminder.getReminderId());
+
+            log.debug("Scheduled reminder: {}", reminder.getReminderId());
         } catch (Exception e) {
             log.error("Failed to schedule reminder: {}", reminder.getReminderId(), e);
         }
     }
 
     private long getDelayTimeForReminder(LocalDate todayDate, MedicationReminder reminder) {
-        LocalDateTime medicationDateTime = LocalDateTime.of(todayDate, reminder.getMedicationTime());
-        LocalDateTime reminderScheduleTime = medicationDateTime.minusSeconds(NOTIFICATION_LEAD_SECONDS);
-        long delaySeconds = Duration.between(LocalDateTime.now(), reminderScheduleTime).getSeconds();
+        LocalDateTime reminderScheduleTime = LocalDateTime.of(todayDate, reminder.getMedicationTime());
+//        LocalDateTime reminderScheduleTime = medicationDateTime.minusSeconds(NOTIFICATION_LEAD_SECONDS);
 
-        if (delaySeconds < 0) {
-            log.info("Reminder time for reminder id {} has passed. Sending SMS immediately.", reminder.getReminderId());
-        }
-        return max(0, delaySeconds);
+        long delaySeconds = Duration.between(LocalDateTime.now(), reminderScheduleTime).getSeconds();
+        return Math.max(0, delaySeconds);
     }
 
     public void processReminder(MedicationReminder reminder) {
-        int attempts = 0;
+        String message = generateReminderMessage(reminder);
 
-        String message = "";
+        smsService.sendSms(senderId, reminder.getPatient().getPerson().getPhoneNumber(), message);
+        log.info("Processing reminder id:{}", reminder.getReminderId());
 
-        while (attempts < maxRetryAttempts) {
-            try {
-                smsService.sendSms("Source", reminder.getPatient().getPerson().getPhoneNumber(), message);
-                log.info("Processing reminder id:{}", reminder.getReminderId());
-
-                reminder.setNotificationStatus("SENT");
-                medicationReminderService.saveReminder(reminder);
-                scheduledReminders.remove(reminder.getReminderId());
-
-                return;
-            } catch (Exception e) {
-                attempts++;
-
-                log.error("Attempt {} failed for reminder {}: {}",
-                        attempts, reminder.getReminderId(), e.getMessage());
-
-                if (attempts < maxRetryAttempts) {
-                    try {
-                        Thread.sleep(retryDelaySeconds * 1000L);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                        break;
-                    }
-                }
-            }
-        }
-        reminder.setNotificationStatus("Failed");
+        reminder.setNotificationStatus("SENT");
         medicationReminderService.saveReminder(reminder);
+        scheduledReminders.remove(reminder.getReminderId());
+    }
+
+    private String generateReminderMessage(MedicationReminder reminder) {
+        return String.format(
+                "Hello %s %s, this is a reminder to take your medication: %s at %s. Stay healthy!",
+                reminder.getPatient().getPerson().getFirstName(),
+                reminder.getPatient().getPerson().getLastName(),
+                reminder.getMedication().getName(),
+                reminder.getMedicationTime()
+        );
     }
 
     @Override
