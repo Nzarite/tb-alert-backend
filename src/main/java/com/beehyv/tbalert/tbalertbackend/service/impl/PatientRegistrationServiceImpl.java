@@ -8,7 +8,7 @@ import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.mapper.AddressMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
-import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
+import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
@@ -28,7 +28,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final PatientRepo patientRepo;
     private final PatientMapper patientMapper;
     private final AddressRepo addressRepo;
-    private final ContactScreeningRepository contactScreeningRepo;
+    private final ContactScreeningRepo contactScreeningRepo;
     private final PatientFollowUpService patientFollowUpService;
     private final AddressMapper addressMapper;
 

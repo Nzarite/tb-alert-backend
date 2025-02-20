@@ -7,7 +7,9 @@ import jakarta.validation.Valid;
 public interface ContactScreeningService {
     ContactScreeningOutputDTO getContactScreeningById(Integer patientId);
 
-    void saveContactScreening(@Valid ContactScreeningInputDTO contactScreeningInputDTO);
+    ContactScreeningOutputDTO setContactScreening(Integer patientId, @Valid ContactScreeningInputDTO contactScreeningInputDTO);
+
+    ContactScreeningOutputDTO updateContactScreening(Integer patientId, @Valid ContactScreeningInputDTO contactScreeningInputDTO);
 
     void deleteContactScreeningByPatientId(Integer patientId);
 
