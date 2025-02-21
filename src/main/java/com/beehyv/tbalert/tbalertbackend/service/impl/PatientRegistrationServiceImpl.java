@@ -22,6 +22,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -132,13 +133,13 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         if(!patients.isEmpty()){
             return patients.stream().map(patientMapper::toPatientOutputDTO).toList();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
-    public List<PatientOutputDTO> getPatientByName(String patientName) {
-        log.info("Service getPatientByName patientName: {}", patientName);
-        return patientRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(patientName,patientName).stream().map(patientMapper::toPatientOutputDTO).toList();
+    public List<PatientOutputDTO> getPatientByNameOrNikshayIdOrPatientId(String patientName) {
+        log.info("Service getPatientByNameOrNikshayIdOrPatientId patientName: {}", patientName);
+        return patientRepo.findAllByPatientIdOrNameOrNikshayId(patientName).stream().map(patientMapper::toPatientOutputDTO).toList();
     }
 
     @Override
@@ -156,7 +157,20 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             if (patient.isCured()) return "Cured";
         }
         List<PatientFollowUp> followUps = patientFollowUpService.findBeforeDate(patient.getPatientId(), LocalDate.now());
-        return followUps.stream().skip(Math.max(followUps.size() - 3, 0)).anyMatch(PatientFollowUp::getOccured) ? "Treatment ongoing" : "No Contact";
+        String treatmentStatus;
+        boolean recentOccurrence = followUps.stream()
+                .skip(Math.max(followUps.size() - 3, 0))
+                .anyMatch(patientFollowUp -> patientFollowUp.getStatus().equals("Occured"));
+
+        if (recentOccurrence) {
+            treatmentStatus = "Treatment ongoing";
+        } else if (followUps.getLast().getStatus().equals("Cancelled")) {
+            treatmentStatus = "Treatment cancelled";
+        } else {
+            treatmentStatus = "No Contact";
+        }
+
+        return treatmentStatus;
     }
 
     @Override

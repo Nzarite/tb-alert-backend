@@ -4,6 +4,7 @@ import com.beehyv.tbalert.tbalertbackend.dto.output.*;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputForFrontEndDto.FollowUpDetails;
 import com.beehyv.tbalert.tbalertbackend.entity.*;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
+import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
 import com.beehyv.tbalert.tbalertbackend.repository.NikshayMitraRepo;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +43,7 @@ public class ReportsServiceImpl implements ReportsService {
     private final PersonMapper personMapper;
     private final StateHeadService stateHeadService;
     private final PersonService personService;
+    private final PatientMapper patientMapper;
 
 
     @Override
@@ -49,7 +52,7 @@ public class ReportsServiceImpl implements ReportsService {
             long totalPatients = patientRepo.count();
             int deadPatients = patientRepo.countByCurrentStatus("dead");
 
-            Sheet sheet = reportsHelperService.createSheetWithHeader(workbook, "Patient Report for Dead", "Category", "Count");
+            Sheet sheet = reportsHelperService.createSheetWithHeader(7000,workbook, "Patient Report for Dead", "Category", "Count");
             reportsHelperService.addDataRow(sheet, 1, "Total Patients", totalPatients);
             reportsHelperService.addDataRow(sheet, 2, "Total Patients Dead", deadPatients);
 
@@ -68,7 +71,7 @@ public class ReportsServiceImpl implements ReportsService {
         log.info(patientList.toString());
         try (Workbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            Sheet sheet = reportsHelperService.createSheetWithHeader(workbook, "Patient Report",
+            Sheet sheet = reportsHelperService.createSheetWithHeader(7000,workbook, "Patient Report",
                     "Patient ID", "Name", "Gender", "Age",
                     "Phone Number", "Email", "Block", "GP", "Village", "District", "State", "Current Status",
                     "Cured", "Created At", "Created By", "Updated By", "Nikshay ID", "UDST Status",
@@ -109,7 +112,7 @@ public class ReportsServiceImpl implements ReportsService {
                 teleCallerOutputDTOList=teleCallerService.getByState(state);
             else teleCallerOutputDTOList=teleCallerService.getAll();
             log.info(teleCallerOutputDTOList.toString());
-            Sheet sheet=reportsHelperService.createSheetWithHeader(workbook,"Telecaller Details","Id","Name","State","Email",
+            Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Telecaller Details","Id","Name","State","Email",
                     "Phone number","Date Of Joining","Patients Registered");
             applyFontAndPopulateSheet(teleCallerOutputDTOList, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "TeleCallerDetails.xlsx");
@@ -129,7 +132,7 @@ public class ReportsServiceImpl implements ReportsService {
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
         {
             List<StateHeadOutputDTO>stateHeadOutputDTOS=stateHeadService.getAll();
-            Sheet sheet=reportsHelperService.createSheetWithHeader(workbook,"StateHead Details","Id","Name","State","Email",
+            Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"StateHead Details","Id","Name","State","Email",
                     "Phone number","Date Of Joining","TeleCallers Registered");
             applyFontAndPopulateSheet(stateHeadOutputDTOS, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "StateHeads.xlsx");
@@ -150,11 +153,26 @@ public class ReportsServiceImpl implements ReportsService {
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
         {
             List<PatientFollowUpOutputForFrontEndDto>patientFollowUpOutputForFrontEndDtos;
-            if(filter==null || filter.isEmpty())
-            {
-                patientFollowUpOutputForFrontEndDtos=patientFollowUpService.getAll();
-            }
-            return null;
+            List<PatientOutputDTO>patients;
+            patients=patientRegistrationService.getFilteredPatients(filter);
+            patientFollowUpOutputForFrontEndDtos=patientFollowUpService.getFollowUpForPatientList(patients);
+            Sheet sheet=reportsHelperService.createSheetWithHeader(9000,workbook,"PatientFollowUp Details",
+                    "Id","Name",
+                    "FollowUp 1 Date","FollowUp 1 Paitent Condition","FollowUp 1 Medication Name","FollowUp 1 Missed Dosages",
+                    "FollowUp 2 Date","FollowUp 2 Paitent Condition","FollowUp 2 Medication Name","FollowUp 2 Missed Dosages",
+                    "FollowUp 3 Date","FollowUp 3 Paitent Condition","FollowUp 3 Medication Name","FollowUp 3 Missed Dosages",
+                    "FollowUp 4 Date","FollowUp 4 Paitent Condition","FollowUp 4 Medication Name","FollowUp 4 Missed Dosages",
+                    "FollowUp 5 Date","FollowUp 5 Paitent Condition","FollowUp 5 Medication Name","FollowUp 5 Missed Dosages",
+                    "FollowUp 6 Date","FollowUp 6 Paitent Condition","FollowUp 6 Medication Name","FollowUp 6 Missed Dosages",
+                    "FollowUp 7 Date","FollowUp 7 Paitent Condition","FollowUp 7 Medication Name","FollowUp 7 Missed Dosages",
+                    "FollowUp 8 Date","FollowUp 8 Paitent Condition","FollowUp 8 Medication Name","FollowUp 8 Missed Dosages"
+                    );
+            sheet.setColumnWidth(0,sheet.getColumnWidth(0));
+            applyFontAndPopulateSheet(patientFollowUpOutputForFrontEndDtos, workbook, sheet);
+            reportsHelperService.writeWorkbookToFile(workbook, "PatientFollowUpDetails.xlsx");
+            workbook.write(byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+
         } catch (IOException e) {
             log.error("Error generating report: {}", e.getMessage());
             throw new IOException(e.getMessage());
@@ -173,8 +191,27 @@ public class ReportsServiceImpl implements ReportsService {
                 populateTeleCallerRow(row,(TeleCallerOutputDTO) object,cellStyle);
             else if(object.getClass()== StateHeadOutputDTO.class)
                 populateStateHeadRow(row,(StateHeadOutputDTO) object,cellStyle);
+            else if(object.getClass()== PatientFollowUpOutputForFrontEndDto.class) {
+                populatePatientFollowUpRow(row, (PatientFollowUpOutputForFrontEndDto) object, cellStyle);
+            }
         }
     }
+
+    private void populatePatientFollowUpRow(Row row, PatientFollowUpOutputForFrontEndDto followUp, CellStyle cellStyle) {
+        int ind=0;
+        reportsHelperService.createOrUpdateCell(row,ind++,followUp.getPatient().getPatientId(),cellStyle);
+        reportsHelperService.createOrUpdateCell(row,ind++,followUp.getPatient().getFirstName()+followUp.getPatient().getLastName(),cellStyle);
+
+        for(FollowUpDetails followUpDetails : followUp.getFollowUpDetails())
+        {
+            reportsHelperService.createOrUpdateCell(row,ind++,followUpDetails.getDate(),cellStyle);
+            reportsHelperService.createOrUpdateCell(row,ind++,followUpDetails.getPatientCondition(),cellStyle);
+            reportsHelperService.createOrUpdateCell(row,ind++,followUpDetails.getMedicationDetails().isEmpty()?"":followUpDetails.getMedicationDetails().getFirst().getMedicationName(),cellStyle);
+            reportsHelperService.createOrUpdateCell(row,ind++,followUpDetails.getMedicationDetails().isEmpty()?"":followUpDetails.getMedicationDetails().getFirst().getMissedDosages(),cellStyle);
+        }
+
+    }
+
 
     private void populateTeleCallerRow(Row row, TeleCallerOutputDTO teleCallerOutputDTO, CellStyle cellStyle) {
         reportsHelperService.createOrUpdateCell(row,0,teleCallerOutputDTO.getTeleCallerId(),cellStyle);

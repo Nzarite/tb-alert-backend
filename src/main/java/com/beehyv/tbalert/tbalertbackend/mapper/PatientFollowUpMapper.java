@@ -26,7 +26,7 @@ public class PatientFollowUpMapper {
                 .medicationDetails(missedMedicationList.stream().map(medicationDetailsMapper::toMedicationDetails).toList())
                 .remarks(patientFollowUp.getRemarks())
                 .date(patientFollowUp.getDate().toString())
-                .followUpStatus(patientFollowUp.getOccured() != null && patientFollowUp.getOccured())
+                .followUpStatus(patientFollowUp.getStatus())
                 .build();
     }
     public PatientFollowUp toPatientFollowUp(PatientFollowUpInputDTO patientFollowUpInputDTO, Patient patient) {
@@ -34,7 +34,7 @@ public class PatientFollowUpMapper {
                 .patient(patient)
                 .date(localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()))
                 .remarks(patientFollowUpInputDTO.getRemarks())
-                .occured(false)
+                .status(patientFollowUpInputDTO.getFollowUpStatus())
                 .patientCondition(patientFollowUpInputDTO.getPatientCondition())
                 .build();
     }
@@ -42,7 +42,7 @@ public class PatientFollowUpMapper {
 
     public FollowUpDetails toFollowUpDetails(PatientFollowUp patientFollowUp,List<MissedMedication>missedMedicationList) {
         return   FollowUpDetails.builder()
-                .followUpStatus(patientFollowUp.getOccured() != null && patientFollowUp.getOccured())
+                .followUpStatus(patientFollowUp.getStatus())
                 .medicationDetails(missedMedicationList.stream().map(medicationDetailsMapper::toMedicationDetails).toList())
                 .remarks(patientFollowUp.getRemarks())
                 .date(patientFollowUp.getDate().toString())
