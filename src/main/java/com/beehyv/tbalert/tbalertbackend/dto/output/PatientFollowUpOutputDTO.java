@@ -17,5 +17,5 @@ public class PatientFollowUpOutputDTO {
 
     private String date;
 
-    private Boolean followUpStatus;
+    private String followUpStatus;
 }

@@ -23,8 +23,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -158,6 +160,19 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             if (patient.isCured()) return "Cured";
         }
         List<PatientFollowUp> followUps = patientFollowUpService.findBeforeDate(patient.getPatientId(), LocalDate.now());
-        return followUps.stream().skip(Math.max(followUps.size() - 3, 0)).anyMatch(PatientFollowUp::getOccured) ? "Treatment ongoing" : "No Contact";
+        String treatmentStatus;
+        boolean recentOccurrence = followUps.stream()
+                .skip(Math.max(followUps.size() - 3, 0))
+                .anyMatch(patientFollowUp -> patientFollowUp.getStatus().equals("Occured"));
+
+        if (recentOccurrence) {
+            treatmentStatus = "Treatment ongoing";
+        } else if (followUps.getLast().getStatus().equals("Cancelled")) {
+            treatmentStatus = "Treatment cancelled";
+        } else {
+            treatmentStatus = "No Contact";
+        }
+
+        return treatmentStatus;
     }
 }

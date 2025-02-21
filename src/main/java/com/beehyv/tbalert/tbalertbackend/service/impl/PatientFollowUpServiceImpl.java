@@ -43,7 +43,6 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     private final PatientRepo patientRepo;
     private final MissedMedicationMapper missedMedicationMapper;
     private final LocalDateMapper localDateMapper;
-    private final MissedMedicationService medicationService;
 
 
     @Override
@@ -93,13 +92,31 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
         patientFollowUp.setRemarks(patientFollowUpInputDTO.getRemarks());
         patientFollowUp.setDate(date);
-        if(patientFollowUpInputDTO.getAliveOrDead().equals("dead")){
+        if(patientFollowUpInputDTO.getAliveOrDead()!=null){
             patient.setCurrentStatus(patientFollowUpInputDTO.getAliveOrDead());
+
         }
         if(patientFollowUpInputDTO.isCured()){
             patient.setCured(true);
         }
-        patientFollowUp.setOccured(true);
+        if((patientFollowUpInputDTO.getAliveOrDead()!=null && patientFollowUpInputDTO.getAliveOrDead().equals("dead"))||(patientFollowUpInputDTO.isCured())){
+            List<PatientFollowUp>followUps=patientFollowUpRepo.findAllByPatient_Id(patient.getId());
+            for(PatientFollowUp followUp:followUps){
+                if(followUp.getDate().isAfter(date))
+                    followUp.setStatus("Cancelled");
+            }
+            patientFollowUpRepo.saveAll(followUps.stream().toList());
+        }
+        else {
+            patientFollowUp.setStatus("Occured");
+            if((patient.isCured() && !patientFollowUpInputDTO.isCured()) || (patient.getCurrentStatus().equals("dead") && patientFollowUpInputDTO.getAliveOrDead().equals("alive"))){
+                List<PatientFollowUp>followUps=patientFollowUpRepo.findAllByPatient_Id(patient.getId());
+                for(PatientFollowUp followUp:followUps){
+                    if(followUp.getStatus().equals("Cancelled"))
+                        followUp.setStatus("Missed");
+                }
+            }
+        }
         patientFollowUp.setPatientCondition(patientFollowUpInputDTO.getPatientCondition());
         patientFollowUpRepo.save(patientFollowUp);
         List<MissedMedication>missedMedications=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,patientFollowUp.getDate());
