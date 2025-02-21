@@ -17,7 +17,7 @@ public class ContactScreeningMapper {
     private final PatientRepo patientRepo;
     private final LocalDateMapper localDateMapper;
 
-    public ContactScreening toContactScreening(Integer patientId, ContactScreeningInputDTO contactScreeningInputDTO) {
+    public ContactScreening toContactScreening(String patientId, ContactScreeningInputDTO contactScreeningInputDTO) {
         Patient patient = patientRepo.findById(patientId).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + patientId));
 
         if(!contactScreeningInputDTO.getContactScreeningDone()){

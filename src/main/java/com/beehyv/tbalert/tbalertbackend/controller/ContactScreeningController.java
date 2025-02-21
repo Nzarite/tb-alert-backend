@@ -30,13 +30,13 @@ public class ContactScreeningController {
     }
 
     @PostMapping("{patientId}")
-    public ResponseEntity<ContactScreeningOutputDTO> setContactScreening(@PathVariable Integer patientId, @RequestBody @Valid ContactScreeningInputDTO contactScreeningInputDTO) {
+    public ResponseEntity<ContactScreeningOutputDTO> setContactScreening(@PathVariable String patientId, @RequestBody @Valid ContactScreeningInputDTO contactScreeningInputDTO) {
         return new ResponseEntity<>(contactScreeningService.setContactScreening(patientId, contactScreeningInputDTO), HttpStatus.ACCEPTED);
     }
 
 
     @PutMapping("/{patientId}")
-    public ResponseEntity<ContactScreeningOutputDTO> updateContactScreening(@PathVariable Integer patientId, @RequestBody @Valid ContactScreeningInputDTO contactScreeningInputDTO) {
+    public ResponseEntity<ContactScreeningOutputDTO> updateContactScreening(@PathVariable String patientId, @RequestBody @Valid ContactScreeningInputDTO contactScreeningInputDTO) {
         return new ResponseEntity<>(contactScreeningService.updateContactScreening(patientId, contactScreeningInputDTO), HttpStatus.ACCEPTED);
     }
 }

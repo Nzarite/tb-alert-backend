@@ -11,6 +11,8 @@ import com.beehyv.tbalert.tbalertbackend.service.ContactScreeningService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @AllArgsConstructor
 public class ContactScreeningServiceImpl implements ContactScreeningService {
@@ -29,7 +31,7 @@ public class ContactScreeningServiceImpl implements ContactScreeningService {
     }
 
     @Override
-    public ContactScreeningOutputDTO setContactScreening(Integer patientId, ContactScreeningInputDTO contactScreeningInputDTO) {
+    public ContactScreeningOutputDTO setContactScreening(String patientId, ContactScreeningInputDTO contactScreeningInputDTO) {
         ContactScreening contactScreening = contactScreeningMapper.toContactScreening(patientId, contactScreeningInputDTO);
         if(contactScreening == null) {
             throw new IllegalArgumentException("Patient does not exist");
@@ -39,16 +41,16 @@ public class ContactScreeningServiceImpl implements ContactScreeningService {
     }
 
     @Override
-    public ContactScreeningOutputDTO updateContactScreening(Integer patientId, ContactScreeningInputDTO contactScreeningInputDTO) {
+    public ContactScreeningOutputDTO updateContactScreening(String patientId, ContactScreeningInputDTO contactScreeningInputDTO) {
         Patient patient = patientRepo.findById(patientId).orElseThrow(() -> new IllegalArgumentException("Patient does not exist"));
-        ContactScreening contactScreening = contactScreeningRepo.findByPatientId(patientId);
+        ContactScreening contactScreening = contactScreeningRepo.findByPatient_Id(patientId).get();
 
         if(contactScreening == null) {
             throw new IllegalArgumentException("Contact Screening details have not been set");
         }
 
         contactScreening.setContactScreeningDone(contactScreeningInputDTO.getContactScreeningDone());
-        contactScreening.setDateOfContactScreening(contactScreeningInputDTO.getDateOfContactScreening());
+        contactScreening.setDateOfContactScreening(LocalDate.parse(contactScreeningInputDTO.getDateOfContactScreening()));
         contactScreening.setNoOfHHCsAvailable(contactScreeningInputDTO.getNoOfHHCsAvailable());
         contactScreening.setNoOfHHCsScreened(contactScreeningInputDTO.getNoOfHHCsScreened());
         contactScreening.setNoOfHHCsWithTBSymptoms(contactScreeningInputDTO.getNoOfHHCsWithTBSymptoms());
