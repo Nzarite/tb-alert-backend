@@ -100,7 +100,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         if((patientFollowUpInputDTO.getAliveOrDead()!=null && patientFollowUpInputDTO.getAliveOrDead().equals("dead"))||(patientFollowUpInputDTO.isCured())){
             List<PatientFollowUp>followUps=patientFollowUpRepo.findAllByPatient_Id(patient.getId());
             for(PatientFollowUp followUp:followUps){
-                if(followUp.getDate().equals(date) || followUp.getDate().isAfter(date))
+                if(followUp.getDate().isAfter(date))
                     followUp.setStatus("Cancelled");
             }
             patientFollowUpRepo.saveAll(followUps.stream().toList());
