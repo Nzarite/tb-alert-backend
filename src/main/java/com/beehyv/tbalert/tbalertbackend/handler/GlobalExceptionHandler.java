@@ -13,16 +13,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.io.IOException;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     public String errorMessage(Exception ex) {
-        return String.format("Error Message: {0} Error:{1}", ex.getMessage(), ex.getClass());
+        return String.format("Error Message: %s | Error Type: %s", ex.getMessage(), ex.getClass().getSimpleName());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -33,57 +35,75 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.warn(errorMessage(ex));
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        log.info("Error Message: {} Error:{}", e.getMessage(), e.getClass());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        log.warn(errorMessage(e));
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.warn(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.warn(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<String> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.warn(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.warn(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.warn(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DateTimeParseException.class)
     public ResponseEntity<String> handleDateTimeParseException(DateTimeParseException ex) {
-        log.info("Error Message: {} Error:{}", ex.getMessage(), ex.getClass());
+        log.warn(errorMessage(ex));
         return new ResponseEntity<>("Invalid Date format "+ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<String> handleIOException(IOException ex) {
+        log.error(errorMessage(ex));
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<String> handleNullPointerException(NullPointerException ex) {
+        log.error(errorMessage(ex));
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
+        log.error(errorMessage(ex));
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralExceptions(Exception e) {
-        log.info("Error Message: {} Error:{}", e.getMessage(), e.getClass());
-        return new ResponseEntity<>(e.getMessage()+" "+e.getClass(), HttpStatus.I_AM_A_TEAPOT);
+        log.error(errorMessage(e));
+        return new ResponseEntity<>(e.getMessage()+" "+e.getClass().getSimpleName(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

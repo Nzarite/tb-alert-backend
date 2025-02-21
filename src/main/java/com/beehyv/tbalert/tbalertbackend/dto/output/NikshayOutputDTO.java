@@ -20,5 +20,5 @@ public class NikshayOutputDTO {
     private String nikshayMitraStatus;
     private String nikshayMitraDate;
     private String nikshayMitraName;
-    private Integer patientId;
+    private String patientId;
 }

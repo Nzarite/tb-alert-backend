@@ -1,5 +1,6 @@
 package com.beehyv.tbalert.tbalertbackend.dto.input;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -9,19 +10,26 @@ import lombok.Data;
 @Builder
 public class PatientInputDTO {
 
-    @NotEmpty(message = "Firstname cannot be empty")
+    @NotEmpty(message = "First name cannot be empty")
     private String firstName;
 
     private String lastName;
 
-    @NotEmpty(message = "Gender cannot be empty")
+    @NotEmpty(message = "Enter valid phone number")
+    private String phoneNumber;
+
+    @Email(message = "Invalid Email")
+    private String email;
+
+    @NotEmpty(message = "Enter valid gender")
     private String gender;
 
-    @NotEmpty(message = "Phone number cannot be empty")
-    private String phone;
+    @NotEmpty(message = "Creator email is required")
+    @Email(message = "Enter valid creator email")
+    private String createdBy;
 
-    @NotNull
-    private String dateOfBirth;
+    @NotNull(message = "Enter valid age")
+    private int age;
 
     @NotEmpty(message = "Block name cannot be empty")
     private String block;
@@ -34,4 +42,8 @@ public class PatientInputDTO {
 
     @NotEmpty(message = "District name cannot be empty")
     private String district;
+
+    @NotEmpty(message = "State name cannot be empty")
+    private String state;
+
 }

@@ -5,13 +5,13 @@ import com.beehyv.tbalert.tbalertbackend.dto.output.ContactScreeningOutputDTO;
 import jakarta.validation.Valid;
 
 public interface ContactScreeningService {
-    ContactScreeningOutputDTO getContactScreeningById(Integer patientId);
+    ContactScreeningOutputDTO getContactScreeningById(String patientId);
 
     ContactScreeningOutputDTO setContactScreening(Integer patientId, @Valid ContactScreeningInputDTO contactScreeningInputDTO);
 
     ContactScreeningOutputDTO updateContactScreening(Integer patientId, @Valid ContactScreeningInputDTO contactScreeningInputDTO);
 
-    void deleteContactScreeningByPatientId(Integer patientId);
+    void deleteContactScreeningByPatientId(String patientId);
 
     void deleteContactScreeningById(Integer id);
 

@@ -25,8 +25,8 @@ public class ContactScreeningController {
     private final ContactScreeningService contactScreeningService;
 
     @GetMapping("/{patientId}")
-    public ResponseEntity<ContactScreeningOutputDTO> getContactScreening(@PathVariable Integer patientId) {
-        return new ResponseEntity<>(contactScreeningService.getContactScreeningById(patientId), HttpStatus.FOUND);
+    public ResponseEntity<ContactScreeningOutputDTO> getContactScreening(@PathVariable String patientId) {
+        return new ResponseEntity<>(contactScreeningService.getContactScreeningById(patientId), HttpStatus.OK);
     }
 
     @PostMapping("{patientId}")

@@ -12,9 +12,13 @@ import java.util.List;
 @Repository
 public interface PatientFollowUpRepo extends JpaRepository<PatientFollowUp, Integer> {
 
-    List<PatientFollowUp> findByPatient_Id(int id);
+    List<PatientFollowUp> findByPatient_Id(String id);
 
-    PatientFollowUp findByDate(LocalDate date);
+    List<PatientFollowUp> findByDate(LocalDate date);
 
     PatientFollowUp findByPatientAndDate(Patient patient, LocalDate date);
+
+    List<PatientFollowUp> findByPatientAndDateBefore(Patient patient, LocalDate dateBefore);
+
+    List<PatientFollowUp> findAllByPatient_Id(String patientId);
 }

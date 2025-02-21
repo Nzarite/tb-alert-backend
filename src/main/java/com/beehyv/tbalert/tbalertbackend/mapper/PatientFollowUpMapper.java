@@ -17,7 +17,6 @@ public class PatientFollowUpMapper {
 
     private final PatientMapper patientMapper;
     private final MedicationDetailsMapper medicationDetailsMapper;
-
     private final LocalDateMapper localDateMapper;
 
 
@@ -27,26 +26,27 @@ public class PatientFollowUpMapper {
                 .medicationDetails(missedMedicationList.stream().map(medicationDetailsMapper::toMedicationDetails).toList())
                 .remarks(patientFollowUp.getRemarks())
                 .date(patientFollowUp.getDate().toString())
-                .followUpStatus(patientFollowUp.getOccured() != null && patientFollowUp.getOccured())
+                .followUpStatus(patientFollowUp.getStatus())
                 .build();
     }
-
-    public PatientFollowUp toPatientFollowUp(PatientFollowUpInputDTO patientFollowUpInputDTO, Patient patient, List<MissedMedication> missedMedicationList) {
+    public PatientFollowUp toPatientFollowUp(PatientFollowUpInputDTO patientFollowUpInputDTO, Patient patient) {
         return PatientFollowUp.builder()
                 .patient(patient)
                 .date(localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()))
                 .remarks(patientFollowUpInputDTO.getRemarks())
-                .occured(false)
+                .status(patientFollowUpInputDTO.getFollowUpStatus())
+                .patientCondition(patientFollowUpInputDTO.getPatientCondition())
                 .build();
     }
 
 
     public FollowUpDetails toFollowUpDetails(PatientFollowUp patientFollowUp,List<MissedMedication>missedMedicationList) {
         return   FollowUpDetails.builder()
-                .followUpStatus(patientFollowUp.getOccured() != null && patientFollowUp.getOccured())
+                .followUpStatus(patientFollowUp.getStatus())
                 .medicationDetails(missedMedicationList.stream().map(medicationDetailsMapper::toMedicationDetails).toList())
                 .remarks(patientFollowUp.getRemarks())
                 .date(patientFollowUp.getDate().toString())
+                .patientCondition(patientFollowUp.getPatientCondition())
                 .build();
     }
 }

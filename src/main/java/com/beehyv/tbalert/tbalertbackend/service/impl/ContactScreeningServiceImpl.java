@@ -19,8 +19,8 @@ public class ContactScreeningServiceImpl implements ContactScreeningService {
     private final PatientRepo patientRepo;
 
     @Override
-    public ContactScreeningOutputDTO getContactScreeningById(Integer patientId) {
-        ContactScreening contactScreening = contactScreeningRepo.findByPatientId(patientId);
+    public ContactScreeningOutputDTO getContactScreeningById(String patientId) {
+        ContactScreening contactScreening = contactScreeningRepo.findByPatient_Id(patientId).orElseThrow(()->new RuntimeException("Could not find contact screening"));
         if(contactScreening == null) {
             throw new IllegalArgumentException("Patient does not exist");
         }
@@ -72,8 +72,8 @@ public class ContactScreeningServiceImpl implements ContactScreeningService {
     }
 
     @Override
-    public void deleteContactScreeningByPatientId(Integer patientId) {
-        ContactScreening contactScreening = contactScreeningRepo.findByPatientId(patientId);
+    public void deleteContactScreeningByPatientId(String patientId) {
+        ContactScreening contactScreening = contactScreeningRepo.findByPatient_Id(patientId).orElseThrow(()->new RuntimeException("Could not find contact screening"));
         contactScreeningRepo.delete(contactScreening);
     }
 

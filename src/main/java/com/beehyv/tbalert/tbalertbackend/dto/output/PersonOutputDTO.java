@@ -13,13 +13,25 @@ public class PersonOutputDTO {
 
     private String lastName;
 
-    private String State;
-
-    private String Role;
-
     private String phoneNumber;
 
     private String email;
 
     private String gender;
+
+    private String block;
+
+    private String gp;
+
+    private String village;
+
+    private String district;
+
+    private String state;
+
+    private String createdBy;
+
+    private String createdOn;
+
+    private String updatedBy;
 }

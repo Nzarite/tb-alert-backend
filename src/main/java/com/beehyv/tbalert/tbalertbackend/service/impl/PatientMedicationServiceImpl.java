@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,14 +24,14 @@ public class PatientMedicationServiceImpl implements PatientMedicationService {
     private final PatientMapper patientMapper;
 
     @Override
-    public List<PatientMedicationOutputDTO> get(int id) {
+    public List<PatientMedicationOutputDTO> get(String id) {
         log.info("Get patient medications by patient id: {}", id);
         List<PatientMedication> patientMedicationList=patientMedicationRepo.getPatientMedicationsByPatient(patientMapper.findPatient(id));
         return patientMedicationList.stream().map(patientMedicationMapper::toPatientMedicationOutputDTO).toList();
     }
 
     @Override
-    public List<PatientMedicationOutputDTO> add(int id, List<PatientMedicationInputDTO> patientMedicationInputDTOList) {
+    public List<PatientMedicationOutputDTO> add(String id, List<PatientMedicationInputDTO> patientMedicationInputDTOList) {
         log.info("Add patient medications by patient id: {}", id);
         List<PatientMedicationOutputDTO> patientMedicationOutputDTOS=new ArrayList<>();
         patientMedicationInputDTOList.forEach(pm->{

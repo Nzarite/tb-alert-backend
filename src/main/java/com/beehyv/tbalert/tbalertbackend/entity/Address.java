@@ -29,7 +29,8 @@ public class Address {
     @Column(nullable = false, name = "district")
     private String district;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
+    @Column(nullable = false,name="state")
+    private String state;
+
+    
 }

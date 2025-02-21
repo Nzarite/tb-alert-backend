@@ -1,0 +1,33 @@
+package com.beehyv.tbalert.tbalertbackend.controller;
+
+import com.beehyv.tbalert.tbalertbackend.dto.input.StateHeadInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.StateHeadOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.service.StateHeadService;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@Slf4j
+@AllArgsConstructor
+@RequestMapping("/statehead")
+public class StateHeadController {
+
+    private final StateHeadService stateHeadService;
+
+    @PostMapping("/register")
+    public ResponseEntity<StateHeadOutputDTO> add(@RequestBody @Valid StateHeadInputDTO stateHeadInputDTO)
+    {
+        return new ResponseEntity<>(stateHeadService.add(stateHeadInputDTO), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PersonOutputDTO> findByPersonId(@PathVariable Long id)
+    {
+        return new ResponseEntity<>(stateHeadService.findByPersonId(id), HttpStatus.OK);
+    }
+}

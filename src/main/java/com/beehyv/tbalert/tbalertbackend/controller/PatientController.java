@@ -1,6 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepo;
 import com.beehyv.tbalert.tbalertbackend.service.ContactScreeningService;
@@ -26,7 +27,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/patient")
 @AllArgsConstructor
-@CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
 public class PatientController {
 
     private final PatientRegistrationService patientRegistrationService;
@@ -41,29 +41,29 @@ public class PatientController {
     }
 
     @GetMapping("/{patientId}")
-    public ResponseEntity<PatientOutputDTO> getPatient(@PathVariable int patientId) {
+    public ResponseEntity<PatientOutputDTO> getPatient(@PathVariable String patientId) {
             log.info("Controller called for Getting patient: {}", patientId);
             return new ResponseEntity<>(patientRegistrationService.getPatient(patientId), HttpStatus.OK);
     }
 
     @GetMapping("/name/{patientName}")
-    public ResponseEntity<List<PatientOutputDTO>> getPatientByName(@PathVariable String patientName) {
-            log.info("Controller called for Getting patient by name: {}", patientName);
-            return new ResponseEntity<>(patientRegistrationService.getPatientByName(patientName),HttpStatus.OK);
+    public ResponseEntity<List<PatientOutputDTO>> getPatientByNameOrNikshayIdOrPatientId(@PathVariable String patientName) {
+            log.info("Controller called for Getting patient by name or nikshayId or patientID: {}", patientName);
+            return new ResponseEntity<>(patientRegistrationService.getPatientByNameOrNikshayIdOrPatientId(patientName),HttpStatus.OK);
 
     }
 
     @PutMapping("/update/{patientId}")
-    public ResponseEntity<HttpStatus> updatePatient(@PathVariable int patientId,@RequestBody @Valid PatientInputDTO patientInputDTO) {
-            log.info("Controller being called for Updating patient: {}", patientInputDTO.toString());
-            patientRegistrationService.updatePatient(patientId, patientInputDTO);
-            log.info("Patient successfully updated: {}", patientInputDTO);
+    public ResponseEntity<HttpStatus> updatePatient(@PathVariable String patientId,@RequestBody @Valid PatientUpdateInputDTO patientUpdateInputDTO) {
+            log.info("Controller being called for Updating patient: {}", patientUpdateInputDTO.toString());
+            patientRegistrationService.updatePatient(patientId, patientUpdateInputDTO);
+            log.info("Patient successfully updated: {}", patientUpdateInputDTO.toString());
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
     }
 
     @DeleteMapping("/{patientId}")
-    public ResponseEntity<HttpStatus> deletePatient(@PathVariable int patientId) {
+    public ResponseEntity<HttpStatus> deletePatient(@PathVariable String patientId) {
             log.info("Controller called for deleting patient: {}", patientId);
             contactScreeningService.deleteContactScreeningByPatientId(patientId);
             patientRegistrationService.deletePatient(patientId);
@@ -77,4 +77,11 @@ public class PatientController {
             log.info("Controller called for Getting all patients");
             return new ResponseEntity<>(patientRegistrationService.getAll(), HttpStatus.OK);
     }
+
+    @GetMapping("/nikshayid/{nikshayId}")
+    public ResponseEntity<PatientOutputDTO> getPatientByNikshayId(@PathVariable String nikshayId) {
+        log.info("Controller called for Getting patient by nikshay id: {}", nikshayId);
+        return new ResponseEntity<>(patientRegistrationService.getPatientByNikshayId(nikshayId),HttpStatus.OK);
+    }
+
 }

@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Entity
 @Data
 @Builder
@@ -17,25 +15,14 @@ import java.time.LocalDate;
 public class Patient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private String id;
 
-    @Column(name = "firstname", nullable = false)
-    private String firstName;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Person person;
 
-    @Column(name = "lastname", nullable = false)
-    private String lastName;
-
-    @Column(name = "gender", nullable = false)
-    private String gender;
-
-    @Column(name = "phone", nullable = false)
-    private String phone;
-
-    @Column(name = "dob", nullable = false)
-    private LocalDate dateOfBirth;
-
-    private String currentStatus;
+    private String currentStatus="alive";
 
     private boolean cured=false;
+
+    private int age;
 }

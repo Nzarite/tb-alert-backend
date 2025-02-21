@@ -27,9 +27,10 @@ public class PatientFollowUp {
     @Column(name = "date",nullable = false)
     private LocalDate date;
 
-    private Boolean occured=false;
+    private String status;
 
     private String remarks;
 
+    private int patientCondition;
 
 }
