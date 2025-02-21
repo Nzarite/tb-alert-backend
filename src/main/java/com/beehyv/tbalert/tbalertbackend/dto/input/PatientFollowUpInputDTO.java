@@ -25,4 +25,6 @@ public class PatientFollowUpInputDTO {
     @NotNull
     private int patientCondition;
 
+    private String followUpStatus;
+
 }

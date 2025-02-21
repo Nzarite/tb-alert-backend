@@ -18,5 +18,5 @@ public class TBDetailsInputDTO {
     @NotEmpty
     private String dstbOrDrtb;
 
-    private Integer patientId;
+    private String patientId;
 }
