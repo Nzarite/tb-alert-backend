@@ -22,14 +22,19 @@ public class StateHeadController {
     private final StateHeadService stateHeadService;
 
     @PostMapping("/register")
-    public ResponseEntity<StateHeadOutputDTO> add(@RequestBody @Valid StateHeadInputDTO stateHeadInputDTO)
-    {
+    public ResponseEntity<StateHeadOutputDTO> add(@RequestBody @Valid StateHeadInputDTO stateHeadInputDTO) {
         return new ResponseEntity<>(stateHeadService.add(stateHeadInputDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PersonOutputDTO> findByPersonId(@PathVariable Long id)
-    {
+    public ResponseEntity<PersonOutputDTO> findByPersonId(@PathVariable Long id) {
         return new ResponseEntity<>(stateHeadService.findByPersonId(id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteStateHead(@PathVariable Long id) {
+        log.info("Controller called for deleting statehead: {}", id);
+        stateHeadService.deleteStateHead(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -16,4 +16,6 @@ public interface TeleCallerService {
     List<TeleCallerOutputDTO> getByState(String name);
 
     List<TeleCallerOutputDTO> getAll();
+
+    void deleteTeleCaller(Long id);
 }

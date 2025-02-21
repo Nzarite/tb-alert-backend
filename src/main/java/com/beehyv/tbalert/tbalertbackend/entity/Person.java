@@ -40,4 +40,6 @@ public class Person {
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
+    private Boolean isDeleted=false;
+
 }

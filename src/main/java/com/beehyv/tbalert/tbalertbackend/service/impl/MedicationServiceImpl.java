@@ -6,6 +6,7 @@ import com.beehyv.tbalert.tbalertbackend.entity.Medication;
 import com.beehyv.tbalert.tbalertbackend.mapper.MedicationMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.MedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.service.MedicationService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @AllArgsConstructor
+@Transactional
 public class MedicationServiceImpl implements MedicationService {
     private final MedicationRepo medicationRepo;
     private final MedicationMapper medicationMapper;

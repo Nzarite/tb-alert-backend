@@ -81,8 +81,8 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
                     (Class<List<Map<String, Object>>>) (Class<?>) List.class);
 
             if (searchResponse.getBody() == null || searchResponse.getBody().isEmpty()) {
-                log.error("User not found in Keycloak.");
-                return "User not found in Keycloak.";
+                log.error("User not found in Keycloak");
+                return "User not found in Keycloak";
             }
 
             String userId = (String) searchResponse.getBody().get(0).get("id");
@@ -96,8 +96,8 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
                     (Class<Map<String, Object>>) (Class<?>) Map.class);
 
             if (roleResponse.getBody() == null) {
-                log.error("Role not found in Keycloak.");
-                return "Role not found in Keycloak.";
+                log.error("Role not found in Keycloak");
+                return "Role not found in Keycloak";
             }
 
             // Step 3: Assign role to user
@@ -117,7 +117,7 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
         }
     }
 
-    private void sendPasswordResetEmail(String userId, String accessToken) {
+    public void sendPasswordResetEmail(String userId, String accessToken) {
         String emailActionUrl = keycloakUrl + "/admin/realms/" + realm + "/users/" + userId + "/execute-actions-email";
 
         HttpHeaders headers = createHeaders(accessToken);
@@ -131,7 +131,47 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
         }
     }
 
-        // Utility method to create HTTP headers with authentication
+    public String deleteUserByEmail(String email) {
+        String accessToken = keycloakAdminService.getAdminAccessToken();
+        if (accessToken == null) {
+            log.error("Failed to get admin access token");
+            return "Failed to get admin access token";
+        }
+
+        try {
+            // Step 1: Search for the user in Keycloak
+            String searchUrl = keycloakUrl + "/admin/realms/" + realm + "/users?username=" + email;
+            HttpHeaders headers = createHeaders(accessToken);
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<List<Map<String, Object>>> searchResponse = restTemplate.exchange(
+                    searchUrl,
+                    HttpMethod.GET,
+                    entity,
+                    (Class<List<Map<String, Object>>>) (Class<?>) List.class);
+
+            if (searchResponse.getBody() == null || searchResponse.getBody().isEmpty()) {
+                log.warn("User with email {} not found in Keycloak", email);
+                return "User not found in Keycloak";
+            }
+
+            String userId = (String) searchResponse.getBody().get(0).get("id");
+
+            // Step 2: Delete the user
+            String deleteUrl = keycloakUrl + "/admin/realms/" + realm + "/users/" + userId;
+            restTemplate.exchange(deleteUrl, HttpMethod.DELETE, entity, Void.class);
+
+            log.info("User with email {} deleted successfully from Keycloak", email);
+            return "User deleted successfully";
+
+        } catch (HttpClientErrorException e) {
+            log.error("Error deleting user: {}", e.getMessage());
+            return "Error deleting user: " + e.getMessage();
+        }
+    }
+
+
+    // Utility method to create HTTP headers with authentication
     private HttpHeaders createHeaders(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

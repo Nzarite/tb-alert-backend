@@ -19,10 +19,11 @@ public class PatientMapper {
     private final AddressRepo addressRepo;
     private LocalDateMapper localDateMapper;
 
-    public Patient findPatient(String patientId) {
+    public Patient find(String patientId) {
         log.info("Mapper called for Find patient with id {}", patientId);
-        return patientRepo.findById(patientId).orElseThrow(()-> new IllegalArgumentException(
-                "Patient with id " + patientId + " not found"));
+        return patientRepo.findById(patientId).filter(patient -> !patient.getPerson().getIsDeleted())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Patient with id " + patientId + " not found"));
     }
 
     public PatientOutputDTO toPatientOutputDTO(Patient patient) {

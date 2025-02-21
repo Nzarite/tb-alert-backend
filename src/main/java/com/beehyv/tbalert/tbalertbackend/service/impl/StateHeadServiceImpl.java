@@ -7,10 +7,12 @@ import com.beehyv.tbalert.tbalertbackend.entity.StateHead;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.StateHeadMapper;
+import com.beehyv.tbalert.tbalertbackend.repository.PersonRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.StateHeadRepo;
 import com.beehyv.tbalert.tbalertbackend.service.KeycloakUserService;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import com.beehyv.tbalert.tbalertbackend.service.StateHeadService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.List;
 @Service
 @Slf4j
 @AllArgsConstructor
+@Transactional
 public class StateHeadServiceImpl implements StateHeadService {
 
     private final PersonService personService;
@@ -28,12 +31,13 @@ public class StateHeadServiceImpl implements StateHeadService {
     private final KeycloakUserService keycloakUserService;
     private final StateHeadMapper stateHeadMapper;
     private final LocalDateMapper localDateMapper;
+    private final PersonRepo personRepo;
 
     @Override
-    public PersonOutputDTO add(PersonInputDTO personInputDTO) {
+    public StateHeadOutputDTO add(StateHeadInputDTO stateHeadInputDTO) {
 
         String keycloakResponse = keycloakUserService.createUser(
-                personInputDTO.getEmail(),
+                stateHeadInputDTO.getEmail(),
                 "StateCoordinator"
         );
 
@@ -57,6 +61,18 @@ public class StateHeadServiceImpl implements StateHeadService {
 
     @Override
     public List<StateHeadOutputDTO> getAll() {
-        return stateHeadRepo.findAll().stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
+        return stateHeadRepo.findByPerson_IsDeletedFalse()
+                .stream()
+                .map(stateHeadMapper::toStateHeadOutputDTO)
+                .toList();
+    }
+
+    @Override
+    public void deleteStateHead(Long id) {
+        StateHead stateHead = stateHeadMapper.find(id);
+        stateHead.getPerson().setIsDeleted(true);
+        stateHead.getPerson().setEmail(null);
+        personRepo.save(stateHead.getPerson());
+        stateHeadRepo.save(stateHead);
     }
 }

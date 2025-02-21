@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +49,7 @@ public class ReportsServiceImpl implements ReportsService {
     public Integer getAllDead() throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             long totalPatients = patientRepo.count();
-            int deadPatients = patientRepo.countByCurrentStatus("dead");
+            int deadPatients = patientRepo.countByCurrentStatusAndPerson_IsDeletedFalse("dead");
 
             Sheet sheet = reportsHelperService.createSheetWithHeader(7000,workbook, "Patient Report for Dead", "Category", "Count");
             reportsHelperService.addDataRow(sheet, 1, "Total Patients", totalPatients);

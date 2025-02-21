@@ -13,15 +13,18 @@ import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PersonRepo;
 import com.beehyv.tbalert.tbalertbackend.service.KeycloakUserService;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @AllArgsConstructor
+@Transactional
 public class PersonServiceImpl implements PersonService {
 
     private final AddressMapper addressMapper;
@@ -53,7 +56,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonOutputDTO add(TeleCallerInputDTO teleCaller) {
-       log.info("Service called for Add person: {}", teleCaller);
+        log.info("Service called for Add person: {}", teleCaller);
         Person personSaved = personMapper.toPerson(teleCaller);
         Address address = addressMapper.toAddress(teleCaller);
         personSaved.setAddress(address);
@@ -63,7 +66,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonOutputDTO add(StateHeadInputDTO stateHead) {
-       log.info("Service called for Add person: {}", stateHead);
+        log.info("Service called for Add person: {}", stateHead);
         Person personSaved = personMapper.toPerson(stateHead);
         Address address = addressMapper.toAddress(stateHead);
         personSaved.setAddress(address);
@@ -89,29 +92,29 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<PersonOutputDTO> getAll() {
-        return personRepo.findAll().stream().map(personMapper::toPersonOutputDTO).toList();
+        return personRepo.findAllByIsDeletedFalse().stream().map(personMapper::toPersonOutputDTO).toList();
     }
 
     @Override
     public PersonOutputDTO getByEmail(String email) {
 
-        Person person=personRepo.findByEmail(email);
-        if(person==null){
-            throw new IllegalArgumentException("Person not found for email: "+email);
+        Optional<Person> person = personRepo.findByEmailAndIsDeletedFalse(email);
+        if (person.isEmpty()) {
+            throw new IllegalArgumentException("Person not found for email: " + email);
         }
-        return personMapper.toPersonOutputDTO(person);
+        return personMapper.toPersonOutputDTO(person.get());
     }
 
     @Override
     public List<PersonOutputDTO> getByState(String state) {
 
-        List<Person>personList=personRepo.findByAddress_State(state);
+        List<Person> personList = personRepo.findByAddress_StateAndIsDeletedFalse(state);
         return personList.stream().map(personMapper::toPersonOutputDTO).toList();
     }
 
     @Override
     public int getCountOfUsersCreated(Long personId) {
-        Person person=personMapper.find(personId);
-        return personRepo.countByCreatedBy(person.getEmail());
+        Person person = personMapper.find(personId);
+        return personRepo.countByCreatedByAndIsDeletedFalse(person.getEmail());
     }
 }

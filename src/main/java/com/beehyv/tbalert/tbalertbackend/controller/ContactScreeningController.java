@@ -20,7 +20,7 @@ public class ContactScreeningController {
     private final ContactScreeningService contactScreeningService;
 
     @GetMapping("/{patientId}")
-    public ResponseEntity<ContactScreeningOutputDTO> getContactScreening(@PathVariable Integer patientId) {
+    public ResponseEntity<ContactScreeningOutputDTO> getContactScreening(@PathVariable String patientId) {
         return new ResponseEntity<>(contactScreeningService.getContactScreeningById(patientId), HttpStatus.OK);
     }
 

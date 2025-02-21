@@ -7,6 +7,7 @@ import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMedicationMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientMedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.service.PatientMedicationService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.List;
 @Slf4j
 @Service
 @AllArgsConstructor
+@Transactional
 public class PatientMedicationServiceImpl implements PatientMedicationService {
 
     private final PatientMedicationRepo patientMedicationRepo;
@@ -26,7 +28,7 @@ public class PatientMedicationServiceImpl implements PatientMedicationService {
     @Override
     public List<PatientMedicationOutputDTO> get(String id) {
         log.info("Get patient medications by patient id: {}", id);
-        List<PatientMedication> patientMedicationList=patientMedicationRepo.getPatientMedicationsByPatient(patientMapper.findPatient(id));
+        List<PatientMedication> patientMedicationList=patientMedicationRepo.getPatientMedicationsByPatient(patientMapper.find(id));
         return patientMedicationList.stream().map(patientMedicationMapper::toPatientMedicationOutputDTO).toList();
     }
 

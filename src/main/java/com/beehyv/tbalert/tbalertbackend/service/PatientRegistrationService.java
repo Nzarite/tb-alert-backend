@@ -21,9 +21,7 @@ public interface PatientRegistrationService {
 
     List<PatientOutputDTO> getPatientByNameOrNikshayIdOrPatientId(String patientName);
 
-    List<PatientOutputDTO>getFilteredPatients(Map<String,Object> filters);
+    List<PatientOutputDTO> getFilteredPatients(Map<String, Object> filters);
 
     String determinePatientStatus(PatientOutputDTO patientOutputDTO);
-
-    PatientOutputDTO getPatientByNikshayId(String nikhsayId);
 }

@@ -49,6 +49,7 @@ public class PatientSpecification {
                 boolean curedBool = (boolean) criteria.get("cured");
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("cured"), curedBool));
             }
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("person").get("isDeleted"), false));
             return predicate;
         };
     }

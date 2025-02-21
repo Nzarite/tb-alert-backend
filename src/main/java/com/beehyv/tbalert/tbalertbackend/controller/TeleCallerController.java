@@ -25,18 +25,30 @@ public class TeleCallerController {
     private final TeleCallerService teleCallerService;
 
     @PostMapping("/register")
-    public ResponseEntity<TeleCallerOutputDTO>add(@RequestBody @Valid TeleCallerInputDTO teleCallerInputDTO) {
+    public ResponseEntity<TeleCallerOutputDTO> add(@RequestBody @Valid TeleCallerInputDTO teleCallerInputDTO) {
         return new ResponseEntity<>(teleCallerService.add(teleCallerInputDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PersonOutputDTO> getByPersonId(@PathVariable Long id) {
-        return new ResponseEntity<>(teleCallerService.getByPersonId(id),HttpStatus.OK);
+        return new ResponseEntity<>(teleCallerService.getByPersonId(id), HttpStatus.OK);
     }
 
     @GetMapping("/state/{name}")
     public ResponseEntity<List<TeleCallerOutputDTO>> getByState(@PathVariable String name) {
-        return new ResponseEntity<>(teleCallerService.getByState(name),HttpStatus.OK);
+        return new ResponseEntity<>(teleCallerService.getByState(name), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<TeleCallerOutputDTO>> getAll() {
+        return new ResponseEntity<>(teleCallerService.getAll(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<TeleCallerOutputDTO> delete(@PathVariable Long id) {
+        log.info("Controller called for deleting telecaller: {}", id);
+        teleCallerService.deleteTeleCaller(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

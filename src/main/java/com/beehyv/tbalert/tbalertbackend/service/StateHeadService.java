@@ -12,4 +12,6 @@ public interface StateHeadService {
     PersonOutputDTO findByPersonId(Long id);
 
     List<StateHeadOutputDTO> getAll();
+
+    void deleteStateHead(Long id);
 }

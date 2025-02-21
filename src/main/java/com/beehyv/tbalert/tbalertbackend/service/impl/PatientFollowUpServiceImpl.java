@@ -19,6 +19,7 @@ import com.beehyv.tbalert.tbalertbackend.repository.PatientMedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import com.beehyv.tbalert.tbalertbackend.service.MissedMedicationService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ import java.util.List;
 @Slf4j
 @Service
 @AllArgsConstructor
+@Transactional
 public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
     private final PatientFollowUpRepo patientFollowUpRepo;
@@ -49,7 +51,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         log.info("Service called to Get patient follow up with patient id {}", id);
         List<PatientFollowUp> patientFollowUps = patientFollowUpRepo.findByPatient_Id(id);
 
-        Patient patient = patientMapper.findPatient(id);
+        Patient patient = patientMapper.find(id);
         List<PatientFollowUpOutputForFrontEndDto.FollowUpDetails>followUpDetails=new ArrayList<>();
 
         List<PatientMedication>patientMedications=patientMedicationRepo.getPatientMedicationsByPatient(patient);
@@ -72,7 +74,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     @Override
     public PatientFollowUpOutputDTO add(String id, PatientFollowUpInputDTO patientFollowUpInputDTO) {
         log.info("Service called to Add patient follow up with patient id {}", id);
-        Patient patient=patientMapper.findPatient(id);
+        Patient patient=patientMapper.find(id);
         List<MissedMedication>missedMedicationList=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()));
         PatientFollowUp patientFollowUp=patientFollowUpMapper.toPatientFollowUp(patientFollowUpInputDTO,patient);
         patientFollowUpRepo.save(patientFollowUp);
@@ -83,7 +85,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     public PatientFollowUpOutputDTO update(String id, PatientFollowUpInputDTO patientFollowUpInputDTO) {
         LocalDate date=localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate());
         missedMedicationService.add(id,patientFollowUpInputDTO.getMissedMedications(),date);
-        Patient patient=patientMapper.findPatient(id);
+        Patient patient=patientMapper.find(id);
         PatientFollowUp patientFollowUp=patientFollowUpRepo.findByPatientAndDate(patient,date);
         if(patientFollowUp==null){
             throw new IllegalArgumentException("No follow up exists for the given patient and date");
@@ -109,7 +111,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
     @Override
     public List<PatientFollowUp> findBeforeDate(String id, LocalDate localDate) {
-        Patient patient=patientMapper.findPatient(id);
+        Patient patient=patientMapper.find(id);
         return patientFollowUpRepo.findByPatientAndDateBefore(patient,localDate);
     }
 

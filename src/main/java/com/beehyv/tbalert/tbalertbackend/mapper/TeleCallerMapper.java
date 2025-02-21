@@ -19,7 +19,7 @@ public class TeleCallerMapper {
     private final AddressRepo addressRepo;
 
     public TeleCaller find(Long id) {
-        return teleCallerRepo.findById(id).orElseThrow(()-> new IllegalArgumentException("TeleCaller not found for id: " + id));
+        return teleCallerRepo.findById(id).filter(teleCaller -> !teleCaller.getPerson().getIsDeleted()).orElseThrow(()-> new IllegalArgumentException("TeleCaller not found for id: " + id));
     }
 
     public TeleCallerOutputDTO toTeleCallerOutputDTO(TeleCaller teleCaller)

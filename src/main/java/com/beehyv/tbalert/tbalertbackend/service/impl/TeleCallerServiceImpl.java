@@ -3,14 +3,17 @@ package com.beehyv.tbalert.tbalertbackend.service.impl;
 import com.beehyv.tbalert.tbalertbackend.dto.input.TeleCallerInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.entity.StateHead;
 import com.beehyv.tbalert.tbalertbackend.entity.TeleCaller;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.TeleCallerMapper;
+import com.beehyv.tbalert.tbalertbackend.repository.PersonRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.TeleCallerRepo;
 import com.beehyv.tbalert.tbalertbackend.service.KeycloakUserService;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import com.beehyv.tbalert.tbalertbackend.service.TeleCallerService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import java.util.List;
 @Service
 @Slf4j
 @AllArgsConstructor
+@Transactional
 public class TeleCallerServiceImpl implements TeleCallerService {
 
     private final PersonMapper personMapper;
@@ -28,12 +32,13 @@ public class TeleCallerServiceImpl implements TeleCallerService {
     private final TeleCallerMapper teleCallerMapper;
     private final KeycloakUserService keycloakUserService;
     private final LocalDateMapper localDateMapper;
+    private final PersonRepo personRepo;
 
     @Override
-    public PersonOutputDTO add(PersonInputDTO personInputDTO) {
+    public TeleCallerOutputDTO add(TeleCallerInputDTO teleCallerInputDTO) {
 
         String keycloakResponse = keycloakUserService.createUser(
-                personInputDTO.getEmail(),
+                teleCallerInputDTO.getEmail(),
                 "Telecaller"
         );
 
@@ -57,7 +62,7 @@ public class TeleCallerServiceImpl implements TeleCallerService {
 
     @Override
     public List<TeleCallerOutputDTO> getByState(String state) {
-        List<TeleCaller>teleCallers=teleCallerRepo.findByPerson_Address_State(state);
+        List<TeleCaller> teleCallers = teleCallerRepo.findByPerson_Address_StateAndPerson_IsDeletedFalse(state);
         log.info(state);
         log.info(teleCallers.toString());
         return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
@@ -65,8 +70,26 @@ public class TeleCallerServiceImpl implements TeleCallerService {
 
     @Override
     public List<TeleCallerOutputDTO> getAll() {
-        return teleCallerRepo.findAll().stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
+        return teleCallerRepo.findByPerson_IsDeletedFalse()
+                .stream()
+                .map(teleCallerMapper::toTeleCallerOutputDTO)
+                .toList();
     }
 
+    @Override
+    public void deleteTeleCaller(Long id) {
+        TeleCaller teleCaller = teleCallerMapper.find(id);
 
+        String deleteResponse = keycloakUserService.deleteUserByEmail(teleCaller.getPerson().getEmail());
+        if (deleteResponse.equals("User deleted successfully")) {
+            teleCaller.getPerson().setIsDeleted(true);
+            teleCaller.getPerson().setEmail(null);
+            personRepo.save(teleCaller.getPerson());
+            teleCallerRepo.save(teleCaller);
+
+            log.info("TeleCaller with ID {} deleted successfully", id);
+        } else {
+            log.warn("TeleCaller with ID {} not found in Keycloak", id);
+        }
+    }
 }

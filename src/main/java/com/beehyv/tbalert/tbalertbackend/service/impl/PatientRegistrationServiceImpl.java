@@ -16,6 +16,7 @@ import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import com.beehyv.tbalert.tbalertbackend.specifications.PatientSpecification;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,11 +25,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @Service
 @AllArgsConstructor
+@Transactional
 public class PatientRegistrationServiceImpl implements PatientRegistrationService {
 
     private final PatientRepo patientRepo;
@@ -47,18 +48,18 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
         log.info("Service called to Register patient: {}", patientInputDTO);
         PersonOutputDTO person = personService.add(patientInputDTO);
-        Patient patient=new Patient();
+        Patient patient = new Patient();
         patient.setPerson(personMapper.find(person.getId()));
         patient.setAge(patientInputDTO.getAge());
-        String state=person.getState();
+        String state = person.getState();
         String id = switch (state) {
             case "TELANGANA" -> "TG";
             case "UTTAR PRADESH" -> "UP";
             case "BIHAR" -> "BH";
             default -> "";
         };
-        long currCnt=patientRepo.count();
-        id+=currCnt;
+        long currCnt = patientRepo.count();
+        id += currCnt;
         patient.setId(id);
         patientRepo.save(patient);
 
@@ -68,7 +69,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Override
     public PatientOutputDTO getPatient(String patientId) {
         log.info("Service called to retrieve patient with Id: {}", patientId);
-        Patient patient=patientMapper.findPatient(patientId);
+        Patient patient = patientMapper.find(patientId);
         return patientMapper.toPatientOutputDTO(patient);
     }
 
@@ -77,42 +78,42 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     public void updatePatient(String patientId, PatientUpdateInputDTO patientUpdateInputDTO) {
         log.info("Service called to update patient with Id: {}", patientId);
 
-        Patient patient=patientMapper.findPatient(patientId);
-        Person person=patient.getPerson();
+        Patient patient = patientMapper.find(patientId);
+        Person person = patient.getPerson();
 
         person.setUpdatedBy(patientUpdateInputDTO.getUpdatedBy());
-        if(patientUpdateInputDTO.getFirstName()!=null)
+        if (patientUpdateInputDTO.getFirstName() != null)
             person.setFirstName(patientUpdateInputDTO.getFirstName());
-        if(patientUpdateInputDTO.getLastName()!=null)
+        if (patientUpdateInputDTO.getLastName() != null)
             person.setLastName(patientUpdateInputDTO.getLastName());
-        if(patientUpdateInputDTO.getGender()!=null)
+        if (patientUpdateInputDTO.getGender() != null)
             person.setGender(patientUpdateInputDTO.getGender());
-        if(patientUpdateInputDTO.getPhoneNumber()!=null)
+        if (patientUpdateInputDTO.getPhoneNumber() != null)
             person.setPhoneNumber(patientUpdateInputDTO.getPhoneNumber());
-        if(patientUpdateInputDTO.getEmail()!=null)
+        if (patientUpdateInputDTO.getEmail() != null)
             person.setEmail(patientUpdateInputDTO.getEmail());
 
-        Address address=person.getAddress();
-        if(patientUpdateInputDTO.getBlock()!=null)
+        Address address = person.getAddress();
+        if (patientUpdateInputDTO.getBlock() != null)
             address.setBlock(patientUpdateInputDTO.getBlock());
-        if(patientUpdateInputDTO.getState()!=null)
+        if (patientUpdateInputDTO.getState() != null)
             address.setState(patientUpdateInputDTO.getState());
-        if(patientUpdateInputDTO.getGp()!=null)
+        if (patientUpdateInputDTO.getGp() != null)
             address.setGp(patientUpdateInputDTO.getGp());
-        if(patientUpdateInputDTO.getDistrict()!=null)
+        if (patientUpdateInputDTO.getDistrict() != null)
             address.setDistrict(patientUpdateInputDTO.getDistrict());
-        if(patientUpdateInputDTO.getVillage()!=null)
+        if (patientUpdateInputDTO.getVillage() != null)
             address.setVillage(patientUpdateInputDTO.getVillage());
 
-        if(patientUpdateInputDTO.getCurrentStatus()!=null)
+        if (patientUpdateInputDTO.getCurrentStatus() != null)
             patient.setCurrentStatus(patientUpdateInputDTO.getCurrentStatus());
-        if(patientUpdateInputDTO.getAge()>0)
+        if (patientUpdateInputDTO.getAge() > 0)
             patient.setAge(patientUpdateInputDTO.getAge());
 
         person.setAddress(address);
-        person=personRepo.save(person);
+        person = personRepo.save(person);
         patient.setPerson(person);
-        
+
         patientRepo.save(patient);
 
     }
@@ -120,19 +121,20 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Override
     public void deletePatient(String patientId) {
         log.info("Service called to delete patient with Id: {}", patientId);
-        Patient patient=patientMapper.findPatient(patientId);
+        Patient patient = patientMapper.find(patientId);
+        patient.getPerson().setIsDeleted(true);
+        patient.getPerson().setEmail(null);
+        personRepo.save(patient.getPerson());
         contactScreeningRepo.deleteByPatientId(patientId);
-        patientRepo.delete(patient);
+        patientRepo.save(patient);
     }
 
     @Override
     public List<PatientOutputDTO> getAll() {
         log.info("Service getAll patients");
-        List<Patient>patients=patientRepo.findAll();
-        if(!patients.isEmpty()){
-            return patients.stream().map(patientMapper::toPatientOutputDTO).toList();
-        }
-        return null;
+        return patientRepo.findByPerson_IsDeletedFalse().stream()
+                .map(patientMapper::toPatientOutputDTO)
+                .toList();
     }
 
     @Override
@@ -145,7 +147,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     public List<PatientOutputDTO> getFilteredPatients(Map<String, Object> filters) {
         log.info("Service getFilteredPatients filters: {}", filters);
         Specification<Patient> specification = patientSpecification.getPatientsByFilter(filters);
-        List<Patient>patients=patientRepo.findAll(specification);
+        List<Patient> patients = patientRepo.findAll(specification);
         return patients.stream().map(patientMapper::toPatientOutputDTO).toList();
     }
 
@@ -158,12 +160,4 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         List<PatientFollowUp> followUps = patientFollowUpService.findBeforeDate(patient.getPatientId(), LocalDate.now());
         return followUps.stream().skip(Math.max(followUps.size() - 3, 0)).anyMatch(PatientFollowUp::getOccured) ? "Treatment ongoing" : "No Contact";
     }
-
-    @Override
-    public PatientOutputDTO getPatientByNikshayId(String nikhsayId) {
-        Patient patient= Objects.requireNonNull(nikshayMitraRepo.findByNikshayId(nikhsayId).orElse(null)).getPatient();
-        return patientMapper.toPatientOutputDTO(patient);
-    }
-
-
 }

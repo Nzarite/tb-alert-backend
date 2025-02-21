@@ -6,11 +6,13 @@ import com.beehyv.tbalert.tbalertbackend.entity.ContactScreening;
 import com.beehyv.tbalert.tbalertbackend.mapper.ContactScreeningMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
 import com.beehyv.tbalert.tbalertbackend.service.ContactScreeningService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class ContactScreeningServiceImpl implements ContactScreeningService {
     private final ContactScreeningRepository contactScreeningRepository;
     private final ContactScreeningMapper contactScreeningMapper;
@@ -39,6 +41,4 @@ public class ContactScreeningServiceImpl implements ContactScreeningService {
         ContactScreening contactScreening = contactScreeningRepository.findByPatient_Id(patientId).orElseThrow(()->new RuntimeException("Could not find contact screening"));
         contactScreeningRepository.delete(contactScreening);
     }
-
-
 }

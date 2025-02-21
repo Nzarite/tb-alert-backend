@@ -5,12 +5,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PersonRepo extends JpaRepository<Person, Long> {
-    Person findByEmail(String email);
+    Optional<Person> findByEmailAndIsDeletedFalse(String email);
 
-    List<Person> findByAddress_State(String state);
+    List<Person> findByAddress_StateAndIsDeletedFalse(String state);
 
-    int countByCreatedBy(String createdBy);
+    int countByCreatedByAndIsDeletedFalse(String createdBy);
+
+    Optional<Person> findByIdAndIsDeletedFalse(Long id);
+
+    List<Person> findAllByIsDeletedFalse();
 }

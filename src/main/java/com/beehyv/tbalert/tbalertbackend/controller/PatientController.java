@@ -28,53 +28,45 @@ public class PatientController {
 
     @PostMapping("/register")
     public ResponseEntity<PatientOutputDTO> registerPatient(@RequestBody @Valid PatientInputDTO patientInputDTO) {
-            log.info("Controller called for Registering patient: {}", patientInputDTO.toString());
-            return new ResponseEntity<>(patientRegistrationService.register(patientInputDTO), HttpStatus.CREATED);
+        log.info("Controller called for Registering patient: {}", patientInputDTO.toString());
+        return new ResponseEntity<>(patientRegistrationService.register(patientInputDTO), HttpStatus.CREATED);
 
     }
 
     @GetMapping("/{patientId}")
     public ResponseEntity<PatientOutputDTO> getPatient(@PathVariable String patientId) {
-            log.info("Controller called for Getting patient: {}", patientId);
-            return new ResponseEntity<>(patientRegistrationService.getPatient(patientId), HttpStatus.OK);
+        log.info("Controller called for Getting patient: {}", patientId);
+        return new ResponseEntity<>(patientRegistrationService.getPatient(patientId), HttpStatus.OK);
     }
 
     @GetMapping("/name/{patientName}")
     public ResponseEntity<List<PatientOutputDTO>> getPatientByNameOrNikshayIdOrPatientId(@PathVariable String patientName) {
-            log.info("Controller called for Getting patient by name or nikshayId or patientID: {}", patientName);
-            return new ResponseEntity<>(patientRegistrationService.getPatientByNameOrNikshayIdOrPatientId(patientName),HttpStatus.OK);
+        log.info("Controller called for Getting patient by name or nikshayId or patientID: {}", patientName);
+        return new ResponseEntity<>(patientRegistrationService.getPatientByNameOrNikshayIdOrPatientId(patientName), HttpStatus.OK);
 
     }
 
     @PutMapping("/update/{patientId}")
-    public ResponseEntity<HttpStatus> updatePatient(@PathVariable String patientId,@RequestBody @Valid PatientUpdateInputDTO patientUpdateInputDTO) {
-            log.info("Controller being called for Updating patient: {}", patientUpdateInputDTO.toString());
-            patientRegistrationService.updatePatient(patientId, patientUpdateInputDTO);
-            log.info("Patient successfully updated: {}", patientUpdateInputDTO.toString());
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    public ResponseEntity<HttpStatus> updatePatient(@PathVariable String patientId, @RequestBody @Valid PatientUpdateInputDTO patientUpdateInputDTO) {
+        log.info("Controller being called for Updating patient: {}", patientUpdateInputDTO.toString());
+        patientRegistrationService.updatePatient(patientId, patientUpdateInputDTO);
+        log.info("Patient successfully updated: {}", patientUpdateInputDTO.toString());
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
     }
 
     @DeleteMapping("/{patientId}")
     public ResponseEntity<HttpStatus> deletePatient(@PathVariable String patientId) {
-            log.info("Controller called for deleting patient: {}", patientId);
-            patientRegistrationService.deletePatient(patientId);
-            log.info("Patient successfully deleted: {}", patientId);
-        contactScreeningService.deleteContactScreeningByPatientId(patientId);
-            return new ResponseEntity<>(HttpStatus.OK);
-
+        log.info("Controller called for deleting patient: {}", patientId);
+        patientRegistrationService.deletePatient(patientId);
+        log.info("Patient successfully deleted: {}", patientId);
+//        contactScreeningService.deleteContactScreeningByPatientId(patientId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<PatientOutputDTO>> getAllPatients() {
-            log.info("Controller called for Getting all patients");
-            return new ResponseEntity<>(patientRegistrationService.getAll(), HttpStatus.OK);
+        log.info("Controller called for Getting all patients");
+        return new ResponseEntity<>(patientRegistrationService.getAll(), HttpStatus.OK);
     }
-
-    @GetMapping("/nikshayid/{nikshayId}")
-    public ResponseEntity<PatientOutputDTO> getPatientByNikshayId(@PathVariable String nikshayId) {
-        log.info("Controller called for Getting patient by nikshay id: {}", nikshayId);
-        return new ResponseEntity<>(patientRegistrationService.getPatientByNikshayId(nikshayId),HttpStatus.OK);
-    }
-
 }

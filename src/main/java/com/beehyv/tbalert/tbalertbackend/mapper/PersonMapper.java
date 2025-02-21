@@ -24,7 +24,7 @@ public class PersonMapper {
 
     public Person find(Long id)
     {
-        return personRepo.findById(id).orElseThrow(()->new IllegalArgumentException("Invalid Person Id " +id));
+        return personRepo.findByIdAndIsDeletedFalse(id).orElseThrow(()->new IllegalArgumentException("Invalid Person Id " +id));
     }
 
     public Person toPerson(PersonInputDTO personInputDTO)
@@ -37,6 +37,7 @@ public class PersonMapper {
                 .gender(personInputDTO.getGender())
                 .createdOn(LocalDateTime.now())
                 .createdBy(personInputDTO.getCreatedBy())
+                .isDeleted(false)
                 .build();
     }
     public Person toPerson(TeleCallerInputDTO personInputDTO)
@@ -49,6 +50,7 @@ public class PersonMapper {
                 .gender(personInputDTO.getGender())
                 .createdOn(LocalDateTime.now())
                 .createdBy(personInputDTO.getCreatedBy())
+                .isDeleted(false)
                 .build();
     }
 
@@ -62,6 +64,7 @@ public class PersonMapper {
                 .gender(personInputDTO.getGender())
                 .createdOn(LocalDateTime.now())
                 .createdBy(personInputDTO.getCreatedBy())
+                .isDeleted(false)
                 .build();
     }
     public Person toPerson(PatientInputDTO patientInputDTO)
@@ -74,6 +77,7 @@ public class PersonMapper {
                 .gender(patientInputDTO.getGender())
                 .createdOn(LocalDateTime.now())
                 .createdBy(patientInputDTO.getCreatedBy())
+                .isDeleted(false)
                 .build();
     }
 

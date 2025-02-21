@@ -49,7 +49,7 @@ public class TBDetailsServiceImpl implements TBDetailsService {
         TBDetails tbDetails = tbDetailsMapper.toTBDetails(tbDetailsInputDTO);
         tbDetailsRepo.save(tbDetails);
 
-        Patient patient=patientMapper.findPatient(tbDetails.getPatient().getId());
+        Patient patient=patientMapper.find(tbDetails.getPatient().getId());
         LocalDate localDate = LocalDate.now();
         int curr=15;
         for (int i = 0; i < 8; i++)

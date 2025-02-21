@@ -12,6 +12,4 @@ public interface ContactScreeningService {
     void deleteContactScreeningByPatientId(String patientId);
 
     void deleteContactScreeningById(Integer id);
-
-
 }
