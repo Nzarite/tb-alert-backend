@@ -8,7 +8,7 @@ import lombok.Data;
 @Builder
 public class SettingInputDTO {
     @NotEmpty(message = "Key cannot be empty")
-    private String key;
+    private String keyName;
 
     @NotEmpty(message = "Value cannot be empty")
     private String value;
