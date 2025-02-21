@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SettingRepo extends JpaRepository<Setting, String> {
-    public Setting findByKey(String key);
+
+    Setting findByKeyName(String keyName);
 }

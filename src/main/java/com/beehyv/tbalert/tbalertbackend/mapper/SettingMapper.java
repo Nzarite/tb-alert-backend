@@ -13,7 +13,7 @@ public class SettingMapper {
     private SettingRepo settingRepo;
 
     public Setting toSetting(SettingInputDTO settingInputDTO) {
-        Setting setting = settingRepo.findByKey(settingInputDTO.getKey());
+        Setting setting = settingRepo.findByKeyName(settingInputDTO.getKey());
         if (setting == null) {
             throw new IllegalArgumentException("Invalid key: " + settingInputDTO.getKey() + " already exists");
         }
@@ -22,7 +22,7 @@ public class SettingMapper {
 
     public SettingOutputDTO toSettingOutputDTO(Setting setting) {
         return SettingOutputDTO.builder()
-                .key(setting.getKey())
+                .key(setting.getKeyName())
                 .value(setting.getValue())
                 .type(setting.getType())
                 .build();

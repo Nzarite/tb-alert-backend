@@ -27,7 +27,7 @@ public class SettingServiceImpl implements SettingService {
     public List<SettingOutputDTO> getSettings() {
         return settingRepo.findAll().stream()
                 .map(setting -> SettingOutputDTO.builder()
-                        .key(setting.getKey())
+                        .key(setting.getKeyName())
                         .value(setting.getValue())
                         .type(setting.getType())
                         .build())
@@ -36,7 +36,7 @@ public class SettingServiceImpl implements SettingService {
 
     @Override
     public void updateSetting(SettingInputDTO settingInputDTO) {
-        Setting setting = settingRepo.findByKey(settingInputDTO.getKey());
+        Setting setting = settingRepo.findByKeyName(settingInputDTO.getKey());
         if (setting != null) {
             setting.setValue(settingInputDTO.getValue());
         }
@@ -49,7 +49,7 @@ public class SettingServiceImpl implements SettingService {
 
     @Override
     public void deleteSetting(String key) {
-        Setting setting = settingRepo.findByKey(key);
+        Setting setting = settingRepo.findByKeyName(key);
         if (setting != null) {
             settingRepo.delete(setting);
         }

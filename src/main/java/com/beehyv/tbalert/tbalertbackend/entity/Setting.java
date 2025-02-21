@@ -20,9 +20,10 @@ import lombok.NoArgsConstructor;
 public class Setting {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column
-    private String key;
+    private String keyName;
 
     @Column
     private String value;
