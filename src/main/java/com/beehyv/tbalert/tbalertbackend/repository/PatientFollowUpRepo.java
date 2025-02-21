@@ -21,4 +21,6 @@ public interface PatientFollowUpRepo extends JpaRepository<PatientFollowUp, Inte
     List<PatientFollowUp> findByPatientAndDateBefore(Patient patient, LocalDate dateBefore);
 
     List<PatientFollowUp> findAllByPatient_Id(String patientId);
+
+    void deleteAllByPatient_Id(String patientId);
 }

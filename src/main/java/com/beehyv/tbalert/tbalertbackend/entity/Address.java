@@ -29,8 +29,6 @@ public class Address {
     @Column(nullable = false, name = "district")
     private String district;
 
-    @Column(nullable = false,name="state")
-    private String state;
-
-    
+    @ManyToOne(cascade = CascadeType.ALL)
+    private State state;
 }

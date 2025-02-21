@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -23,4 +24,6 @@ public interface MissedMedicationRepo extends JpaRepository<MissedMedication, In
     List<MissedMedication> findByPatientMedicationAndDate(PatientMedication patientMedication, LocalDate date);
 
     List<MissedMedication> findByPatientMedicationInAndDate(ArrayList<PatientMedication> patientMedications, LocalDate date);
+
+    void deleteAllByPatientMedicationIn(Collection<PatientMedication> patientMedications);
 }

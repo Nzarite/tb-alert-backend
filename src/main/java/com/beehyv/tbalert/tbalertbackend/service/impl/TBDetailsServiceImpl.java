@@ -40,18 +40,15 @@ public class TBDetailsServiceImpl implements TBDetailsService {
 
     @Override
     public TBDetailsOutputDTO getTBDetails(String patientId) {
-
         log.info("inside getTBDetails");
 
-        TBDetails tbDetails = tbDetailsRepo.findByPatient_Id(patientId).orElseThrow(() -> new IllegalArgumentException("" +
-                "Patient with id " + patientId + " not found"));
+        TBDetails tbDetails = tbDetailsRepo.findByPatient_Id(patientId).orElseThrow(() -> new IllegalArgumentException("Patient with id " + patientId + " not found"));
 
         return tbDetailsMapper.toOutputDto(tbDetails);
     }
 
     @Override
     public TBDetailsOutputDTO registerTBDetails(TBDetailsInputDTO tbDetailsInputDTO) {
-
         log.info("inside registerTBDetails");
 
         TBDetails tbDetails = tbDetailsMapper.toTBDetails(tbDetailsInputDTO);
@@ -93,9 +90,7 @@ public class TBDetailsServiceImpl implements TBDetailsService {
 
         log.info("inside updateTBDetails");
 
-        TBDetails tbDetails = tbDetailsRepo.findByPatient_Id(patientId).orElseThrow(() -> new IllegalArgumentException("" +
-                "Patient with id " + patientId + " not found"));
-
+        TBDetails tbDetails = tbDetailsRepo.findByPatient_Id(patientId).orElseThrow(() -> new IllegalArgumentException("Patient with id " + patientId + " not found"));
         tbDetails.setDateOfDiagnosis(localDateMapper.toLocalDate(tbDetailsInputDTO.getDateOfDiagnosis()));
         tbDetails.setDateOfTreatmentInitiation(localDateMapper.toLocalDate(tbDetailsInputDTO.getDateOfTreatmentInitiation()));
         tbDetails.setTypeOfPwtb(tbDetailsInputDTO.getTypeOfPwtb());
@@ -108,12 +103,9 @@ public class TBDetailsServiceImpl implements TBDetailsService {
 
     @Override
     public void deleteTBDetails(String patientId) {
-
         log.info("inside deleteTBDetails");
 
-        TBDetails tbDetails = tbDetailsRepo.findByPatient_Id(patientId).orElseThrow(() -> new IllegalArgumentException("" +
-                "Patient with id " + patientId + " not found"));
-
+        TBDetails tbDetails = tbDetailsRepo.findByPatient_Id(patientId).orElseThrow(() -> new IllegalArgumentException("Patient with id " + patientId + " not found"));
         tbDetailsRepo.delete(tbDetails);
     }
 

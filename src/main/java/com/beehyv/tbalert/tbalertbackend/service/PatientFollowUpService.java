@@ -22,4 +22,6 @@ public interface PatientFollowUpService {
     List<PatientFollowUp> findBeforeDate(String id, LocalDate localDate );
 
     List<PatientFollowUpOutputForFrontEndDto> getFollowUpForPatientList(List<PatientOutputDTO>patientList);
+
+    void delete(String patientId);
 }

@@ -6,22 +6,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
-@Data
 @Entity
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@Table(name = "statehead")
-public class StateHead {
+@Table(name = "state")
+public class State {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "person_id")
-    private Person person;
+    @Column(nullable = false, name = "state_name")
+    private String stateName;
 
-    private LocalDate dateOfJoining;
+    @Column(nullable = false, name = "state_code")
+    private String stateCode;
 }

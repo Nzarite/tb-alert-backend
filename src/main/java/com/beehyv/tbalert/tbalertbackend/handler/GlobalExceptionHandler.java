@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DateTimeParseException.class)
     public ResponseEntity<String> handleDateTimeParseException(DateTimeParseException ex) {
         log.warn(errorMessage(ex));
-        return new ResponseEntity<>("Invalid Date format "+ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Invalid Date format " + ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IOException.class)
@@ -108,7 +108,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
         log.error(errorMessage(ex));
-        return new ResponseEntity<>("User with this email already exists", HttpStatus.CONFLICT);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InvalidDataAccessResourceUsageException.class)
@@ -126,6 +126,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralExceptions(Exception e) {
         log.error(errorMessage(e));
-        return new ResponseEntity<>(e.getMessage()+" "+e.getClass().getSimpleName(), HttpStatus.I_AM_A_TEAPOT);
+        return new ResponseEntity<>(e.getMessage() + " " + e.getClass().getSimpleName(), HttpStatus.I_AM_A_TEAPOT);
     }
 }

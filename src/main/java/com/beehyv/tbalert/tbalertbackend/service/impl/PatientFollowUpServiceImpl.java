@@ -73,6 +73,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     @Override
     public PatientFollowUpOutputDTO add(String id, PatientFollowUpInputDTO patientFollowUpInputDTO) {
         log.info("Service called to Add patient follow up with patient id {}", id);
+
         Patient patient=patientMapper.find(id);
         List<MissedMedication>missedMedicationList=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()));
         PatientFollowUp patientFollowUp=patientFollowUpMapper.toPatientFollowUp(patientFollowUpInputDTO,patient);
@@ -82,6 +83,8 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
     @Override
     public PatientFollowUpOutputDTO update(String id, PatientFollowUpInputDTO patientFollowUpInputDTO) {
+        log.info("Service called to Update patient follow up with patient id {}", id);
+
         LocalDate date=localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate());
         missedMedicationService.add(id,patientFollowUpInputDTO.getMissedMedications(),date);
         Patient patient=patientMapper.find(id);
@@ -128,16 +131,27 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
     @Override
     public List<PatientFollowUp> findBeforeDate(String id, LocalDate localDate) {
+        log.info("Service called to Find patient follow up with patient id {}", id);
+
         Patient patient=patientMapper.find(id);
         return patientFollowUpRepo.findByPatientAndDateBefore(patient,localDate);
     }
 
     @Override
     public List<PatientFollowUpOutputForFrontEndDto> getFollowUpForPatientList(List<PatientOutputDTO> patientList) {
+        log.info("Service called to Find patient follow up for patient list");
+
         List<PatientFollowUpOutputForFrontEndDto>patientFollowUpOutputForFrontEndDtos=new ArrayList<>();
         for(PatientOutputDTO patient:patientList){
             patientFollowUpOutputForFrontEndDtos.add(get(patient.getPatientId()));
         }
         return patientFollowUpOutputForFrontEndDtos;
+    }
+
+    @Override
+    public void delete(String patientId) {
+        log.info("Service called to Delete patient follow up with patient id {}", patientId);
+
+        patientFollowUpRepo.deleteAllByPatient_Id(patientId);
     }
 }

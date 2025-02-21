@@ -4,7 +4,9 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.ContactScreeningService;
+import com.beehyv.tbalert.tbalertbackend.service.NikshayMitraService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
+import com.beehyv.tbalert.tbalertbackend.service.TBDetailsService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +26,6 @@ import java.util.List;
 public class PatientController {
 
     private final PatientRegistrationService patientRegistrationService;
-    private final ContactScreeningService contactScreeningService;
 
     @PostMapping("/register")
     public ResponseEntity<PatientOutputDTO> registerPatient(@RequestBody @Valid PatientInputDTO patientInputDTO) {
@@ -60,7 +61,6 @@ public class PatientController {
         log.info("Controller called for deleting patient: {}", patientId);
         patientRegistrationService.deletePatient(patientId);
         log.info("Patient successfully deleted: {}", patientId);
-//        contactScreeningService.deleteContactScreeningByPatientId(patientId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

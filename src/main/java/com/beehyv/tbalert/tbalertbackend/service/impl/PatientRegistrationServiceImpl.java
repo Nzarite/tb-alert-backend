@@ -12,9 +12,7 @@ import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.*;
-import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
-import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
-import com.beehyv.tbalert.tbalertbackend.service.PersonService;
+import com.beehyv.tbalert.tbalertbackend.service.*;
 import com.beehyv.tbalert.tbalertbackend.specifications.PatientSpecification;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -45,10 +43,15 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final PersonService personService;
     private final PatientSpecification patientSpecification;
     private final NikshayMitraRepo nikshayMitraRepo;
+    private final ContactScreeningService contactScreeningService;
+    private final NikshayMitraService nikshayMitraService;
+    private final TBDetailsService tbDetailsService;
+    private final PatientMedicationService patientMedicationService;
 
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
         log.info("Service called to Register patient: {}", patientInputDTO);
+
         PersonOutputDTO person = personService.add(patientInputDTO);
         Patient patient = new Patient();
         patient.setPerson(personMapper.find(person.getId()));
@@ -71,6 +74,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Override
     public PatientOutputDTO getPatient(String patientId) {
         log.info("Service called to retrieve patient with Id: {}", patientId);
+
         Patient patient = patientMapper.find(patientId);
         return patientMapper.toPatientOutputDTO(patient);
     }
@@ -123,18 +127,25 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Override
     public void deletePatient(String patientId) {
         log.info("Service called to delete patient with Id: {}", patientId);
+
         Patient patient = patientMapper.find(patientId);
         patient.getPerson().setIsDeleted(true);
         patient.getPerson().setEmail(null);
         personRepo.save(patient.getPerson());
-        contactScreeningRepo.deleteByPatientId(patientId);
+        nikshayMitraService.deleteNikshayDetails(patientId);
+        tbDetailsService.deleteTBDetails(patientId);
+        contactScreeningService.deleteContactScreeningByPatientId(patientId);
+        patientMedicationService.delete(patientId);
+        patientFollowUpService.delete(patientId);
         patientRepo.save(patient);
     }
 
     @Override
     public List<PatientOutputDTO> getAll() {
         log.info("Service getAll patients");
-        return patientRepo.findByPerson_IsDeletedFalse().stream()
+
+        return patientRepo.findByPerson_IsDeletedFalse()
+                .stream()
                 .map(patientMapper::toPatientOutputDTO)
                 .toList();
     }
@@ -142,19 +153,29 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Override
     public List<PatientOutputDTO> getPatientByNameOrNikshayIdOrPatientId(String patientName) {
         log.info("Service getPatientByNameOrNikshayIdOrPatientId patientName: {}", patientName);
-        return patientRepo.findAllByPatientIdOrNameOrNikshayId(patientName).stream().map(patientMapper::toPatientOutputDTO).toList();
+
+        return patientRepo.findAllByPatientIdOrNameOrNikshayId(patientName)
+                .stream()
+                .map(patientMapper::toPatientOutputDTO)
+                .toList();
     }
 
     @Override
     public List<PatientOutputDTO> getFilteredPatients(Map<String, Object> filters) {
         log.info("Service getFilteredPatients filters: {}", filters);
+
         Specification<Patient> specification = patientSpecification.getPatientsByFilter(filters);
         List<Patient> patients = patientRepo.findAll(specification);
-        return patients.stream().map(patientMapper::toPatientOutputDTO).toList();
+        return patients
+                .stream()
+                .map(patientMapper::toPatientOutputDTO)
+                .toList();
     }
 
     @Override
     public String determinePatientStatus(PatientOutputDTO patient) {
+        log.info("Service determinePatientStatus patient: {}", patient);
+
         if (patient.getCurrentStatus() != null) {
             if ("dead".equals(patient.getCurrentStatus())) return "Dead";
             if (patient.isCured()) return "Cured";
