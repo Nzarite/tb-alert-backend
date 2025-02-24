@@ -56,5 +56,6 @@ public class PatientMedicationServiceImpl implements PatientMedicationService {
         List<PatientMedication>patientMedications=patientMedicationRepo.findAllByPatient_Id(id);
         missedMedicationRepo.deleteAllByPatientMedicationIn(patientMedications);
         patientMedicationRepo.deleteAll(patientMedications);
+        log.info("Deleted patient medications by patient id: {}", id);
     }
 }

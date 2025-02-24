@@ -17,7 +17,7 @@ public class Patient {
     @Id
     private String id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Person person;
 
     private String currentStatus="alive";
