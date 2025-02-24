@@ -62,7 +62,6 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         id+=currCnt;
         patient.setId(id);
         patientRepo.save(patient);
-
         return patientMapper.toPatientOutputDTO(patient);
     }
 

@@ -77,6 +77,9 @@ public class TeleCallerServiceImpl implements TeleCallerService {
             teleCaller.getPerson().setGender(teleCallerInputDTO.getGender());
         if(teleCallerInputDTO.getPhoneNumber()!=null)
             teleCaller.getPerson().setPhoneNumber(teleCallerInputDTO.getPhoneNumber());
+        if(teleCallerInputDTO.getDateOfLeaving()!=null)
+            teleCaller.setDateOfLeaving(localDateMapper.toLocalDate(teleCallerInputDTO.getDateOfLeaving()));
+
         teleCaller.setPerson(teleCaller.getPerson());
         personRepo.save(teleCaller.getPerson());
         return teleCallerMapper.toTeleCallerOutputDTO(teleCallerRepo.save(teleCaller));

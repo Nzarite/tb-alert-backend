@@ -69,8 +69,12 @@ public class StateHeadServiceImpl implements StateHeadService {
             stateHead.getPerson().setGender(stateHeadInputDTO.getGender());
         if(stateHeadInputDTO.getPhoneNumber()!=null)
             stateHead.getPerson().setPhoneNumber(stateHeadInputDTO.getPhoneNumber());
+
+        if(stateHeadInputDTO.getDateOfLeaving()!=null)
+            stateHead.setDateOfLeaving(localDateMapper.toLocalDate(stateHeadInputDTO.getDateOfLeaving()));
         stateHead.setPerson(stateHead.getPerson());
         personRepo.save(stateHead.getPerson());
-        return stateHeadMapper.toStateHeadOutputDTO(stateHeadRepo.save(stateHead));
+        stateHead=stateHeadRepo.save(stateHead);
+        return stateHeadMapper.toStateHeadOutputDTO(stateHead);
     }
 }

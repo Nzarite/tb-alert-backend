@@ -2,7 +2,6 @@ package com.beehyv.tbalert.tbalertbackend.service;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.StateHeadInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.StateHeadOutputDTO;
-import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -15,5 +14,5 @@ public interface StateHeadService {
 
     List<StateHeadOutputDTO> getStateHeadByName(String name);
 
-    StateHeadOutputDTO update(Long id, @Valid StateHeadInputDTO stateHeadInputDTO);
+    StateHeadOutputDTO update(Long id, StateHeadInputDTO stateHeadInputDTO);
 }
