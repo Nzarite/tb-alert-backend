@@ -17,9 +17,9 @@ public class State {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false, name = "state_name")
+    @Column(nullable = false, name = "state_name", unique = true)
     private String stateName;
 
-    @Column(nullable = false, name = "state_code")
+    @Column(nullable = false, name = "state_code", unique = true)
     private String stateCode;
 }

@@ -16,6 +16,7 @@ public class StateHeadMapper {
 
     private final StateHeadRepo stateHeadRepo;
     private final LocalDateMapper localDateMapper;
+    private final StateMapper stateMapper;
 
     public StateHead find(long id) {
         log.info("Mapper called to find StateHead with id {}", id);
@@ -35,7 +36,7 @@ public class StateHeadMapper {
                 .createdBy(person.getCreatedBy())
                 .createdOn(localDateMapper.toDateTime(person.getCreatedOn()))
                 .phoneNumber(person.getPhoneNumber())
-                .state(address.getState())
+                .state(address.getState().getStateName())
                 .gp(address.getGp())
                 .village(address.getVillage())
                 .district(address.getDistrict())

@@ -26,7 +26,7 @@ public class ReportsController {
 
 
     @PostMapping("/patient/filter")
-    public ResponseEntity<byte[]>getReportsFilter(@RequestBody Map<String,Object> filter) throws IOException {
+    public ResponseEntity<byte[]> getReportsFilter(@RequestBody Map<String, Object> filter) throws IOException {
         byte[] excelData = reportsService.getPatients(filter);
 
         return ResponseEntity.ok()
@@ -42,34 +42,32 @@ public class ReportsController {
     }
 
     @PostMapping("/telecaller")
-    public ResponseEntity<byte[]>getTeleCallerOfAState(@RequestBody StateInputDTO state) throws IOException
-    {
-        log.info("Controller called for Getting tele caller for state: {}", state);
-        byte[] excelData=reportsService.getTeleCallerOfAState(state.getState());
+    public ResponseEntity<byte[]> getTeleCallerOfAState(@RequestBody String state) throws IOException {
+        log.info("Controller called for Getting telecallers for state: {}", state);
+        byte[] excelData = reportsService.getTeleCallerOfAState(state);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=telecaller.xlsx")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=telecaller.xlsx")
                 .body(excelData);
-
     }
 
     @PostMapping("/statehead")
     public ResponseEntity<byte[]> getStateHeads() throws IOException {
         log.info("Controller called for Getting state heads");
-        byte[] excelData=reportsService.getStateHeads();
+        byte[] excelData = reportsService.getStateHeads();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=statehead.xlsx")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=statehead.xlsx")
                 .body(excelData);
     }
 
     @PostMapping("/patient/followup")
-    public ResponseEntity<byte[]>getPatientFollowUps(@RequestBody Map<String,Object> filter) throws IOException {
+    public ResponseEntity<byte[]> getPatientFollowUps(@RequestBody Map<String, Object> filter) throws IOException {
         log.info("Controller called for Getting patient follow ups");
-        byte[] excelData=reportsService.getPatientFollowUp(filter);
+        byte[] excelData = reportsService.getPatientFollowUp(filter);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=patientfollowup.xlsx")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=patientfollowup.xlsx")
                 .body(excelData);
 
     }

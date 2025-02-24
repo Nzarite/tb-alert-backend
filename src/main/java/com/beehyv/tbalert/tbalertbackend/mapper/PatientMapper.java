@@ -16,12 +16,13 @@ import org.springframework.stereotype.Component;
 public class PatientMapper {
 
     private final PatientRepo patientRepo;
-    private final AddressRepo addressRepo;
     private LocalDateMapper localDateMapper;
 
     public Patient find(String patientId) {
         log.info("Mapper called for Find patient with id {}", patientId);
-        return patientRepo.findById(patientId).filter(patient -> !patient.getPerson().getIsDeleted())
+
+        return patientRepo.findById(patientId)
+                .filter(patient -> !patient.getPerson().getIsDeleted())
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Patient with id " + patientId + " not found"));
     }
@@ -49,7 +50,7 @@ public class PatientMapper {
                 .block(address.getBlock())
                 .village(address.getVillage())
                 .district(address.getDistrict())
-                .state(address.getState())
+                .state(address.getState().getStateName())
                 .currentStatus(patient.getCurrentStatus()==null?"alive":patient.getCurrentStatus())
                 .cured(patient.isCured())
                 .createdBy(person.getCreatedBy())

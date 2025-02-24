@@ -4,13 +4,10 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Address;
-import com.beehyv.tbalert.tbalertbackend.entity.Patient;
-import com.beehyv.tbalert.tbalertbackend.entity.PatientFollowUp;
-import com.beehyv.tbalert.tbalertbackend.entity.Person;
-import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
+import com.beehyv.tbalert.tbalertbackend.entity.*;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
+import com.beehyv.tbalert.tbalertbackend.mapper.StateMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.*;
 import com.beehyv.tbalert.tbalertbackend.service.*;
 import com.beehyv.tbalert.tbalertbackend.specifications.PatientSpecification;
@@ -21,10 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -34,19 +29,16 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     private final PatientRepo patientRepo;
     private final PatientMapper patientMapper;
-    private final AddressRepo addressRepo;
-    private final ContactScreeningRepo contactScreeningRepo;
     private final PatientFollowUpService patientFollowUpService;
     private final PersonMapper personMapper;
-    private final LocalDateMapper localDateMapper;
     private final PersonRepo personRepo;
     private final PersonService personService;
     private final PatientSpecification patientSpecification;
-    private final NikshayMitraRepo nikshayMitraRepo;
     private final ContactScreeningService contactScreeningService;
     private final NikshayMitraService nikshayMitraService;
     private final TBDetailsService tbDetailsService;
     private final PatientMedicationService patientMedicationService;
+    private final StateMapper stateMapper;
 
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
@@ -56,19 +48,14 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         Patient patient = new Patient();
         patient.setPerson(personMapper.find(person.getId()));
         patient.setAge(patientInputDTO.getAge());
-        String state = person.getState();
-        String id = switch (state) {
-            case "TELANGANA" -> "TG";
-            case "UTTAR PRADESH" -> "UP";
-            case "BIHAR" -> "BH";
-            default -> "";
-        };
+        String stateName = person.getState();
+        State state = stateMapper.getStateByName(stateName);
         long currCnt = patientRepo.count();
-        id += currCnt;
+        String id = state.getStateCode() + currCnt;
         patient.setId(id);
-        patientRepo.save(patient);
+        Patient savedPatient = patientRepo.save(patient);
 
-        return patientMapper.toPatientOutputDTO(patient);
+        return patientMapper.toPatientOutputDTO(savedPatient);
     }
 
     @Override
@@ -103,7 +90,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         if (patientUpdateInputDTO.getBlock() != null)
             address.setBlock(patientUpdateInputDTO.getBlock());
         if (patientUpdateInputDTO.getState() != null)
-            address.setState(patientUpdateInputDTO.getState());
+            address.setState(stateMapper.getStateByName(patientUpdateInputDTO.getState()));
         if (patientUpdateInputDTO.getGp() != null)
             address.setGp(patientUpdateInputDTO.getGp());
         if (patientUpdateInputDTO.getDistrict() != null)
@@ -196,12 +183,4 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
         return treatmentStatus;
     }
-
-    @Override
-    public PatientOutputDTO getPatientByNikshayId(String nikhsayId) {
-        Patient patient= Objects.requireNonNull(nikshayMitraRepo.findByNikshayId(nikhsayId).orElse(null)).getPatient();
-        return patientMapper.toPatientOutputDTO(patient);
-    }
-
-
 }

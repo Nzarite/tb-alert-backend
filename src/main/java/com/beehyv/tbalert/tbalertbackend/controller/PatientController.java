@@ -3,16 +3,13 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepo;
-import com.beehyv.tbalert.tbalertbackend.service.ContactScreeningService;
-import com.beehyv.tbalert.tbalertbackend.service.NikshayMitraService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
-import com.beehyv.tbalert.tbalertbackend.service.TBDetailsService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +23,6 @@ import java.util.List;
 public class PatientController {
 
     private final PatientRegistrationService patientRegistrationService;
-    private final ContactScreeningRepo contactScreeningRepo;
-    private final ContactScreeningService contactScreeningService;
 
     @PostMapping("/register")
     public ResponseEntity<PatientOutputDTO> registerPatient(@RequestBody @Valid PatientInputDTO patientInputDTO) {
@@ -71,11 +66,4 @@ public class PatientController {
         log.info("Controller called for Getting all patients");
         return new ResponseEntity<>(patientRegistrationService.getAll(), HttpStatus.OK);
     }
-
-    @GetMapping("/nikshayid/{nikshayId}")
-    public ResponseEntity<PatientOutputDTO> getPatientByNikshayId(@PathVariable String nikshayId) {
-        log.info("Controller called for Getting patient by nikshay id: {}", nikshayId);
-        return new ResponseEntity<>(patientRegistrationService.getPatientByNikshayId(nikshayId),HttpStatus.OK);
-    }
-
 }

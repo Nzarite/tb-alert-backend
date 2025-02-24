@@ -9,9 +9,7 @@ import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
 import com.beehyv.tbalert.tbalertbackend.mapper.AddressMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
-import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PersonRepo;
-import com.beehyv.tbalert.tbalertbackend.service.KeycloakUserService;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -28,24 +26,12 @@ import java.util.Optional;
 public class PersonServiceImpl implements PersonService {
 
     private final AddressMapper addressMapper;
-    private final AddressRepo addressRepo;
     private PersonRepo personRepo;
     private PersonMapper personMapper;
-    private final KeycloakUserService keycloakUserService;
 
     @Override
     public PersonOutputDTO add(PersonInputDTO person) {
         log.info("Service called for Add person: {}", person);
-
-//        String keycloakResponse = keycloakUserService.createUser(
-//                person.getEmail(),
-//                person.getRole()
-//        );
-//
-//        if (!"User created and role assigned successfully".equals(keycloakResponse)) {
-//            log.error("Failed to create user in Keycloak: {}", keycloakResponse);
-//            throw new RuntimeException("Failed to create user in Keycloak");
-//        }
 
         Person personSaved = personMapper.toPerson(person);
         Address address = addressMapper.toAddress(person);
@@ -57,6 +43,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonOutputDTO add(TeleCallerInputDTO teleCaller) {
         log.info("Service called for Add person: {}", teleCaller);
+
         Person personSaved = personMapper.toPerson(teleCaller);
         Address address = addressMapper.toAddress(teleCaller);
         personSaved.setAddress(address);
@@ -67,6 +54,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonOutputDTO add(StateHeadInputDTO stateHead) {
         log.info("Service called for Add person: {}", stateHead);
+
         Person personSaved = personMapper.toPerson(stateHead);
         Address address = addressMapper.toAddress(stateHead);
         personSaved.setAddress(address);
@@ -77,6 +65,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonOutputDTO add(PatientInputDTO patientInputDTO) {
         log.info("Service called for Add person: {}", patientInputDTO);
+
         Person personSaved = personMapper.toPerson(patientInputDTO);
         Address address = addressMapper.toAddress(patientInputDTO);
         personSaved.setAddress(address);
@@ -108,7 +97,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public List<PersonOutputDTO> getByState(String state) {
 
-        List<Person> personList = personRepo.findByAddress_StateAndIsDeletedFalse(state);
+        List<Person> personList = personRepo.findByAddress_State_StateNameAndIsDeletedFalse(state);
         return personList.stream().map(personMapper::toPersonOutputDTO).toList();
     }
 

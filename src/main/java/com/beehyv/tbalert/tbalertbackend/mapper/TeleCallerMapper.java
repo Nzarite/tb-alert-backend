@@ -39,7 +39,7 @@ public class TeleCallerMapper {
                 .village(address.getVillage())
                 .gp(address.getGp())
                 .district(address.getDistrict())
-                .state(address.getState())
+                .state(address.getState().getStateName())
                 .createdBy(person.getCreatedBy())
                 .createdOn(localDateMapper.toDateTime(person.getCreatedOn()))
                 .updatedBy(person.getUpdatedBy())
