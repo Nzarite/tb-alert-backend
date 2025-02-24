@@ -2,17 +2,11 @@ package com.beehyv.tbalert.tbalertbackend.service.impl;
 
 import com.beehyv.tbalert.tbalertbackend.dto.output.*;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputForFrontEndDto.FollowUpDetails;
-import com.beehyv.tbalert.tbalertbackend.entity.ContactScreening;
-import com.beehyv.tbalert.tbalertbackend.entity.NikshayMitra;
-import com.beehyv.tbalert.tbalertbackend.entity.Person;
-import com.beehyv.tbalert.tbalertbackend.entity.TBDetails;
+import com.beehyv.tbalert.tbalertbackend.entity.*;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
-import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepo;
-import com.beehyv.tbalert.tbalertbackend.repository.NikshayMitraRepo;
-import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
-import com.beehyv.tbalert.tbalertbackend.repository.TBDetailsRepo;
+import com.beehyv.tbalert.tbalertbackend.repository.*;
 import com.beehyv.tbalert.tbalertbackend.service.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +41,7 @@ public class ReportsServiceImpl implements ReportsService {
     private final StateHeadService stateHeadService;
     private final PersonService personService;
     private final PatientMapper patientMapper;
+    private final PatientFollowUpRepo patientFollowUpRepo;
 
 
     @Override
@@ -176,6 +172,21 @@ public class ReportsServiceImpl implements ReportsService {
             return byteArrayOutputStream.toByteArray();
 
         } catch (IOException e) {
+            log.error("Error generating report: {}", e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    @Override
+    public byte[] getPatientFollowUpForToday() throws IOException {
+        try(Workbook workbook=new XSSFWorkbook();
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
+        {
+            List<PatientFollowUp>patientFollowUps=patientFollowUpRepo.findAllByDate(LocalDate.now());
+            return null;
+        }
+        catch (IOException e)
+        {
             log.error("Error generating report: {}", e.getMessage());
             throw new IOException(e.getMessage());
         }

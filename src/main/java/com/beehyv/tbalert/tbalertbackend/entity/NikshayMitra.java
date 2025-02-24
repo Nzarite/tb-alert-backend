@@ -38,7 +38,7 @@ public class NikshayMitra {
     private LocalDate dateOfDbt;
 
     @Column(nullable = false, name = "nikshay_mitra_status")
-    private String nikshayMitraStatus;
+    private Boolean nikshayMitraStatus;
 
     @Column(name = "nikshay_mitra_date")
     private LocalDate nikshayMitraDate;
