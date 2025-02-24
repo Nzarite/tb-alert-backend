@@ -66,4 +66,11 @@ public class PatientController {
         log.info("Controller called for Getting all patients");
         return new ResponseEntity<>(patientRegistrationService.getAll(), HttpStatus.OK);
     }
+
+    @GetMapping("/state/{state}")
+    public ResponseEntity<List<PatientOutputDTO>> getPatientByState(@PathVariable String state) {
+        log.info("Controller called for Getting patient by state: {}", state);
+
+        return new ResponseEntity<>(patientRegistrationService.getAllByState(state), HttpStatus.OK);
+    }
 }

@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @AllArgsConstructor
@@ -29,6 +31,11 @@ public class StateHeadController {
     @GetMapping("/{id}")
     public ResponseEntity<PersonOutputDTO> findByPersonId(@PathVariable Long id) {
         return new ResponseEntity<>(stateHeadService.findByPersonId(id), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<StateHeadOutputDTO>> getAll() {
+        return new ResponseEntity<>(stateHeadService.getAll(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

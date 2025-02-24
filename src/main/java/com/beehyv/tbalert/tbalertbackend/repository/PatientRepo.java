@@ -1,15 +1,16 @@
 package com.beehyv.tbalert.tbalertbackend.repository;
 
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
-import com.beehyv.tbalert.tbalertbackend.entity.Person;
+import org.apache.el.stream.Stream;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PatientRepo extends JpaRepository<Patient, String>, JpaSpecificationExecutor<Patient> {
@@ -27,5 +28,9 @@ public interface PatientRepo extends JpaRepository<Patient, String>, JpaSpecific
             "OR LOWER(n.nikshayId) LIKE LOWER(CONCAT('%', :patientName, '%')))")
     List<Patient> findAllByPatientIdOrNameOrNikshayId(@Param("patientName") String patientName);
 
-    List<Patient> findByPerson_IsDeletedFalse();
+    List<Patient> findAllByPerson_IsDeletedFalse();
+
+    List<Patient> findAllByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(String state);
+
+    Optional<Patient> findByIdAndPerson_IsDeletedFalse(String patientId);
 }

@@ -21,19 +21,17 @@ public class PatientMapper {
     public Patient find(String patientId) {
         log.info("Mapper called for Find patient with id {}", patientId);
 
-        return patientRepo.findById(patientId)
-                .filter(patient -> !patient.getPerson().getIsDeleted())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Patient with id " + patientId + " not found"));
+        return patientRepo.findByIdAndPerson_IsDeletedFalse(patientId).orElseThrow(() -> new IllegalArgumentException(
+                "Patient with id " + patientId + " not found"));
     }
 
     public PatientOutputDTO toPatientOutputDTO(Patient patient) {
         log.info("Mapper called for toPatientOutputDTO with id {}", patient.getId());
 
         Person person = patient.getPerson();
-        Address address=person.getAddress();
+        Address address = person.getAddress();
 
-        if(address==null) {
+        if (address == null) {
             throw new IllegalArgumentException("Patient with id " + patient.getId() + " not found");
         }
         log.info("Email {}", person.getUpdatedBy());
@@ -51,7 +49,7 @@ public class PatientMapper {
                 .village(address.getVillage())
                 .district(address.getDistrict())
                 .state(address.getState().getStateName())
-                .currentStatus(patient.getCurrentStatus()==null?"alive":patient.getCurrentStatus())
+                .currentStatus(patient.getCurrentStatus() == null ? "alive" : patient.getCurrentStatus())
                 .cured(patient.isCured())
                 .createdBy(person.getCreatedBy())
                 .createdAt(localDateMapper.toDateTime(person.getCreatedOn()))

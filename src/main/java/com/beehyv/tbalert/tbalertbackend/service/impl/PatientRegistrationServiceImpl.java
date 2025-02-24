@@ -131,7 +131,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     public List<PatientOutputDTO> getAll() {
         log.info("Service getAll patients");
 
-        return patientRepo.findByPerson_IsDeletedFalse()
+        return patientRepo.findAllByPerson_IsDeletedFalse()
                 .stream()
                 .map(patientMapper::toPatientOutputDTO)
                 .toList();
@@ -182,5 +182,15 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         }
 
         return treatmentStatus;
+    }
+
+    @Override
+    public List<PatientOutputDTO> getAllByState(String state) {
+        log.info("Service getAllByState state: {}", state);
+
+        List<Patient> patients = patientRepo.findAllByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(state);
+        return patients.stream()
+                .map(patientMapper::toPatientOutputDTO)
+                .toList();
     }
 }

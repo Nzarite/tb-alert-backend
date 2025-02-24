@@ -24,4 +24,6 @@ public interface PatientRegistrationService {
     List<PatientOutputDTO> getFilteredPatients(Map<String, Object> filters);
 
     String determinePatientStatus(PatientOutputDTO patientOutputDTO);
+
+    List<PatientOutputDTO> getAllByState(String state);
 }
