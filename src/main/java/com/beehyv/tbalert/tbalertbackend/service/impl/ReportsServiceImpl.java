@@ -2,7 +2,10 @@ package com.beehyv.tbalert.tbalertbackend.service.impl;
 
 import com.beehyv.tbalert.tbalertbackend.dto.output.*;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputForFrontEndDto.FollowUpDetails;
-import com.beehyv.tbalert.tbalertbackend.entity.*;
+import com.beehyv.tbalert.tbalertbackend.entity.ContactScreening;
+import com.beehyv.tbalert.tbalertbackend.entity.NikshayMitra;
+import com.beehyv.tbalert.tbalertbackend.entity.Person;
+import com.beehyv.tbalert.tbalertbackend.entity.TBDetails;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
