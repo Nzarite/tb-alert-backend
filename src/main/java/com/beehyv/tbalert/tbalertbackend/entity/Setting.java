@@ -22,8 +22,8 @@ public class Setting {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name = "`key`", unique = true, nullable = false) // Escape "key"
-    private String key;
+    @Column
+    private String keyName;
 
     @Column
     private String value;

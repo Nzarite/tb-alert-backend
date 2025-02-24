@@ -17,11 +17,18 @@ public class ContactScreeningMapper {
     private final PatientRepo patientRepo;
     private final LocalDateMapper localDateMapper;
 
-    public ContactScreening toContactScreening(ContactScreeningInputDTO contactScreeningInputDTO) {
-        Patient patient = patientRepo.findById(contactScreeningInputDTO.getPatientId()).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + contactScreeningInputDTO.getPatientId()));
+    public ContactScreening toContactScreening(String patientId, ContactScreeningInputDTO contactScreeningInputDTO) {
+        Patient patient = patientRepo.findById(patientId).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + patientId));
+
+        if(!contactScreeningInputDTO.getContactScreeningDone()){
+            return ContactScreening.builder()
+                    .contactScreeningDone(false)
+                    .patient(patient)
+                    .build();
+        }
 
         return ContactScreening.builder()
-                .contactScreeningDone(contactScreeningInputDTO.getContactScreeningDone())
+                .contactScreeningDone(true)
                 .dateOfContactScreening(localDateMapper.toLocalDate(contactScreeningInputDTO.getDateOfContactScreening()))
                 .noOfHHCsAvailable(contactScreeningInputDTO.getNoOfHHCsAvailable())
                 .noOfHHCsScreened(contactScreeningInputDTO.getNoOfHHCsScreened())

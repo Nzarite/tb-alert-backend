@@ -24,18 +24,14 @@ public class ContactScreeningController {
         return new ResponseEntity<>(contactScreeningService.getContactScreeningById(patientId), HttpStatus.OK);
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<?> saveContactScreeningDetails(@RequestBody @Valid ContactScreeningInputDTO contactScreeningInputDTO) {
-        contactScreeningService.saveContactScreening(contactScreeningInputDTO);
-
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    @PostMapping("{patientId}")
+    public ResponseEntity<ContactScreeningOutputDTO> setContactScreening(@PathVariable String patientId, @RequestBody @Valid ContactScreeningInputDTO contactScreeningInputDTO) {
+        return new ResponseEntity<>(contactScreeningService.setContactScreening(patientId, contactScreeningInputDTO), HttpStatus.ACCEPTED);
     }
 
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateContactScreeningDetails(@RequestBody @Valid ContactScreeningInputDTO contactScreeningInputDTO) {
-        contactScreeningService.saveContactScreening(contactScreeningInputDTO);
-
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    @PutMapping("/{patientId}")
+    public ResponseEntity<ContactScreeningOutputDTO> updateContactScreening(@PathVariable String patientId, @RequestBody @Valid ContactScreeningInputDTO contactScreeningInputDTO) {
+        return new ResponseEntity<>(contactScreeningService.updateContactScreening(patientId, contactScreeningInputDTO), HttpStatus.ACCEPTED);
     }
 }

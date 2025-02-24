@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class SettingOutputDTO {
-    private String key;
+    private String keyName;
     private String value;
     private String type;
 }

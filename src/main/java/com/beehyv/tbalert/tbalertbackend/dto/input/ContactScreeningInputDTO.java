@@ -7,8 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ContactScreeningInputDTO {
-
-    @NotNull(message = "This field cannot be empty")
+    @NotNull(message = "This field cannot be null")
     private Boolean contactScreeningDone;
 
     private String dateOfContactScreening;

@@ -35,7 +35,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final PatientRepo patientRepo;
     private final PatientMapper patientMapper;
     private final AddressRepo addressRepo;
-    private final ContactScreeningRepository contactScreeningRepo;
+    private final ContactScreeningRepo contactScreeningRepo;
     private final PatientFollowUpService patientFollowUpService;
     private final PersonMapper personMapper;
     private final LocalDateMapper localDateMapper;
@@ -196,4 +196,12 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
         return treatmentStatus;
     }
+
+    @Override
+    public PatientOutputDTO getPatientByNikshayId(String nikhsayId) {
+        Patient patient= Objects.requireNonNull(nikshayMitraRepo.findByNikshayId(nikhsayId).orElse(null)).getPatient();
+        return patientMapper.toPatientOutputDTO(patient);
+    }
+
+
 }
