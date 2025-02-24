@@ -42,6 +42,8 @@ public class ReportsServiceImpl implements ReportsService {
     private final PersonService personService;
     private final PatientMapper patientMapper;
     private final PatientFollowUpRepo patientFollowUpRepo;
+    private final String stateLiteral="State";
+    private final String emailLiteral="Email";
 
 
     @Override
@@ -71,7 +73,7 @@ public class ReportsServiceImpl implements ReportsService {
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             Sheet sheet = reportsHelperService.createSheetWithHeader(7000,workbook, "Patient Report",
                     "Patient ID", "Name", "Gender", "Age",
-                    "Phone Number", "Email", "Block", "GP", "Village", "District", "State", "Current Status",
+                    "Phone Number", emailLiteral, "Block", "GP", "Village", "District", stateLiteral, "Current Status",
                     "Cured", "Created At", "Created By", "Updated By", "Nikshay ID", "UDST Status",
                     "Date Of UDST", "UDST Result", "DBT Status", "Date Of DBT", "Nikshay Mitra Status",
                     "Nikshay Mitra Date", "Nikshay Mitra Name", "Contact Screening Done",
@@ -110,7 +112,7 @@ public class ReportsServiceImpl implements ReportsService {
                 teleCallerOutputDTOList=teleCallerService.getByState(state);
             else teleCallerOutputDTOList=teleCallerService.getAll();
             log.info(teleCallerOutputDTOList.toString());
-            Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Telecaller Details","Id","Name","State","Email",
+            Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Telecaller Details","Id","Name",stateLiteral,emailLiteral,
                     "Phone number","Date Of Joining","Patients Registered");
             applyFontAndPopulateSheet(teleCallerOutputDTOList, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "TeleCallerDetails.xlsx");
@@ -130,7 +132,7 @@ public class ReportsServiceImpl implements ReportsService {
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
         {
             List<StateHeadOutputDTO>stateHeadOutputDTOS=stateHeadService.getAll();
-            Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"StateHead Details","Id","Name","State","Email",
+            Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"StateHead Details","Id","Name",stateLiteral,emailLiteral,
                     "Phone number","Date Of Joining","TeleCallers Registered");
             applyFontAndPopulateSheet(stateHeadOutputDTOS, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "StateHeads.xlsx");
@@ -183,7 +185,12 @@ public class ReportsServiceImpl implements ReportsService {
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
         {
             List<PatientFollowUp>patientFollowUps=patientFollowUpRepo.findAllByDate(LocalDate.now());
-            return null;
+            Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Follow Up for Today","Patient Name","Patient Phone Number");
+            sheet.setColumnWidth(0,sheet.getColumnWidth(0));
+            applyFontAndPopulateSheet(patientFollowUps, workbook, sheet);
+            reportsHelperService.writeWorkbookToFile(workbook, "FollowUpsForToday.xlsx");
+            workbook.write(byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
         }
         catch (IOException e)
         {
@@ -207,7 +214,17 @@ public class ReportsServiceImpl implements ReportsService {
             else if(object.getClass()== PatientFollowUpOutputForFrontEndDto.class) {
                 populatePatientFollowUpRow(row, (PatientFollowUpOutputForFrontEndDto) object, cellStyle);
             }
+            else if(object.getClass()== PatientFollowUp.class)
+            {
+                populateFollowUpForToday(row,(PatientFollowUp)object,cellStyle);
+            }
         }
+    }
+
+    private void populateFollowUpForToday(Row row, PatientFollowUp patientFollowUp, CellStyle cellStyle) {
+        int ind=0;
+        reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getPatient().getPerson().getFirstName()+" "+patientFollowUp.getPatient().getPerson().getLastName(),cellStyle);
+        reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getPatient().getPerson().getPhoneNumber(),cellStyle);
     }
 
     private void populatePatientFollowUpRow(Row row, PatientFollowUpOutputForFrontEndDto followUp, CellStyle cellStyle) {
@@ -329,8 +346,7 @@ public class ReportsServiceImpl implements ReportsService {
                 startColumn=currentColumn + 1;
             }
         }
-        reportsHelperService.createOrUpdateCell(row, startColumn, patient.getCreatedBy(), cellStyle);
-        startColumn++;
+        reportsHelperService.createOrUpdateCell(row, startColumn++, patient.getCreatedBy(), cellStyle);
     }
 
 
