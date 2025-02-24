@@ -161,7 +161,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                 .skip(Math.max(followUps.size() - 3, 0))
                 .anyMatch(patientFollowUp -> patientFollowUp.getStatus().equals("Occured"));
 
-        if (recentOccurrence) {
+        if (followUps.isEmpty() || recentOccurrence) {
             treatmentStatus = "Treatment ongoing";
         } else if (followUps.getLast().getStatus().equals("Cancelled")) {
             treatmentStatus = "Treatment cancelled";
