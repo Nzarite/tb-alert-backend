@@ -20,7 +20,7 @@ public class PatientFollowUpInputDTO {
 
     private List<MissedMedicationInputDTO>missedMedications;
 
-    private boolean cured;
+    private Boolean cured;
 
     @NotNull
     private int patientCondition;
