@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 
-public interface ContactScreeningRepository extends JpaRepository<ContactScreening, Integer> {
+public interface ContactScreeningRepo extends JpaRepository<ContactScreening, Integer> {
 
     void deleteByPatientId(String patientId);
 

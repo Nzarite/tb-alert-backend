@@ -3,6 +3,7 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepo;
 import com.beehyv.tbalert.tbalertbackend.service.ContactScreeningService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import jakarta.validation.Valid;
@@ -10,7 +11,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -21,6 +30,7 @@ import java.util.List;
 public class PatientController {
 
     private final PatientRegistrationService patientRegistrationService;
+    private final ContactScreeningRepo contactScreeningRepo;
     private final ContactScreeningService contactScreeningService;
 
     @PostMapping("/register")
@@ -55,9 +65,9 @@ public class PatientController {
     @DeleteMapping("/{patientId}")
     public ResponseEntity<HttpStatus> deletePatient(@PathVariable String patientId) {
             log.info("Controller called for deleting patient: {}", patientId);
+            contactScreeningService.deleteContactScreeningByPatientId(patientId);
             patientRegistrationService.deletePatient(patientId);
             log.info("Patient successfully deleted: {}", patientId);
-        contactScreeningService.deleteContactScreeningByPatientId(patientId);
             return new ResponseEntity<>(HttpStatus.OK);
 
     }

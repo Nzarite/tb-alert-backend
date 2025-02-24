@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
 
 import java.time.LocalDate;
 
@@ -52,7 +53,7 @@ public class ContactScreening {
     @Column(name = "hhcs_initiated_tpt")
     private Integer noOfHHCsInitiatedTPT;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 }

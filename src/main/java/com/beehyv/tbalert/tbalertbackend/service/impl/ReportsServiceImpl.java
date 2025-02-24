@@ -6,7 +6,7 @@ import com.beehyv.tbalert.tbalertbackend.entity.*;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
-import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepository;
+import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.NikshayMitraRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.TBDetailsRepo;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ public class ReportsServiceImpl implements ReportsService {
     private final ReportsHelperService reportsHelperService;
     private final TeleCallerService teleCallerService;
     private final NikshayMitraRepo nikshayMitraRepo;
-    private final ContactScreeningRepository contactScreeningRepository;
+    private final ContactScreeningRepo contactScreeningRepos;
     private final TBDetailsRepo tbDetailsRepo;
     private final PatientFollowUpService patientFollowUpService;
     private final PersonMapper personMapper;
@@ -269,7 +268,7 @@ public class ReportsServiceImpl implements ReportsService {
             reportsHelperService.createOrUpdateCell(row, 24, nikshayMitra.getNikshayMitraName(), cellStyle);
         }
 
-        ContactScreening contactScreening = contactScreeningRepository.findByPatient_Id(patient.getPatientId()).orElse(null);
+        ContactScreening contactScreening = contactScreeningRepos.findByPatient_Id(patient.getPatientId()).orElse(null);
         if (contactScreening != null) {
             reportsHelperService.createOrUpdateCell(row, 25, contactScreening.getContactScreeningDone(), cellStyle);
             reportsHelperService.createOrUpdateCell(row, 26, contactScreening.getDateOfContactScreening(), cellStyle);
