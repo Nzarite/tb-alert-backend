@@ -2,6 +2,7 @@ package com.beehyv.tbalert.tbalertbackend.specifications;
 
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
+import com.beehyv.tbalert.tbalertbackend.entity.TBDetails;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
@@ -57,7 +58,7 @@ public class PatientSpecification {
                 boolean curedBool = (boolean) criteria.get("cured");
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("cured"), curedBool));
             }
-            if(criteria.containsKey("state") && criteria.get("state") != null) {
+            if(criteria.containsKey("state") && criteria.get("state") != null && !criteria.get("state").equals("")) {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(personJoin.get("address").get("state"), criteria.get("state")));
             }
             return predicate;
