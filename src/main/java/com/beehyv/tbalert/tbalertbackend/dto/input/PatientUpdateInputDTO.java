@@ -32,4 +32,6 @@ public class PatientUpdateInputDTO {
 
     @Email(message = "Provide email of authorising body for update")
     private String updatedBy;
+
+    private Boolean consentForMessage;
 }

@@ -55,8 +55,8 @@ public class StateHeadServiceImpl implements StateHeadService {
     }
 
     @Override
-    public PersonOutputDTO findByPersonId(Long id) {
-        return personMapper.toPersonOutputDTO(personMapper.find(id));
+    public StateHeadOutputDTO findById(Long id) {
+        return stateHeadMapper.toStateHeadOutputDTO(stateHeadMapper.find(id));
     }
 
     @Override
@@ -74,5 +74,33 @@ public class StateHeadServiceImpl implements StateHeadService {
         stateHead.getPerson().setEmail(null);
         personRepo.save(stateHead.getPerson());
         stateHeadRepo.save(stateHead);
+    }
+
+    @Override
+    public List<StateHeadOutputDTO> getStateHeadByName(String name) {
+        List<StateHead>stateHeads=stateHeadRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name,name);
+        return stateHeads.stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
+    }
+
+    @Override
+    public StateHeadOutputDTO update(Long id, StateHeadInputDTO stateHeadInputDTO) {
+        StateHead stateHead=stateHeadMapper.find(id);
+        if(stateHeadInputDTO.getFirstName()!=null)
+            stateHead.getPerson().setFirstName(stateHeadInputDTO.getFirstName());
+        if(stateHeadInputDTO.getLastName()!=null)
+            stateHead.getPerson().setLastName(stateHeadInputDTO.getLastName());
+        if(stateHeadInputDTO.getDateOfJoining()!=null)
+            stateHead.setDateOfJoining(localDateMapper.toLocalDate(stateHeadInputDTO.getDateOfJoining()));
+        if(stateHeadInputDTO.getGender()!=null)
+            stateHead.getPerson().setGender(stateHeadInputDTO.getGender());
+        if(stateHeadInputDTO.getPhoneNumber()!=null)
+            stateHead.getPerson().setPhoneNumber(stateHeadInputDTO.getPhoneNumber());
+
+        if(stateHeadInputDTO.getDateOfLeaving()!=null)
+            stateHead.setDateOfLeaving(localDateMapper.toLocalDate(stateHeadInputDTO.getDateOfLeaving()));
+        stateHead.setPerson(stateHead.getPerson());
+        personRepo.save(stateHead.getPerson());
+        stateHead=stateHeadRepo.save(stateHead);
+        return stateHeadMapper.toStateHeadOutputDTO(stateHead);
     }
 }

@@ -24,4 +24,6 @@ public class StateHead {
     private Person person;
 
     private LocalDate dateOfJoining;
+
+    private LocalDate dateOfLeaving;
 }

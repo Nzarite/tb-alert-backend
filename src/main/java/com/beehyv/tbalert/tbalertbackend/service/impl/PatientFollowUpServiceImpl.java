@@ -55,8 +55,8 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
         List<PatientMedication>patientMedications=patientMedicationRepo.getPatientMedicationsByPatient(patient);
 
+        List<MissedMedication>missedMedicationList=new ArrayList<>();
         patientFollowUps.forEach(patientFollowUp -> {
-            List<MissedMedication>missedMedicationList=new ArrayList<>();
             patientMedications.forEach(patientMedication -> {
                 List<MissedMedication>missedMedications=missedMedicationRepo.findByPatientMedicationAndDate(patientMedication,patientFollowUp.getDate());
                 missedMedicationList.addAll(missedMedications);

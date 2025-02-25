@@ -1,7 +1,6 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.StateHeadInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.StateHeadOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.StateHeadService;
 import jakarta.validation.Valid;
@@ -28,9 +27,21 @@ public class StateHeadController {
         return new ResponseEntity<>(stateHeadService.add(stateHeadInputDTO), HttpStatus.CREATED);
     }
 
+
     @GetMapping("/{id}")
-    public ResponseEntity<PersonOutputDTO> findByPersonId(@PathVariable Long id) {
-        return new ResponseEntity<>(stateHeadService.findByPersonId(id), HttpStatus.OK);
+    public ResponseEntity<StateHeadOutputDTO> findById(@PathVariable Long id) {
+        return new ResponseEntity<>(stateHeadService.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<StateHeadOutputDTO>> getStateHeadByName(@PathVariable String name) {
+        return new ResponseEntity<>(stateHeadService.getStateHeadByName(name),HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<StateHeadOutputDTO> updateStateHead(@PathVariable Long id, @RequestBody @Valid StateHeadInputDTO stateHeadInputDTO)
+    {
+        return new ResponseEntity<>(stateHeadService.update(id,stateHeadInputDTO),HttpStatus.OK);
     }
 
     @GetMapping

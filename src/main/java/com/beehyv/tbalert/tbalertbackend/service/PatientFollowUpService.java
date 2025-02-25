@@ -4,7 +4,6 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientFollowUpInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputForFrontEndDto;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientFollowUp;
 import jakarta.validation.Valid;
 

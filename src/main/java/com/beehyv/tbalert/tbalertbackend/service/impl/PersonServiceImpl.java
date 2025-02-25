@@ -29,10 +29,17 @@ public class PersonServiceImpl implements PersonService {
     private PersonRepo personRepo;
     private PersonMapper personMapper;
 
+    private void checkForEmail(String email) {
+        if(personRepo.existsByEmail(email)) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+    }
+
+
     @Override
     public PersonOutputDTO add(PersonInputDTO person) {
-        log.info("Service called for Add person: {}", person);
-
+        log.info("Service called for Add person using person input: {}", person);
+checkForEmail(person.getEmail());
         Person personSaved = personMapper.toPerson(person);
         Address address = addressMapper.toAddress(person);
         personSaved.setAddress(address);
@@ -42,8 +49,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonOutputDTO add(TeleCallerInputDTO teleCaller) {
-        log.info("Service called for Add person: {}", teleCaller);
-
+        log.info("Service called for Add personusing telecaller input: {}", teleCaller);
+checkForEmail(teleCaller.getEmail());
         Person personSaved = personMapper.toPerson(teleCaller);
         Address address = addressMapper.toAddress(teleCaller);
         personSaved.setAddress(address);
@@ -53,8 +60,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonOutputDTO add(StateHeadInputDTO stateHead) {
-        log.info("Service called for Add person: {}", stateHead);
-
+        log.info("Service called for Add personusing statehead input: {}", stateHead);
+checkForEmail(stateHead.getEmail());
         Person personSaved = personMapper.toPerson(stateHead);
         Address address = addressMapper.toAddress(stateHead);
         personSaved.setAddress(address);
@@ -64,8 +71,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonOutputDTO add(PatientInputDTO patientInputDTO) {
-        log.info("Service called for Add person: {}", patientInputDTO);
-
+        log.info("Service called for Add person using patient input: {}", patientInputDTO);
+checkForEmail(patientInputDTO.getEmail());
         Person personSaved = personMapper.toPerson(patientInputDTO);
         Address address = addressMapper.toAddress(patientInputDTO);
         personSaved.setAddress(address);

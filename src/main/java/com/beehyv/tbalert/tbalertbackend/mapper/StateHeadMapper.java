@@ -43,6 +43,7 @@ public class StateHeadMapper {
                 .block(address.getBlock())
                 .updatedBy(person.getUpdatedBy())
                 .dateOfJoining(localDateMapper.toDate(stateHead.getDateOfJoining()))
-                .build();
+                .dateOfLeaving(localDateMapper.toDate(stateHead.getDateOfLeaving()))
+                        .build();
     }
 }
