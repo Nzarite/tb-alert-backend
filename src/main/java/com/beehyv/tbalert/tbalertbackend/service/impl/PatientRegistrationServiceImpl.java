@@ -12,9 +12,6 @@ import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.*;
-import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
-import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepo;
-import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
@@ -65,7 +62,6 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         id+=currCnt;
         patient.setId(id);
         patientRepo.save(patient);
-
         return patientMapper.toPatientOutputDTO(patient);
     }
 
@@ -165,7 +161,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                 .skip(Math.max(followUps.size() - 3, 0))
                 .anyMatch(patientFollowUp -> patientFollowUp.getStatus().equals("Occured"));
 
-        if (recentOccurrence) {
+        if (followUps.isEmpty() || recentOccurrence) {
             treatmentStatus = "Treatment ongoing";
         } else if (followUps.getLast().getStatus().equals("Cancelled")) {
             treatmentStatus = "Treatment cancelled";

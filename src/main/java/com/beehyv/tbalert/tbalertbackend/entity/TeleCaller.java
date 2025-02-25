@@ -26,4 +26,7 @@ public class TeleCaller {
     private Person person;
 
     private LocalDate dateOfJoining;
+
+    private LocalDate dateOfLeaving;
+
 }

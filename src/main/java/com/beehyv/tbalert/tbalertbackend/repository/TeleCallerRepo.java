@@ -10,4 +10,6 @@ import java.util.List;
 public interface TeleCallerRepo extends JpaRepository<TeleCaller, Long> {
 
     List<TeleCaller> findByPerson_Address_State(String personAddressState);
+
+    List<TeleCaller> findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(String name, String name1);
 }

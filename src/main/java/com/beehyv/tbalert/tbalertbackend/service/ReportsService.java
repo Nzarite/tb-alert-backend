@@ -14,4 +14,6 @@ public interface ReportsService {
     byte[] getStateHeads() throws IOException;
 
     byte[] getPatientFollowUp(Map<String, Object> filter) throws IOException;
+
+    byte[] getPatientFollowUpForToday() throws IOException;
 }
