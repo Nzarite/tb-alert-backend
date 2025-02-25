@@ -12,7 +12,7 @@ import com.beehyv.tbalert.tbalertbackend.repository.*;
 import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
-import com.beehyv.tbalert.tbalertbackend.specifications.TBDeailsSpecification;
+import com.beehyv.tbalert.tbalertbackend.specifications.TBDetailsSpecification;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,7 +38,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final LocalDateMapper localDateMapper;
     private final PersonRepo personRepo;
     private final PersonService personService;
-    private final TBDeailsSpecification tbDeailsSpecification;
+    private final TBDetailsSpecification tbDetailsSpecification;
     private final NikshayMitraRepo nikshayMitraRepo;
     private final TBDetailsRepo tbDetailsRepo;
 
@@ -145,7 +145,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Override
     public List<PatientOutputDTO> getFilteredPatients(Map<String, Object> filters) {
         log.info("Service getFilteredPatients filters: {}", filters);
-        Specification<TBDetails> specification = tbDeailsSpecification.getPatientsByFilter(filters);
+        Specification<TBDetails> specification = tbDetailsSpecification.getPatientsByFilter(filters);
         List<Patient>patients=tbDetailsRepo.findAll(specification).stream().map(TBDetails::getPatient).toList();
         return patients.stream().map(patientMapper::toPatientOutputDTO).toList();
     }

@@ -8,7 +8,6 @@ import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.*;
 import com.beehyv.tbalert.tbalertbackend.service.*;
-import com.beehyv.tbalert.tbalertbackend.specifications.TBDeailsSpecification;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.CellStyle;

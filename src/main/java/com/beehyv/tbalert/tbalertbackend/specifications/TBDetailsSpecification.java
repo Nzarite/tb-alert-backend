@@ -17,7 +17,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class TBDeailsSpecification {
+public class TBDetailsSpecification {
 
     private final LocalDateMapper localDateMapper;
 
