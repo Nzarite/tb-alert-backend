@@ -1,4 +1,4 @@
-package com.beehyv.tbalert.tbalertbackend.service;
+package com.beehyv.tbalert.tbalertbackend.service.impl;
 
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import lombok.AllArgsConstructor;

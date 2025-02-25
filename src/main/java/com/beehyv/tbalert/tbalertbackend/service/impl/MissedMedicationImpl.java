@@ -34,7 +34,6 @@ public class MissedMedicationImpl implements MissedMedicationService {
     private final PatientFollowUpRepo patientFollowUpRepo;
 
     private final MedicationRepo medicationRepo;
-    private final MedicationMapper medicationMapper;
 
 
     @Override
@@ -53,7 +52,8 @@ public class MissedMedicationImpl implements MissedMedicationService {
 
         List<MissedMedication> toSaveMissedMedications = new ArrayList<>();
         List<MissedMedicationOutputDTO> missedMedicationOutputDTOS = new ArrayList<>();
-        log.info("SIze of input = {}", missedMedicationInputDTOS.size());
+        List<PatientFollowUp>followUpsToSave = new ArrayList<>();
+        log.info("Size of input = {}", missedMedicationInputDTOS.size());
         for (MissedMedicationInputDTO inputDTO : missedMedicationInputDTOS) {
             int medicationId = inputDTO.getMedicationId();
             PatientMedication patientMedication = patientMedicationMap.get(medicationId);
@@ -68,7 +68,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
                 missedMedication = missedMedicationMap.get(medicationId);
                 PatientFollowUp patientFollowUp = patientFollowUpRepo.findByPatientAndDate(patient,missedMedication.getDate());
                 patientFollowUp.setStatus("Occured");
-                patientFollowUpRepo.save(patientFollowUp);
+                followUpsToSave.add(patientFollowUp);
 
                 log.info("Missed Dosages : {}", inputDTO.getMissedDosages());
                 missedMedication.setComment(inputDTO.getComments());
@@ -78,7 +78,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
             missedMedicationOutputDTOS.add(missedMedicationMapper.toMissedMedicationOutputDTO(missedMedication));
         }
             missedMedicationRepo.saveAll(toSaveMissedMedications);
-
+            patientFollowUpRepo.saveAll(followUpsToSave);
             return missedMedicationOutputDTOS;
 
     }

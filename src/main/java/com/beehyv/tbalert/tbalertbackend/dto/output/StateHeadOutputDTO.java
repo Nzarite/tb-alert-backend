@@ -38,4 +38,7 @@ public class StateHeadOutputDTO {
     private String updatedBy;
 
     private String dateOfJoining;
+
+    private String dateOfLeaving;
+
 }

@@ -39,4 +39,7 @@ public class StateHeadInputDTO {
 
     @NotNull(message = "Enter Valid Date of Joining")
     private String dateOfJoining;
+
+    private String dateOfLeaving;
+
 }

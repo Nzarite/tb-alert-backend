@@ -23,4 +23,6 @@ public interface MissedMedicationRepo extends JpaRepository<MissedMedication, In
     List<MissedMedication> findByPatientMedicationAndDate(PatientMedication patientMedication, LocalDate date);
 
     List<MissedMedication> findByPatientMedicationInAndDate(ArrayList<PatientMedication> patientMedications, LocalDate date);
+
+    List<MissedMedication> findAllByPatientMedicationInAndDateIn(List<PatientMedication> patientMedications, List<LocalDate> list);
 }
