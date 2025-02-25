@@ -49,6 +49,10 @@ public class TBDeailsSpecification {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(personJoin.get("address").get("state"), criteria.get("state")));
             }
 
+            if(criteria.containsKey("createdBy") && !criteria.get("createdBy").toString().isEmpty()) {
+                predicate=criteriaBuilder.and(predicate, criteriaBuilder.equal(personJoin.get("createdBy"), criteria.get("createdBy")));
+            }
+
             predicate = addNikshayMitraSubquery(predicate, query, criteriaBuilder, patientJoin, criteria, "udstStatus");
             predicate = addNikshayMitraSubquery(predicate, query, criteriaBuilder, patientJoin, criteria, "dbtStatus");
 

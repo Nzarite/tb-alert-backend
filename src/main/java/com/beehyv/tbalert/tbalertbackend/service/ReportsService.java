@@ -15,5 +15,5 @@ public interface ReportsService {
 
     byte[] getPatientFollowUp(Map<String, Object> filter) throws IOException;
 
-    byte[] getPatientFollowUpForToday() throws IOException;
+    byte[] getPatientFollowUpForToday(Map<String,Object>filter) throws IOException;
 }

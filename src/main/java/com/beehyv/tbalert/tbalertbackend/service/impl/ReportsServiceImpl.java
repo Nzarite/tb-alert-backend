@@ -8,6 +8,7 @@ import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.*;
 import com.beehyv.tbalert.tbalertbackend.service.*;
+import com.beehyv.tbalert.tbalertbackend.specifications.TBDeailsSpecification;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -180,11 +181,14 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     @Override
-    public byte[] getPatientFollowUpForToday() throws IOException {
+    public byte[] getPatientFollowUpForToday(Map<String, Object> filter) throws IOException {
         try(Workbook workbook=new XSSFWorkbook();
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
         {
-            List<PatientFollowUp>patientFollowUps=patientFollowUpRepo.findAllByDate(LocalDate.now());
+
+            List<String>patientIds=patientRegistrationService.getFilteredPatients(filter).stream().map(PatientOutputDTO::getPatientId).toList();
+            List<PatientFollowUp>patientFollowUps=patientFollowUpRepo.findAllByDateAndPatient_IdIn(LocalDate.now(),patientIds);
+
             Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Follow Up for Today","Patient Name","Patient Phone Number");
             sheet.setColumnWidth(0,sheet.getColumnWidth(0));
             applyFontAndPopulateSheet(patientFollowUps, workbook, sheet);
