@@ -39,8 +39,7 @@ public interface PatientRepo extends JpaRepository<Patient, String>, JpaSpecific
                 JOIN patient_medication pm ON p.id = pm.patient_id
                 JOIN medication m ON pm.medication_id = m.id
                 LEFT JOIN nikshay_mitra nm ON p.id = nm.patient_id
-                WHERE p.cured = 0 
-                AND p.current_status = 'alive'
+                WHERE p.cured = 0 AND p.current_status = 'alive' AND p.consent_for_message = true
                 GROUP BY p.id, nm.nikshay_id, per.first_name, per.last_name, per.phone_number, m.id, m.name
                 HAVING MAX(pf.date) > CURRENT_DATE
             """, nativeQuery = true)
