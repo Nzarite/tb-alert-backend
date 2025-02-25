@@ -46,4 +46,7 @@ public class PatientInputDTO {
     @NotEmpty(message = "State name cannot be empty")
     private String state;
 
+    @NotNull(message = "Provide the patient consent for message reminders")
+    private Boolean consentForMessage;
+
 }
