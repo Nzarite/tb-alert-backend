@@ -16,4 +16,6 @@ public interface StateHeadRepo extends JpaRepository<StateHead, Long> {
 //    Optional<StateHead> findById(@Param("stateId") Long stateId);
 
     List<StateHead> findByPerson_IsDeletedFalse();
+
+    List<StateHead> findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(String name, String name1);
 }

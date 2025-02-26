@@ -38,4 +38,6 @@ public class TeleCallerOutputDTO {
     private String updatedBy;
 
     private String dateOfJoining;
+
+    private String dateOfLeaving;
 }

@@ -35,6 +35,20 @@ public class StateHeadController {
         return new ResponseEntity<>(stateHeadService.findByPersonId(id), HttpStatus.OK);
     }
 
+    public ResponseEntity<StateHeadOutputDTO> findById(@PathVariable Long id) {
+        return new ResponseEntity<>(stateHeadService.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<StateHeadOutputDTO>> getStateHeadByName(@PathVariable String name) {
+        return new ResponseEntity<>(stateHeadService.getStateHeadByName(name), HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<StateHeadOutputDTO> updateStateHead(@PathVariable Long id, @RequestBody @Valid StateHeadInputDTO stateHeadInputDTO) {
+        return new ResponseEntity<>(stateHeadService.update(id, stateHeadInputDTO), HttpStatus.OK);
+    }
+
     @GetMapping("/email/{email}")
     public ResponseEntity<PersonOutputDTO> getByPersonEmail(@PathVariable String email) {
         return new ResponseEntity<>(personService.getByEmail(email), HttpStatus.OK);

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class PatientMedication {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne

@@ -39,13 +39,16 @@ public class PatientMedicationServiceImpl implements PatientMedicationService {
     @Override
     public List<PatientMedicationOutputDTO> add(String id, List<PatientMedicationInputDTO> patientMedicationInputDTOList) {
         log.info("Add patient medications by patient id: {}", id);
-
-        List<PatientMedicationOutputDTO> patientMedicationOutputDTOS=new ArrayList<>();
-        patientMedicationInputDTOList.forEach(pm->{
-            PatientMedication patientMedication=patientMedicationMapper.toPatientMedication(id, pm);
-            patientMedicationRepo.save(patientMedication);
-            patientMedicationOutputDTOS.add(patientMedicationMapper.toPatientMedicationOutputDTO(patientMedication));
+        List<PatientMedication> patientMedications;
+        List<Integer> medications = new ArrayList<>();
+        List<Integer> frequency = new ArrayList<>();
+        patientMedicationInputDTOList.forEach(pm -> {
+            medications.add(pm.getMedicationId());
+            frequency.add(pm.getFrequency());
         });
+        patientMedications = patientMedicationMapper.toPatientMedications(id, medications, frequency);
+        List<PatientMedicationOutputDTO> patientMedicationOutputDTOS = new ArrayList<>(patientMedications.stream().map(patientMedicationMapper::toPatientMedicationOutputDTO).toList());
+        patientMedicationRepo.saveAll(patientMedications);
         return patientMedicationOutputDTOS;
     }
 

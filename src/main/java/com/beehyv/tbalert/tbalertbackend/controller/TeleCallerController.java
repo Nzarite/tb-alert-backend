@@ -32,6 +32,10 @@ public class TeleCallerController {
     }
 
     @GetMapping("/{id}")
+    public ResponseEntity<TeleCallerOutputDTO> getById(@PathVariable Long id) {
+        return new ResponseEntity<>(teleCallerService.getById(id), HttpStatus.OK);
+    }
+
     public ResponseEntity<PersonOutputDTO> getByPersonId(@PathVariable Long id) {
         return new ResponseEntity<>(teleCallerService.getByPersonId(id), HttpStatus.OK);
     }
@@ -58,4 +62,13 @@ public class TeleCallerController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<TeleCallerOutputDTO>> getByTeleCallerName(@PathVariable String name) {
+        return new ResponseEntity<>(teleCallerService.getByName(name),HttpStatus.OK);
+    }
+
+    @PutMapping("update/{id}")
+    public ResponseEntity<TeleCallerOutputDTO> updateTeleCaller(@PathVariable Long id, @RequestBody TeleCallerInputDTO teleCallerInputDTO) {
+        return new ResponseEntity<>(teleCallerService.updateTeleCaller(id,teleCallerInputDTO),HttpStatus.OK);
+    }
 }

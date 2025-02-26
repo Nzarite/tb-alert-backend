@@ -14,19 +14,19 @@ import lombok.NoArgsConstructor;
 @Table(name = "address")
 public class Address {
     @Id
-    @GeneratedValue(strategy =  GenerationType.AUTO)
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name = "block")
+    @Column(name = "block")
     private String block;
 
-    @Column(nullable = false, name = "gp")
+    @Column(name = "gp")
     private String gp;
 
-    @Column(nullable = false, name = "village")
+    @Column(name = "village")
     private String village;
 
-    @Column(nullable = false, name = "district")
+    @Column(name = "district")
     private String district;
 
     @ManyToOne(cascade = CascadeType.ALL)

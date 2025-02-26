@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
 
 import java.time.LocalDate;
 
@@ -17,7 +16,7 @@ import java.time.LocalDate;
 @Table(name = "contact_screening")
 public class ContactScreening {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "contact_screening_status", nullable = false)

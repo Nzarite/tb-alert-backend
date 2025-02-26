@@ -55,6 +55,7 @@ public class PatientMapper {
                 .createdAt(localDateMapper.toDateTime(person.getCreatedOn()))
                 .updatedBy(person.getUpdatedBy())
                 .age(patient.getAge())
+                .consentForMessage(patient.getConsentForMessage())
                 .build();
     }
 

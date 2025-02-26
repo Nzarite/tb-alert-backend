@@ -44,6 +44,7 @@ public class TeleCallerMapper {
                 .createdOn(localDateMapper.toDateTime(person.getCreatedOn()))
                 .updatedBy(person.getUpdatedBy())
                 .dateOfJoining(localDateMapper.toDate(teleCaller.getDateOfJoining()))
+                .dateOfLeaving(localDateMapper.toDate(teleCaller.getDateOfLeaving()))
                 .build();
     }
 }

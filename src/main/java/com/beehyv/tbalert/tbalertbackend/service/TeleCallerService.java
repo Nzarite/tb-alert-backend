@@ -11,11 +11,15 @@ public interface TeleCallerService {
 
     TeleCallerOutputDTO add(TeleCallerInputDTO teleCallerInputDTO);
 
-    PersonOutputDTO getByPersonId(Long id);
+    TeleCallerOutputDTO getById(Long id);
 
     List<TeleCallerOutputDTO> getByState(String name);
 
     List<TeleCallerOutputDTO> getAll();
+
+    List<TeleCallerOutputDTO> getByName(String name);
+
+    TeleCallerOutputDTO updateTeleCaller(Long id, TeleCallerInputDTO teleCallerInputDTO);
 
     void deleteTeleCaller(Long id);
 }

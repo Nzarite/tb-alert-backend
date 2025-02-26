@@ -5,6 +5,8 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.*;
+import com.beehyv.tbalert.tbalertbackend.entity.*;
+import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.StateMapper;
@@ -12,6 +14,10 @@ import com.beehyv.tbalert.tbalertbackend.repository.*;
 import com.beehyv.tbalert.tbalertbackend.service.*;
 import com.beehyv.tbalert.tbalertbackend.specifications.PatientSpecification;
 import jakarta.transaction.Transactional;
+import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
+import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
+import com.beehyv.tbalert.tbalertbackend.service.PersonService;
+import com.beehyv.tbalert.tbalertbackend.specifications.TBDetailsSpecification;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -102,7 +108,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             patient.setCurrentStatus(patientUpdateInputDTO.getCurrentStatus());
         if (patientUpdateInputDTO.getAge() > 0)
             patient.setAge(patientUpdateInputDTO.getAge());
-
+        if(patientUpdateInputDTO.getConsentForMessage()!=null)
+            patient.setConsentForMessage(patientUpdateInputDTO.getConsentForMessage());
         person.setAddress(address);
         person = personRepo.save(person);
         patient.setPerson(person);
@@ -173,7 +180,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                 .skip(Math.max(followUps.size() - 3, 0))
                 .anyMatch(patientFollowUp -> patientFollowUp.getStatus().equals("Occured"));
 
-        if (recentOccurrence) {
+        if (followUps.isEmpty() || recentOccurrence) {
             treatmentStatus = "Treatment ongoing";
         } else if (followUps.getLast().getStatus().equals("Cancelled")) {
             treatmentStatus = "Treatment cancelled";

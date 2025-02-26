@@ -43,4 +43,6 @@ public class PatientOutputDTO {
 
     private String updatedBy;
 
+    private Boolean consentForMessage;
+
 }

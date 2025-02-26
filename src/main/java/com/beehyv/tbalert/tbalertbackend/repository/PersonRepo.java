@@ -18,4 +18,6 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
     Optional<Person> findByIdAndIsDeletedFalse(Long id);
 
     List<Person> findAllByIsDeletedFalse();
+
+    boolean existsByEmailAndIsDeletedFalse(String email);
 }
