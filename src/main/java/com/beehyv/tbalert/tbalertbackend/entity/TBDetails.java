@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class TBDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false, name = "date_of_diagnosis")

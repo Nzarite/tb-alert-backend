@@ -42,8 +42,8 @@ public class PersonController {
         return new ResponseEntity<>(personService.get(id),HttpStatus.OK);
     }
 
-    @GetMapping("/email")
-    public ResponseEntity<PersonOutputDTO> getPersonByEmail(@RequestBody String email) {
+    @GetMapping("/email/{email}")
+    public ResponseEntity<PersonOutputDTO> getPersonByEmail(@PathVariable String email) {
         log.info("Controller called for Getting person by email: {}", email);
         return new ResponseEntity<>(personService.getByEmail(email),HttpStatus.OK);
     }

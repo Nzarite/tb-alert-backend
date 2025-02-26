@@ -32,14 +32,13 @@ public class PatientMedicationServiceImpl implements PatientMedicationService {
     public List<PatientMedicationOutputDTO> get(String id) {
         log.info("Get patient medications by patient id: {}", id);
 
-        List<PatientMedication> patientMedicationList = patientMedicationRepo.getPatientMedicationsByPatient(patientMapper.find(id));
+        List<PatientMedication> patientMedicationList=patientMedicationRepo.getPatientMedicationsByPatient(patientMapper.find(id));
         return patientMedicationList.stream().map(patientMedicationMapper::toPatientMedicationOutputDTO).toList();
     }
 
     @Override
     public List<PatientMedicationOutputDTO> add(String id, List<PatientMedicationInputDTO> patientMedicationInputDTOList) {
         log.info("Add patient medications by patient id: {}", id);
-
         List<PatientMedication> patientMedications;
         List<Integer> medications = new ArrayList<>();
         List<Integer> frequency = new ArrayList<>();

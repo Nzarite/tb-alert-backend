@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Table(name = "statehead")
 public class StateHead {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
