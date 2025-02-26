@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "telecaller")
 public class TeleCaller {
 
     @Id

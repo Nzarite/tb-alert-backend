@@ -8,11 +8,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/contactscreening")
 @AllArgsConstructor
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
+@PreAuthorize("hasAuthority('ROLE_Telecaller')")
 public class ContactScreeningController {
 
     private final ContactScreeningService contactScreeningService;

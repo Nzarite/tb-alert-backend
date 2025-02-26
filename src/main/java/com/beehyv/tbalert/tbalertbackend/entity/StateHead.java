@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "statehead")
 public class StateHead {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

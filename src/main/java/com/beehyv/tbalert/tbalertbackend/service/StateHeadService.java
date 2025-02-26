@@ -15,4 +15,6 @@ public interface StateHeadService {
     List<StateHeadOutputDTO> getStateHeadByName(String name);
 
     StateHeadOutputDTO update(Long id, StateHeadInputDTO stateHeadInputDTO);
+
+    void deleteStateHead(Long id);
 }

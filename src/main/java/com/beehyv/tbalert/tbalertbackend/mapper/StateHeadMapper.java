@@ -16,34 +16,34 @@ public class StateHeadMapper {
 
     private final StateHeadRepo stateHeadRepo;
     private final LocalDateMapper localDateMapper;
+    private final StateMapper stateMapper;
 
-    public StateHead find(long id)
-    {
+    public StateHead find(long id) {
         log.info("Mapper called to find StateHead with id {}", id);
-        return stateHeadRepo.findById(id).orElseThrow(()->new IllegalArgumentException("State head not found for Id: "+id));
+        return stateHeadRepo.findById(id).filter(stateHead -> !stateHead.getPerson().getIsDeleted()).orElseThrow(() -> new IllegalArgumentException("State head not found for Id: " + id));
     }
 
     public StateHeadOutputDTO toStateHeadOutputDTO(StateHead stateHead) {
         Person person = stateHead.getPerson();
         Address address = person.getAddress();
         return StateHeadOutputDTO.builder()
-                        .stateHeadId(stateHead.getId())
-                        .personId(person.getId())
-                        .firstName(person.getFirstName())
-                        .lastName(person.getLastName())
-                        .email(person.getEmail())
-                        .gender(person.getGender())
-                        .createdBy(person.getCreatedBy())
-                        .createdOn(localDateMapper.toDateTime(person.getCreatedOn()))
-                        .phoneNumber(person.getPhoneNumber())
-                        .state(address.getState())
-                        .gp(address.getGp())
-                        .village(address.getVillage())
-                        .district(address.getDistrict())
-                        .block(address.getBlock())
-                        .updatedBy(person.getUpdatedBy())
-                        .dateOfJoining(localDateMapper.toDate(stateHead.getDateOfJoining()))
-                        .dateOfLeaving(localDateMapper.toDate(stateHead.getDateOfLeaving()))
+                .stateHeadId(stateHead.getId())
+                .personId(person.getId())
+                .firstName(person.getFirstName())
+                .lastName(person.getLastName())
+                .email(person.getEmail())
+                .gender(person.getGender())
+                .createdBy(person.getCreatedBy())
+                .createdOn(localDateMapper.toDateTime(person.getCreatedOn()))
+                .phoneNumber(person.getPhoneNumber())
+                .state(address.getState().getStateName())
+                .gp(address.getGp())
+                .village(address.getVillage())
+                .district(address.getDistrict())
+                .block(address.getBlock())
+                .updatedBy(person.getUpdatedBy())
+                .dateOfJoining(localDateMapper.toDate(stateHead.getDateOfJoining()))
+                .dateOfLeaving(localDateMapper.toDate(stateHead.getDateOfLeaving()))
                         .build();
     }
 }

@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "person")
 public class Person {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -40,4 +39,5 @@ public class Person {
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
+    private Boolean isDeleted=false;
 }

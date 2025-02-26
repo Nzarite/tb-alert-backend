@@ -9,7 +9,9 @@ import java.util.List;
 @Repository
 public interface TeleCallerRepo extends JpaRepository<TeleCaller, Long> {
 
-    List<TeleCaller> findByPerson_Address_State(String personAddressState);
+    List<TeleCaller> findByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(String personAddressState);
+
+    List<TeleCaller> findByPerson_IsDeletedFalse();
 
     List<TeleCaller> findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(String name, String name1);
 }

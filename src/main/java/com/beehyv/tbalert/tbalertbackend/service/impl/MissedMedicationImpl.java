@@ -11,6 +11,7 @@ import com.beehyv.tbalert.tbalertbackend.repository.MissedMedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientFollowUpRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientMedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.service.MissedMedicationService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @AllArgsConstructor
+@Transactional
 public class MissedMedicationImpl implements MissedMedicationService {
 
     private final PatientMapper patientMapper;
@@ -39,7 +41,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
     @Override
     public List<MissedMedicationOutputDTO> add(String id, @Valid List<MissedMedicationInputDTO> missedMedicationInputDTOS,LocalDate date) {
         log.info("Service called for adding missed medication: {}", missedMedicationInputDTOS);
-        Patient patient=patientMapper.findPatient(id);
+        Patient patient=patientMapper.find(id);
 
         List<Medication>medications=medicationRepo.findAllByIdIn(missedMedicationInputDTOS.stream().map(MissedMedicationInputDTO::getMedicationId).toList());
 
@@ -86,7 +88,7 @@ public class MissedMedicationImpl implements MissedMedicationService {
     @Override
     public List<MissedMedicationOutputDTO> get(String id) {
         log.info("Service called for getByPersonId missed medication: {}", id);
-        List<PatientMedication> patientMedications=patientMedicationRepo.findPatientMedicationByPatient(patientMapper.findPatient(id));
+        List<PatientMedication> patientMedications=patientMedicationRepo.findPatientMedicationByPatient(patientMapper.find(id));
         List<MissedMedicationOutputDTO>missedMedicationOutputDTOS=new ArrayList<>();
         patientMedications.forEach(patientMedication -> missedMedicationOutputDTOS.addAll(missedMedicationRepo.findAllByPatientMedication(patientMedication).stream().map(missedMedicationMapper::toMissedMedicationOutputDTO).toList()));
         return missedMedicationOutputDTOS;

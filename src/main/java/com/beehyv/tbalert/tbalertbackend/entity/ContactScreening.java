@@ -52,7 +52,7 @@ public class ContactScreening {
     @Column(name = "hhcs_initiated_tpt")
     private Integer noOfHHCsInitiatedTPT;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 }
