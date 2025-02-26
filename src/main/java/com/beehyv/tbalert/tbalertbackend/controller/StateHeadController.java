@@ -50,7 +50,7 @@ public class StateHeadController {
         return new ResponseEntity<>(personService.getByEmail(email), HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<StateHeadOutputDTO>> getAll() {
         return new ResponseEntity<>(stateHeadService.getAll(), HttpStatus.OK);
     }

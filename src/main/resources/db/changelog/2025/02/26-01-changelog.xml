@@ -404,4 +404,30 @@
             <column name="state_code" value="UP"/>
         </insert>
     </changeSet>
+
+    <changeSet id="1740545825496-39" author="bhcp0212">
+        <insert tableName="address">
+            <column name="id" value="1"/>
+            <column name="block" value="SA"/>
+            <column name="gp" value="SA"/>
+            <column name="village" value="SA"/>
+            <column name="district" value="SA"/>
+            <column name="state_id" value="2"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1740545825496-40" author="bhcp0212">
+        <insert tableName="person">
+            <column name="id" value="1"/> <!-- Assuming 1 is the ID for superadmin -->
+            <column name="first_name" value="Super"/>
+            <column name="last_name" value="Admin"/>
+            <column name="gender" value="Male"/>
+            <column name="phone_number" value="0000000000"/>
+            <column name="email" value="superadmin@gmail.com"/>
+            <column name="created_by" value="system"/>
+            <column name="created_on" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="address_id" value="1"/>
+            <column name="is_deleted" valueBoolean="false"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

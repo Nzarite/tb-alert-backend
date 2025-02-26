@@ -46,11 +46,6 @@ public class TeleCallerController {
         return new ResponseEntity<>(teleCallerService.getByState(name), HttpStatus.OK);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<TeleCallerOutputDTO>> getAll() {
-        return new ResponseEntity<>(teleCallerService.getAll(), HttpStatus.OK);
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<TeleCallerOutputDTO> delete(@PathVariable Long id) {
         log.info("Controller called for deleting telecaller: {}", id);
