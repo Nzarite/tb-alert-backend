@@ -159,21 +159,47 @@
     </changeSet>
 
     <!-- Person Table -->
-    <changeSet id="1740545825496-9" author="bhcp0212">
+    <changeSet id="1740545825496-37" author="bhcp0212">
         <createTable tableName="person">
             <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_person"/>
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="first_name" type="VARCHAR(255)"/>
-            <column name="last_name" type="VARCHAR(255)"/>
-            <column name="gender" type="VARCHAR(255)"/>
-            <column name="phone_number" type="VARCHAR(255)"/>
-            <column name="email" type="VARCHAR(255)"/>
-            <column name="created_by" type="VARCHAR(255)"/>
-            <column name="created_on" type="TIMESTAMP"/>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="gender" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
             <column name="updated_by" type="VARCHAR(255)"/>
-            <column name="address_id" type="BIGINT"/>
+            <column name="address_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+
+        <!-- Add foreign key constraint for address_id -->
+        <addForeignKeyConstraint baseColumnNames="address_id"
+                                 baseTableName="person"
+                                 constraintName="fk_person_address"
+                                 referencedColumnNames="id"
+                                 referencedTableName="address"/>
     </changeSet>
 
     <!-- Settings Table -->
@@ -325,6 +351,57 @@
             <column name="id" value="1"/>
             <column name="name" value="TB Medicine"/>
             <column name="before_meal" valueBoolean="true"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1740545825496-33" author="bhcp0212">
+        <createTable tableName="state">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="state_name" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="state_code" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1740545825496-34" author="bhcp0212">
+        <!-- Drop the old state column if it exists -->
+        <dropColumn tableName="address" columnName="state"/>
+
+        <!-- Add the new state_id column -->
+        <addColumn tableName="address">
+            <column name="state_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <!-- Add a foreign key constraint -->
+        <addForeignKeyConstraint baseColumnNames="state_id"
+                                 baseTableName="address"
+                                 constraintName="fk_address_state"
+                                 referencedColumnNames="id"
+                                 referencedTableName="state"/>
+    </changeSet>
+
+    <changeSet id="1740545825496-36" author="bhcp0212">
+        <insert tableName="state">
+            <column name="id" value="1"/>
+            <column name="state_name" value="BIHAR"/>
+            <column name="state_code" value="BR"/>
+        </insert>
+        <insert tableName="state">
+            <column name="id" value="2"/>
+            <column name="state_name" value="TELANGANA"/>
+            <column name="state_code" value="TG"/>
+        </insert>
+        <insert tableName="state">
+            <column name="id" value="3"/>
+            <column name="state_name" value="UTTAR PRADESH"/>
+            <column name="state_code" value="UP"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

@@ -31,10 +31,6 @@ public class StateHeadController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PersonOutputDTO> findByPersonId(@PathVariable Long id) {
-        return new ResponseEntity<>(stateHeadService.findByPersonId(id), HttpStatus.OK);
-    }
-
     public ResponseEntity<StateHeadOutputDTO> findById(@PathVariable Long id) {
         return new ResponseEntity<>(stateHeadService.findById(id), HttpStatus.OK);
     }

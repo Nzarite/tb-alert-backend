@@ -5,19 +5,16 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.*;
-import com.beehyv.tbalert.tbalertbackend.entity.*;
-import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.StateMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.*;
 import com.beehyv.tbalert.tbalertbackend.service.*;
-import com.beehyv.tbalert.tbalertbackend.specifications.PatientSpecification;
+import com.beehyv.tbalert.tbalertbackend.specifications.TBDetailsSpecification;
 import jakarta.transaction.Transactional;
 import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
-import com.beehyv.tbalert.tbalertbackend.specifications.TBDetailsSpecification;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -39,12 +37,13 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final PersonMapper personMapper;
     private final PersonRepo personRepo;
     private final PersonService personService;
-    private final PatientSpecification patientSpecification;
+    private final TBDetailsSpecification tbDetailsSpecification;
     private final ContactScreeningService contactScreeningService;
     private final NikshayMitraService nikshayMitraService;
     private final TBDetailsService tbDetailsService;
     private final PatientMedicationService patientMedicationService;
     private final StateMapper stateMapper;
+    private final TBDetailsRepo tbDetailsRepo;
 
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
@@ -108,7 +107,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             patient.setCurrentStatus(patientUpdateInputDTO.getCurrentStatus());
         if (patientUpdateInputDTO.getAge() > 0)
             patient.setAge(patientUpdateInputDTO.getAge());
-        if(patientUpdateInputDTO.getConsentForMessage()!=null)
+        if (patientUpdateInputDTO.getConsentForMessage() != null)
             patient.setConsentForMessage(patientUpdateInputDTO.getConsentForMessage());
         person.setAddress(address);
         person = personRepo.save(person);
@@ -158,8 +157,12 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     public List<PatientOutputDTO> getFilteredPatients(Map<String, Object> filters) {
         log.info("Service getFilteredPatients filters: {}", filters);
 
-        Specification<Patient> specification = patientSpecification.getPatientsByFilter(filters);
-        List<Patient> patients = patientRepo.findAll(specification);
+        Specification<TBDetails> specification = tbDetailsSpecification.getPatientsByFilter(filters);
+        List<Patient> patients = tbDetailsRepo.findAll(specification)
+                .stream()
+                .map(TBDetails::getPatient)
+                .toList();
+
         return patients
                 .stream()
                 .map(patientMapper::toPatientOutputDTO)
