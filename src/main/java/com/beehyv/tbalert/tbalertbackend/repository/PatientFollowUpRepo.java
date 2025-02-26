@@ -1,5 +1,6 @@
 package com.beehyv.tbalert.tbalertbackend.repository;
 
+import com.beehyv.tbalert.tbalertbackend.dto.output.PatientFollowUpOutputForFrontEndDto;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.PatientFollowUp;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,6 @@ public interface PatientFollowUpRepo extends JpaRepository<PatientFollowUp, Inte
     List<PatientFollowUp> findAllByPatient_Id(String patientId);
 
     List<PatientFollowUp> findAllByDate(LocalDate date);
+
+    List<PatientFollowUp> findAllByDateAndPatient_IdIn(LocalDate now, List<String> patientIds);
 }

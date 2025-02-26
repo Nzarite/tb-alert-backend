@@ -180,11 +180,14 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     @Override
-    public byte[] getPatientFollowUpForToday() throws IOException {
+    public byte[] getPatientFollowUpForToday(Map<String, Object> filter) throws IOException {
         try(Workbook workbook=new XSSFWorkbook();
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
         {
-            List<PatientFollowUp>patientFollowUps=patientFollowUpRepo.findAllByDate(LocalDate.now());
+
+            List<String>patientIds=patientRegistrationService.getFilteredPatients(filter).stream().map(PatientOutputDTO::getPatientId).toList();
+            List<PatientFollowUp>patientFollowUps=patientFollowUpRepo.findAllByDateAndPatient_IdIn(LocalDate.now(),patientIds);
+
             Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Follow Up for Today","Patient Name","Patient Phone Number");
             sheet.setColumnWidth(0,sheet.getColumnWidth(0));
             applyFontAndPopulateSheet(patientFollowUps, workbook, sheet);
