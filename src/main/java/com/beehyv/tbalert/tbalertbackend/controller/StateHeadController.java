@@ -3,6 +3,7 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 import com.beehyv.tbalert.tbalertbackend.dto.input.StateHeadInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.StateHeadOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import com.beehyv.tbalert.tbalertbackend.service.StateHeadService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.List;
 public class StateHeadController {
 
     private final StateHeadService stateHeadService;
+    private final PersonService personService;
 
     @PostMapping("/register")
     public ResponseEntity<StateHeadOutputDTO> add(@RequestBody @Valid StateHeadInputDTO stateHeadInputDTO) {
@@ -31,6 +33,11 @@ public class StateHeadController {
     @GetMapping("/{id}")
     public ResponseEntity<PersonOutputDTO> findByPersonId(@PathVariable Long id) {
         return new ResponseEntity<>(stateHeadService.findByPersonId(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<PersonOutputDTO> getByPersonEmail(@PathVariable String email) {
+        return new ResponseEntity<>(personService.getByEmail(email), HttpStatus.OK);
     }
 
     @GetMapping

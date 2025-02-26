@@ -4,6 +4,7 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 import com.beehyv.tbalert.tbalertbackend.dto.input.TeleCallerInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import com.beehyv.tbalert.tbalertbackend.service.TeleCallerService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.List;
 public class TeleCallerController {
 
     private final TeleCallerService teleCallerService;
+    private final PersonService personService;
 
     @PostMapping("/register")
     public ResponseEntity<TeleCallerOutputDTO> add(@RequestBody @Valid TeleCallerInputDTO teleCallerInputDTO) {
@@ -32,6 +34,11 @@ public class TeleCallerController {
     @GetMapping("/{id}")
     public ResponseEntity<PersonOutputDTO> getByPersonId(@PathVariable Long id) {
         return new ResponseEntity<>(teleCallerService.getByPersonId(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<PersonOutputDTO> getByPersonEmail(@PathVariable String email) {
+        return new ResponseEntity<>(personService.getByEmail(email), HttpStatus.OK);
     }
 
     @GetMapping("/state/{name}")
@@ -44,7 +51,7 @@ public class TeleCallerController {
         return new ResponseEntity<>(teleCallerService.getAll(), HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<TeleCallerOutputDTO> delete(@PathVariable Long id) {
         log.info("Controller called for deleting telecaller: {}", id);
         teleCallerService.deleteTeleCaller(id);

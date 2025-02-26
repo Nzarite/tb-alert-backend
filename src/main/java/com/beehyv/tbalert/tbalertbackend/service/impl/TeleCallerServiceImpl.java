@@ -62,8 +62,6 @@ public class TeleCallerServiceImpl implements TeleCallerService {
     @Override
     public List<TeleCallerOutputDTO> getByState(String state) {
         List<TeleCaller> teleCallers = teleCallerRepo.findByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(state);
-        log.info(state);
-        log.info(teleCallers.toString());
         return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
 
