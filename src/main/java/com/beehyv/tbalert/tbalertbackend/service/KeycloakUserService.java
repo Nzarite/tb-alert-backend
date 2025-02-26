@@ -5,7 +5,5 @@ public interface KeycloakUserService {
 
     String assignUserRole(String email, String role, String accessToken);
 
-    void sendPasswordResetEmail(String userId, String accessToken);
-
     String deleteUserByEmail(String email);
 }

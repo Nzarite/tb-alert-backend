@@ -5,6 +5,7 @@ import com.beehyv.tbalert.tbalertbackend.service.KeycloakUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -18,10 +19,12 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
 
     private final KeycloakAdminService keycloakAdminService;
     private final RestTemplate restTemplate;
+    private final EmailService emailService;
 
-    public KeycloakUserServiceImpl(KeycloakAdminService keycloakAdminService, RestTemplate restTemplate) {
+    public KeycloakUserServiceImpl(KeycloakAdminService keycloakAdminService, RestTemplate restTemplate, EmailService emailService) {
         this.keycloakAdminService = keycloakAdminService;
         this.restTemplate = restTemplate;
+        this.emailService = emailService;
     }
 
     @Value("${keycloak.url}")
@@ -106,7 +109,7 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
             restTemplate.postForEntity(assignRoleUrl, roleRequest, Void.class);
 
             // Step 4: Send password reset email
-            sendPasswordResetEmail(userId, accessToken);
+            emailService.sendPasswordResetEmail(userId, accessToken);
 
             log.info("User created and role assigned successfully");
             return "User created and role assigned successfully";
@@ -114,20 +117,6 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
         } catch (HttpClientErrorException e) {
             log.error("Error assigning role: {}", e.getMessage());
             return "Error assigning role: " + e.getMessage();
-        }
-    }
-
-    public void sendPasswordResetEmail(String userId, String accessToken) {
-        String emailActionUrl = keycloakUrl + "/admin/realms/" + realm + "/users/" + userId + "/execute-actions-email";
-
-        HttpHeaders headers = createHeaders(accessToken);
-        HttpEntity<List<String>> emailRequest = new HttpEntity<>(List.of("UPDATE_PASSWORD"), headers);
-
-        try {
-            restTemplate.exchange(emailActionUrl, HttpMethod.PUT, emailRequest, Void.class);
-            log.info("Password reset email sent successfully to user ID: {}", userId);
-        } catch (HttpClientErrorException e) {
-            log.error("Failed to send password reset email: {}", e.getMessage());
         }
     }
 

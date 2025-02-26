@@ -110,7 +110,7 @@ public class ReportsServiceImpl implements ReportsService {
             List<TeleCallerOutputDTO>teleCallerOutputDTOList;
             if(state!=null && !state.isEmpty())
                 teleCallerOutputDTOList=teleCallerService.getByState(state);
-            else teleCallerOutputDTOList=teleCallerService.getAll();
+            else teleCallerOutputDTOList=teleCallerService.getAllNotDeleted();
             log.info(teleCallerOutputDTOList.toString());
             Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Telecaller Details","Id","Name",stateLiteral,emailLiteral,
                     "Phone number","Date Of Joining","Patients Registered");
@@ -131,7 +131,7 @@ public class ReportsServiceImpl implements ReportsService {
         try(Workbook workbook=new XSSFWorkbook();
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
         {
-            List<StateHeadOutputDTO>stateHeadOutputDTOS=stateHeadService.getAll();
+            List<StateHeadOutputDTO>stateHeadOutputDTOS=stateHeadService.getAllNotDeleted();
             Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"StateHead Details","Id","Name",stateLiteral,emailLiteral,
                     "Phone number","Date Of Joining","TeleCallers Registered");
             applyFontAndPopulateSheet(stateHeadOutputDTOS, workbook, sheet);
