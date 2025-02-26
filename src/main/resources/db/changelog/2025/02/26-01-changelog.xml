@@ -430,4 +430,43 @@
             <column name="is_deleted" valueBoolean="false"/>
         </insert>
     </changeSet>
+
+    <changeSet id="1740545825496-41" author="bhcp0212">
+        <comment>Insert initial settings into the settings table</comment>
+
+        <!-- Insert drtb setting -->
+        <insert tableName="settings">
+            <column name="key_name" value="drtb"/>
+            <column name="type" value="followup"/>
+            <column name="value" value="8"/>
+        </insert>
+
+        <!-- Insert dstb setting -->
+        <insert tableName="settings">
+            <column name="key_name" value="dstb"/>
+            <column name="type" value="followup"/>
+            <column name="value" value="8"/>
+        </insert>
+
+        <!-- Insert sms_reminder_time setting -->
+        <insert tableName="settings">
+            <column name="key_name" value="sms_reminder_time"/>
+            <column name="type" value="reminder"/>
+            <column name="value" value="08:00"/>
+        </insert>
+
+        <!-- Insert sms_template setting -->
+        <insert tableName="settings">
+            <column name="key_name" value="sms_template"/>
+            <column name="type" value="reminder"/>
+            <column name="value" value="Hi {patientId}:{nikshayId} {firstName} {lastName},\n\nThis is your daily medicine reminder.\nYour scheduled medications for today ({medication_date}) is/are: {medication_names}.\n\nFor any queries, contact us at {org_phone_number}."/>
+        </insert>
+
+        <!-- Insert org_email_id setting -->
+        <insert tableName="settings">
+            <column name="key_name" value="org_email_id"/>
+            <column name="type" value="org"/>
+            <column name="value" value="tbalert@gmail.com"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
