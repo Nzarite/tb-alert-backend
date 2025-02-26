@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -46,12 +47,19 @@ public class StateHeadServiceImpl implements StateHeadService {
             throw new RuntimeException("Failed to create user in Keycloak");
         }
 
-        PersonOutputDTO personOutputDTO=personService.add(stateHeadInputDTO);
-        StateHead stateHead=new StateHead();
-        stateHead.setPerson(personMapper.find(personOutputDTO.getId()));
-        stateHead.setDateOfJoining(localDateMapper.toLocalDate(stateHeadInputDTO.getDateOfJoining()));
-        stateHeadRepo.save(stateHead);
-        return stateHeadMapper.toStateHeadOutputDTO(stateHead);
+        try {
+            PersonOutputDTO personOutputDTO = personService.add(stateHeadInputDTO);
+            StateHead stateHead = new StateHead();
+            stateHead.setPerson(personMapper.find(personOutputDTO.getId()));
+            stateHead.setDateOfJoining(localDateMapper.toLocalDate(stateHeadInputDTO.getDateOfJoining()));
+            stateHeadRepo.save(stateHead);
+            return stateHeadMapper.toStateHeadOutputDTO(stateHead);
+
+        } catch (RuntimeException e) {
+            log.error("Failed to save StateHead in database, rolling back Keycloak user creation ", e);
+            keycloakUserService.deleteUserByEmail(stateHeadInputDTO.getEmail());
+            throw e;
+        }
     }
 
     @Override
@@ -60,7 +68,7 @@ public class StateHeadServiceImpl implements StateHeadService {
     }
 
     @Override
-    public List<StateHeadOutputDTO> getAll() {
+    public List<StateHeadOutputDTO> getAllNotDeleted() {
         return stateHeadRepo.findByPerson_IsDeletedFalse()
                 .stream()
                 .map(stateHeadMapper::toStateHeadOutputDTO)
@@ -72,35 +80,36 @@ public class StateHeadServiceImpl implements StateHeadService {
         StateHead stateHead = stateHeadMapper.find(id);
         stateHead.getPerson().setIsDeleted(true);
         stateHead.getPerson().setEmail(null);
+        stateHead.setDateOfLeaving(LocalDate.now());
         personRepo.save(stateHead.getPerson());
         stateHeadRepo.save(stateHead);
     }
 
     @Override
     public List<StateHeadOutputDTO> getStateHeadByName(String name) {
-        List<StateHead>stateHeads=stateHeadRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name,name);
+        List<StateHead> stateHeads = stateHeadRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name, name);
         return stateHeads.stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
     }
 
     @Override
     public StateHeadOutputDTO update(Long id, StateHeadInputDTO stateHeadInputDTO) {
-        StateHead stateHead=stateHeadMapper.find(id);
-        if(stateHeadInputDTO.getFirstName()!=null)
+        StateHead stateHead = stateHeadMapper.find(id);
+        if (stateHeadInputDTO.getFirstName() != null)
             stateHead.getPerson().setFirstName(stateHeadInputDTO.getFirstName());
-        if(stateHeadInputDTO.getLastName()!=null)
+        if (stateHeadInputDTO.getLastName() != null)
             stateHead.getPerson().setLastName(stateHeadInputDTO.getLastName());
-        if(stateHeadInputDTO.getDateOfJoining()!=null)
+        if (stateHeadInputDTO.getDateOfJoining() != null)
             stateHead.setDateOfJoining(localDateMapper.toLocalDate(stateHeadInputDTO.getDateOfJoining()));
-        if(stateHeadInputDTO.getGender()!=null)
+        if (stateHeadInputDTO.getGender() != null)
             stateHead.getPerson().setGender(stateHeadInputDTO.getGender());
-        if(stateHeadInputDTO.getPhoneNumber()!=null)
+        if (stateHeadInputDTO.getPhoneNumber() != null)
             stateHead.getPerson().setPhoneNumber(stateHeadInputDTO.getPhoneNumber());
 
-        if(stateHeadInputDTO.getDateOfLeaving()!=null)
+        if (stateHeadInputDTO.getDateOfLeaving() != null)
             stateHead.setDateOfLeaving(localDateMapper.toLocalDate(stateHeadInputDTO.getDateOfLeaving()));
         stateHead.setPerson(stateHead.getPerson());
         personRepo.save(stateHead.getPerson());
-        stateHead=stateHeadRepo.save(stateHead);
+        stateHead = stateHeadRepo.save(stateHead);
         return stateHeadMapper.toStateHeadOutputDTO(stateHead);
     }
 }

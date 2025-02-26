@@ -52,7 +52,7 @@ public class StateHeadController {
 
     @GetMapping("/all")
     public ResponseEntity<List<StateHeadOutputDTO>> getAll() {
-        return new ResponseEntity<>(stateHeadService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(stateHeadService.getAllNotDeleted(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

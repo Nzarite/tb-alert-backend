@@ -10,7 +10,7 @@ public interface StateHeadService {
 
     StateHeadOutputDTO findById(Long id);
 
-    List<StateHeadOutputDTO> getAll();
+    List<StateHeadOutputDTO> getAllNotDeleted();
 
     List<StateHeadOutputDTO> getStateHeadByName(String name);
 

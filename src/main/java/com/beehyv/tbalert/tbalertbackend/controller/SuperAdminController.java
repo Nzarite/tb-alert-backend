@@ -29,7 +29,7 @@ public class SuperAdminController {
     public ResponseEntity<List<TeleCallerOutputDTO>> getAllTeleCallers() {
         log.info("Controller called for getting all telecallers");
 
-        return new ResponseEntity<>(teleCallerService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(teleCallerService.getAllNotDeleted(), HttpStatus.OK);
     }
 
     @GetMapping("/patient")

@@ -27,13 +27,12 @@ import java.util.Optional;
 public class PersonServiceImpl implements PersonService {
 
     private final AddressMapper addressMapper;
-    private final AddressRepo addressRepo;
     private PersonRepo personRepo;
     private PersonMapper personMapper;
 
     private void checkForEmail(String email) {
         if(personRepo.existsByEmailAndIsDeletedFalse(email)) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new RuntimeException("Email already exists");
         }
     }
 

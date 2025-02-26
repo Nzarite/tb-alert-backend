@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -46,12 +47,19 @@ public class TeleCallerServiceImpl implements TeleCallerService {
             throw new RuntimeException("Failed to create user in Keycloak");
         }
 
-        PersonOutputDTO personOutputDTO = personService.add(teleCallerInputDTO);
-        TeleCaller teleCaller = new TeleCaller();
-        teleCaller.setPerson(personMapper.find(personOutputDTO.getId()));
-        teleCaller.setDateOfJoining(localDateMapper.toLocalDate(teleCallerInputDTO.getDateOfJoining()));
-        teleCallerRepo.save(teleCaller);
-        return teleCallerMapper.toTeleCallerOutputDTO(teleCaller);
+        try {
+            PersonOutputDTO personOutputDTO = personService.add(teleCallerInputDTO);
+            TeleCaller teleCaller = new TeleCaller();
+            teleCaller.setPerson(personMapper.find(personOutputDTO.getId()));
+            teleCaller.setDateOfJoining(localDateMapper.toLocalDate(teleCallerInputDTO.getDateOfJoining()));
+            teleCallerRepo.save(teleCaller);
+            return teleCallerMapper.toTeleCallerOutputDTO(teleCaller);
+
+        } catch (RuntimeException e) {
+            log.error("Failed to save TeleCaller in database, rolling back Keycloak user creation ", e);
+            keycloakUserService.deleteUserByEmail(teleCallerInputDTO.getEmail());
+            throw e;
+        }
     }
 
     @Override
@@ -66,7 +74,7 @@ public class TeleCallerServiceImpl implements TeleCallerService {
     }
 
     @Override
-    public List<TeleCallerOutputDTO> getAll() {
+    public List<TeleCallerOutputDTO> getAllNotDeleted() {
         return teleCallerRepo.findByPerson_IsDeletedFalse()
                 .stream()
                 .map(teleCallerMapper::toTeleCallerOutputDTO)
@@ -75,24 +83,24 @@ public class TeleCallerServiceImpl implements TeleCallerService {
 
     @Override
     public List<TeleCallerOutputDTO> getByName(String name) {
-        List<TeleCaller>teleCallers=teleCallerRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCaseAndPerson_IsDeletedFalse(name,name);
+        List<TeleCaller> teleCallers = teleCallerRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCaseAndPerson_IsDeletedFalse(name, name);
         return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
 
     @Override
     public TeleCallerOutputDTO updateTeleCaller(Long id, TeleCallerInputDTO teleCallerInputDTO) {
-        TeleCaller teleCaller=teleCallerMapper.find(id);
-        if(teleCallerInputDTO.getFirstName()!=null)
+        TeleCaller teleCaller = teleCallerMapper.find(id);
+        if (teleCallerInputDTO.getFirstName() != null)
             teleCaller.getPerson().setFirstName(teleCallerInputDTO.getFirstName());
-        if(teleCallerInputDTO.getLastName()!=null)
+        if (teleCallerInputDTO.getLastName() != null)
             teleCaller.getPerson().setLastName(teleCallerInputDTO.getLastName());
-        if(teleCallerInputDTO.getDateOfJoining()!=null)
+        if (teleCallerInputDTO.getDateOfJoining() != null)
             teleCaller.setDateOfJoining(localDateMapper.toLocalDate(teleCallerInputDTO.getDateOfJoining()));
-        if(teleCallerInputDTO.getGender()!=null)
+        if (teleCallerInputDTO.getGender() != null)
             teleCaller.getPerson().setGender(teleCallerInputDTO.getGender());
-        if(teleCallerInputDTO.getPhoneNumber()!=null)
+        if (teleCallerInputDTO.getPhoneNumber() != null)
             teleCaller.getPerson().setPhoneNumber(teleCallerInputDTO.getPhoneNumber());
-        if(teleCallerInputDTO.getDateOfLeaving()!=null)
+        if (teleCallerInputDTO.getDateOfLeaving() != null)
             teleCaller.setDateOfLeaving(localDateMapper.toLocalDate(teleCallerInputDTO.getDateOfLeaving()));
 
         teleCaller.setPerson(teleCaller.getPerson());
@@ -108,6 +116,7 @@ public class TeleCallerServiceImpl implements TeleCallerService {
         if (deleteResponse.equals("User deleted successfully")) {
             teleCaller.getPerson().setIsDeleted(true);
             teleCaller.getPerson().setEmail(null);
+            teleCaller.setDateOfLeaving(LocalDate.now());
             personRepo.save(teleCaller.getPerson());
             teleCallerRepo.save(teleCaller);
 
