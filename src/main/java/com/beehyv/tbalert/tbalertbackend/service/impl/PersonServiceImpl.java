@@ -9,6 +9,7 @@ import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
 import com.beehyv.tbalert.tbalertbackend.mapper.AddressMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
+import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PersonRepo;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import jakarta.transaction.Transactional;
@@ -26,20 +27,20 @@ import java.util.Optional;
 public class PersonServiceImpl implements PersonService {
 
     private final AddressMapper addressMapper;
+    private final AddressRepo addressRepo;
     private PersonRepo personRepo;
     private PersonMapper personMapper;
 
     private void checkForEmail(String email) {
-        if(personRepo.existsByEmail(email)) {
+        if(personRepo.existsByEmailAndIsDeletedFalse(email)) {
             throw new IllegalArgumentException("Email already exists");
         }
     }
 
-
     @Override
     public PersonOutputDTO add(PersonInputDTO person) {
-        log.info("Service called for Add person using person input: {}", person);
-checkForEmail(person.getEmail());
+        log.info("Service called for Add person: {}", person);
+
         Person personSaved = personMapper.toPerson(person);
         Address address = addressMapper.toAddress(person);
         personSaved.setAddress(address);
@@ -49,8 +50,9 @@ checkForEmail(person.getEmail());
 
     @Override
     public PersonOutputDTO add(TeleCallerInputDTO teleCaller) {
-        log.info("Service called for Add personusing telecaller input: {}", teleCaller);
-checkForEmail(teleCaller.getEmail());
+        log.info("Service called for Add person using telecaller input: {}", teleCaller);
+
+        checkForEmail(teleCaller.getEmail());
         Person personSaved = personMapper.toPerson(teleCaller);
         Address address = addressMapper.toAddress(teleCaller);
         personSaved.setAddress(address);
@@ -60,8 +62,9 @@ checkForEmail(teleCaller.getEmail());
 
     @Override
     public PersonOutputDTO add(StateHeadInputDTO stateHead) {
-        log.info("Service called for Add personusing statehead input: {}", stateHead);
-checkForEmail(stateHead.getEmail());
+        log.info("Service called for Add person using statehead input: {}", stateHead);
+
+        checkForEmail(stateHead.getEmail());
         Person personSaved = personMapper.toPerson(stateHead);
         Address address = addressMapper.toAddress(stateHead);
         personSaved.setAddress(address);
@@ -72,7 +75,8 @@ checkForEmail(stateHead.getEmail());
     @Override
     public PersonOutputDTO add(PatientInputDTO patientInputDTO) {
         log.info("Service called for Add person using patient input: {}", patientInputDTO);
-checkForEmail(patientInputDTO.getEmail());
+
+        checkForEmail(patientInputDTO.getEmail());
         Person personSaved = personMapper.toPerson(patientInputDTO);
         Address address = addressMapper.toAddress(patientInputDTO);
         personSaved.setAddress(address);

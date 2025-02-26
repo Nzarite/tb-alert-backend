@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -17,5 +16,6 @@ public interface StateHeadRepo extends JpaRepository<StateHead, Long> {
 //    Optional<StateHead> findById(@Param("stateId") Long stateId);
 
     List<StateHead> findByPerson_IsDeletedFalse();
+
     List<StateHead> findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(String name, String name1);
 }

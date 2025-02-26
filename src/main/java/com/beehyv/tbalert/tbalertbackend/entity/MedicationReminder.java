@@ -6,17 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "patient_medication")
-public class PatientMedication {
-
+public class MedicationReminder {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long reminderId;
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
@@ -26,7 +27,9 @@ public class PatientMedication {
     @JoinColumn(name = "medication_id")
     private Medication medication;
 
-    @Column(name = "frequency", nullable = false)
-    private int frequency=0;
+    private LocalTime medicationTime;
 
+    private LocalDate medicationDeadline;
+
+    private String notificationStatus = "PENDING";
 }

@@ -19,5 +19,5 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
 
     List<Person> findAllByIsDeletedFalse();
 
-    boolean existsByEmail(String email);
+    boolean existsByEmailAndIsDeletedFalse(String email);
 }

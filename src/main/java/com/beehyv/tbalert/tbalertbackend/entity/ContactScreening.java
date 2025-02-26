@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Table(name = "contact_screening")
 public class ContactScreening {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "contact_screening_status", nullable = false)

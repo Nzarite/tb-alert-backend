@@ -62,8 +62,6 @@ public class TeleCallerServiceImpl implements TeleCallerService {
     @Override
     public List<TeleCallerOutputDTO> getByState(String state) {
         List<TeleCaller> teleCallers = teleCallerRepo.findByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(state);
-        log.info(state);
-        log.info(teleCallers.toString());
         return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
 
@@ -76,24 +74,8 @@ public class TeleCallerServiceImpl implements TeleCallerService {
     }
 
     @Override
-    public void deleteTeleCaller(Long id) {
-        TeleCaller teleCaller = teleCallerMapper.find(id);
-
-        String deleteResponse = keycloakUserService.deleteUserByEmail(teleCaller.getPerson().getEmail());
-        if (deleteResponse.equals("User deleted successfully")) {
-            teleCaller.getPerson().setIsDeleted(true);
-            teleCaller.getPerson().setEmail(null);
-            personRepo.save(teleCaller.getPerson());
-            teleCallerRepo.save(teleCaller);
-
-            log.info("TeleCaller with ID {} deleted successfully", id);
-        } else {
-            log.warn("TeleCaller with ID {} not found in Keycloak", id);
-        }
-    }
-    @Override
     public List<TeleCallerOutputDTO> getByName(String name) {
-        List<TeleCaller>teleCallers=teleCallerRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name,name);
+        List<TeleCaller>teleCallers=teleCallerRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCaseAndPerson_IsDeletedFalse(name,name);
         return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
 
@@ -116,5 +98,22 @@ public class TeleCallerServiceImpl implements TeleCallerService {
         teleCaller.setPerson(teleCaller.getPerson());
         personRepo.save(teleCaller.getPerson());
         return teleCallerMapper.toTeleCallerOutputDTO(teleCallerRepo.save(teleCaller));
+    }
+
+    @Override
+    public void deleteTeleCaller(Long id) {
+        TeleCaller teleCaller = teleCallerMapper.find(id);
+
+        String deleteResponse = keycloakUserService.deleteUserByEmail(teleCaller.getPerson().getEmail());
+        if (deleteResponse.equals("User deleted successfully")) {
+            teleCaller.getPerson().setIsDeleted(true);
+            teleCaller.getPerson().setEmail(null);
+            personRepo.save(teleCaller.getPerson());
+            teleCallerRepo.save(teleCaller);
+
+            log.info("TeleCaller with ID {} deleted successfully", id);
+        } else {
+            log.warn("TeleCaller with ID {} not found in Keycloak", id);
+        }
     }
 }
