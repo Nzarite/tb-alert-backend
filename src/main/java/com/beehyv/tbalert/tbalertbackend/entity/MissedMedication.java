@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class MissedMedication {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)

@@ -18,7 +18,7 @@ import java.time.LocalDate;
 public class TeleCaller {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
