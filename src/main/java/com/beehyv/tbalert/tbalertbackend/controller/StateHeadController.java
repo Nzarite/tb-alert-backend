@@ -1,13 +1,16 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.StateHeadInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.StateHeadOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import com.beehyv.tbalert.tbalertbackend.service.StateHeadService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,31 +19,46 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RequestMapping("/statehead")
+@PreAuthorize("hasAuthority('ROLE_SuperAdmin')")
 public class StateHeadController {
 
     private final StateHeadService stateHeadService;
+    private final PersonService personService;
 
     @PostMapping("/register")
-    public ResponseEntity<StateHeadOutputDTO> add(@RequestBody @Valid StateHeadInputDTO stateHeadInputDTO)
-    {
+    public ResponseEntity<StateHeadOutputDTO> add(@RequestBody @Valid StateHeadInputDTO stateHeadInputDTO) {
         return new ResponseEntity<>(stateHeadService.add(stateHeadInputDTO), HttpStatus.CREATED);
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<StateHeadOutputDTO> findById(@PathVariable Long id)
-    {
+    public ResponseEntity<StateHeadOutputDTO> findById(@PathVariable Long id) {
         return new ResponseEntity<>(stateHeadService.findById(id), HttpStatus.OK);
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<List<StateHeadOutputDTO>> getStateHeadByName(@PathVariable String name) {
-        return new ResponseEntity<>(stateHeadService.getStateHeadByName(name),HttpStatus.OK);
+        return new ResponseEntity<>(stateHeadService.getStateHeadByName(name), HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<StateHeadOutputDTO> updateStateHead(@PathVariable Long id, @RequestBody @Valid StateHeadInputDTO stateHeadInputDTO)
-    {
-        return new ResponseEntity<>(stateHeadService.update(id,stateHeadInputDTO),HttpStatus.OK);
+    public ResponseEntity<StateHeadOutputDTO> updateStateHead(@PathVariable Long id, @RequestBody @Valid StateHeadInputDTO stateHeadInputDTO) {
+        return new ResponseEntity<>(stateHeadService.update(id, stateHeadInputDTO), HttpStatus.OK);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<PersonOutputDTO> getByPersonEmail(@PathVariable String email) {
+        return new ResponseEntity<>(personService.getByEmail(email), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<StateHeadOutputDTO>> getAll() {
+        return new ResponseEntity<>(stateHeadService.getAll(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteStateHead(@PathVariable Long id) {
+        log.info("Controller called for deleting statehead: {}", id);
+        stateHeadService.deleteStateHead(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

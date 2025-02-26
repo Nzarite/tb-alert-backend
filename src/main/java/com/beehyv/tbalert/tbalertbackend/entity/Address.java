@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "address")
 public class Address {
     @Id
-    @GeneratedValue(strategy =  GenerationType.AUTO)
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "block")
@@ -29,8 +29,6 @@ public class Address {
     @Column(name = "district")
     private String district;
 
-    @Column(nullable = false,name="state")
-    private String state;
-
-    
+    @ManyToOne(cascade = CascadeType.ALL)
+    private State state;
 }

@@ -14,9 +14,10 @@ public class NikshayMapper {
 
     private final PatientRepo patientRepo;
     private final LocalDateMapper localDateMapper;
+    private final PatientMapper patientMapper;
 
     public NikshayMitra ToEntity(NikshayInputDTO nikshayInputDTO) {
-        Patient patient = patientRepo.findById(nikshayInputDTO.getPatientId()).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + nikshayInputDTO.getPatientId()));
+        Patient patient = patientMapper.find(nikshayInputDTO.getPatientId());
 
         return NikshayMitra.builder()
                 .nikshayId(nikshayInputDTO.getNikshayId())

@@ -24,7 +24,7 @@ public class PatientMedicationMapper {
 
     public PatientMedication toPatientMedication(String id,PatientMedicationInputDTO patientMedication) {
         log.info("Mapper called for toPatientMedication from PatientMedcicatonInputDTO: {}", patientMedication);
-        Patient patient = patientMapper.findPatient(id);
+        Patient patient = patientMapper.find(id);
         Medication medication = medicationMapper.findMedicationById(patientMedication.getMedicationId());
         return PatientMedication.builder()
                 .medication(medication)
@@ -44,7 +44,7 @@ public class PatientMedicationMapper {
 
     public List<PatientMedication> toPatientMedications(String id, List<Integer> medications,List<Integer>frequency) {
         log.info("Mapper called for toPatientMedication from patient id: {}",id );
-        Patient patient = patientMapper.findPatient(id);
+        Patient patient = patientMapper.find(id);
         List<Medication>medicationList=medicationRepo.findAllByIdIn(medications);
         List<PatientMedication>patientMedications=new ArrayList<>();
        for(int i=0; i<medicationList.size(); i++){

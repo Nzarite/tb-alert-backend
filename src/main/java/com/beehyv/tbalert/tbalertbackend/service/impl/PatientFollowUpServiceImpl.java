@@ -19,6 +19,7 @@ import com.beehyv.tbalert.tbalertbackend.repository.PatientMedicationRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import com.beehyv.tbalert.tbalertbackend.service.MissedMedicationService;
 import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ import java.util.List;
 @Slf4j
 @Service
 @AllArgsConstructor
+@Transactional
 public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
     private final PatientFollowUpRepo patientFollowUpRepo;
@@ -48,18 +50,18 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         log.info("Service called to Get patient follow up with patient id {}", id);
         List<PatientFollowUp> patientFollowUps = patientFollowUpRepo.findByPatient_Id(id);
 
-        Patient patient = patientMapper.findPatient(id);
-        List<PatientFollowUpOutputForFrontEndDto.FollowUpDetails>followUpDetails=new ArrayList<>();
+        Patient patient = patientMapper.find(id);
+        List<PatientFollowUpOutputForFrontEndDto.FollowUpDetails> followUpDetails = new ArrayList<>();
 
-        List<PatientMedication>patientMedications=patientMedicationRepo.getPatientMedicationsByPatient(patient);
+        List<PatientMedication> patientMedications = patientMedicationRepo.getPatientMedicationsByPatient(patient);
 
         List<MissedMedication>missedMedicationList=new ArrayList<>();
         patientFollowUps.forEach(patientFollowUp -> {
             patientMedications.forEach(patientMedication -> {
-                List<MissedMedication>missedMedications=missedMedicationRepo.findByPatientMedicationAndDate(patientMedication,patientFollowUp.getDate());
+                List<MissedMedication> missedMedications = missedMedicationRepo.findByPatientMedicationAndDate(patientMedication, patientFollowUp.getDate());
                 missedMedicationList.addAll(missedMedications);
             });
-            FollowUpDetails followUpDetail=patientFollowUpMapper.toFollowUpDetails(patientFollowUp,missedMedicationList);
+            FollowUpDetails followUpDetail = patientFollowUpMapper.toFollowUpDetails(patientFollowUp, missedMedicationList);
             followUpDetails.add(followUpDetail);
         });
         return PatientFollowUpOutputForFrontEndDto.builder()
@@ -71,71 +73,87 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     @Override
     public PatientFollowUpOutputDTO add(String id, PatientFollowUpInputDTO patientFollowUpInputDTO) {
         log.info("Service called to Add patient follow up with patient id {}", id);
-        Patient patient=patientMapper.findPatient(id);
-        List<MissedMedication>missedMedicationList=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()));
-        PatientFollowUp patientFollowUp=patientFollowUpMapper.toPatientFollowUp(patientFollowUpInputDTO,patient);
+
+        Patient patient=patientMapper.find(id);
+        List<MissedMedication> missedMedicationList = missedMedicationMapper.findMissedMedicationsByPatientandDate(patient, localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()));
+        PatientFollowUp patientFollowUp = patientFollowUpMapper.toPatientFollowUp(patientFollowUpInputDTO, patient);
         patientFollowUpRepo.save(patientFollowUp);
-        return patientFollowUpMapper.toDTO(patientFollowUp,missedMedicationList);
+        return patientFollowUpMapper.toDTO(patientFollowUp, missedMedicationList);
     }
 
     @Override
     public PatientFollowUpOutputDTO update(String id, PatientFollowUpInputDTO patientFollowUpInputDTO) {
-        LocalDate date=localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate());
-        missedMedicationService.add(id,patientFollowUpInputDTO.getMissedMedications(),date);
-        Patient patient=patientMapper.findPatient(id);
-        PatientFollowUp patientFollowUp=patientFollowUpRepo.findByPatientAndDate(patient,date);
-        if(patientFollowUp==null){
+        log.info("Service called to Update patient follow up with patient id {}", id);
+
+        LocalDate date = localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate());
+        missedMedicationService.add(id, patientFollowUpInputDTO.getMissedMedications(), date);
+        Patient patient=patientMapper.find(id);
+        PatientFollowUp patientFollowUp = patientFollowUpRepo.findByPatientAndDate(patient, date);
+        if (patientFollowUp == null) {
             throw new IllegalArgumentException("No follow up exists for the given patient and date");
         }
 
         patientFollowUp.setRemarks(patientFollowUpInputDTO.getRemarks());
         patientFollowUp.setDate(date);
-        if(patientFollowUpInputDTO.getAliveOrDead()!=null){
+        if (patientFollowUpInputDTO.getAliveOrDead() != null) {
             patient.setCurrentStatus(patientFollowUpInputDTO.getAliveOrDead());
 
         }
-        if(patientFollowUpInputDTO.isCured()){
-            patient.setCured(true);
-        }
-        if((patientFollowUpInputDTO.getAliveOrDead()!=null && patientFollowUpInputDTO.getAliveOrDead().equals("dead"))||(patientFollowUpInputDTO.isCured())){
-            List<PatientFollowUp>followUps=patientFollowUpRepo.findAllByPatient_Id(patient.getId());
-            for(PatientFollowUp followUp:followUps){
-                if(followUp.getDate().isAfter(date))
+
+
+        if ((patientFollowUpInputDTO.getAliveOrDead() != null && patientFollowUpInputDTO.getAliveOrDead().equals("dead")) || (patientFollowUpInputDTO.getCured()!= null && patientFollowUpInputDTO.getCured().equals(true))) {
+            List<PatientFollowUp> followUps = patientFollowUpRepo.findAllByPatient_Id(patient.getId());
+            for (PatientFollowUp followUp : followUps) {
+                if (followUp.getDate().isAfter(date))
                     followUp.setStatus("Cancelled");
             }
             patientFollowUpRepo.saveAll(followUps.stream().toList());
-        }
-        else {
+        } else {
             patientFollowUp.setStatus("Occured");
-            if((patient.isCured() && !patientFollowUpInputDTO.isCured()) || (patient.getCurrentStatus().equals("dead") && patientFollowUpInputDTO.getAliveOrDead().equals("alive"))){
-                List<PatientFollowUp>followUps=patientFollowUpRepo.findAllByPatient_Id(patient.getId());
-                for(PatientFollowUp followUp:followUps){
-                    if(followUp.getStatus().equals("Cancelled"))
-                        followUp.setStatus("Missed");
-                }
-            }
         }
+        if ((patient.isCured() && !patientFollowUpInputDTO.getCured()) || (patient.getCurrentStatus().equals("dead") && patientFollowUpInputDTO.getAliveOrDead().equals("alive"))) {
+            List<PatientFollowUp> followUps = patientFollowUpRepo.findAllByPatient_Id(patient.getId());
+            for (PatientFollowUp followUp : followUps) {
+                if (followUp.getStatus().equals("Cancelled"))
+                    followUp.setStatus("Missed");
+            }
+            patientFollowUpRepo.saveAll(followUps.stream().toList());
+        }
+
+        patient.setCured(patientFollowUpInputDTO.getCured());
+
         patientFollowUp.setPatientCondition(patientFollowUpInputDTO.getPatientCondition());
         patientFollowUpRepo.save(patientFollowUp);
-        List<MissedMedication>missedMedications=missedMedicationMapper.findMissedMedicationsByPatientandDate(patient,patientFollowUp.getDate());
+        List<MissedMedication> missedMedications = missedMedicationMapper.findMissedMedicationsByPatientandDate(patient, patientFollowUp.getDate());
 
         patientRepo.save(patient);
 
-        return patientFollowUpMapper.toDTO(patientFollowUp,missedMedications);
+        return patientFollowUpMapper.toDTO(patientFollowUp, missedMedications);
     }
 
     @Override
     public List<PatientFollowUp> findBeforeDate(String id, LocalDate localDate) {
-        Patient patient=patientMapper.findPatient(id);
-        return patientFollowUpRepo.findByPatientAndDateBefore(patient,localDate);
+        log.info("Service called to Find patient follow up with patient id {}", id);
+
+        Patient patient=patientMapper.find(id);
+        return patientFollowUpRepo.findByPatientAndDateBefore(patient, localDate);
     }
 
     @Override
     public List<PatientFollowUpOutputForFrontEndDto> getFollowUpForPatientList(List<PatientOutputDTO> patientList) {
-        List<PatientFollowUpOutputForFrontEndDto>patientFollowUpOutputForFrontEndDtos=new ArrayList<>();
-        for(PatientOutputDTO patient:patientList){
+        log.info("Service called to Find patient follow up for patient list");
+
+        List<PatientFollowUpOutputForFrontEndDto> patientFollowUpOutputForFrontEndDtos = new ArrayList<>();
+        for (PatientOutputDTO patient : patientList) {
             patientFollowUpOutputForFrontEndDtos.add(get(patient.getPatientId()));
         }
         return patientFollowUpOutputForFrontEndDtos;
+    }
+
+    @Override
+    public void delete(String patientId) {
+        log.info("Service called to Delete patient follow up with patient id {}", patientId);
+
+        patientFollowUpRepo.deleteAllByPatient_Id(patientId);
     }
 }

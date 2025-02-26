@@ -9,4 +9,6 @@ public interface PatientMedicationService {
     List<PatientMedicationOutputDTO> get(String id);
 
     List<PatientMedicationOutputDTO> add(String id, List<PatientMedicationInputDTO> patientMedicationInputDTOList);
+
+    void delete(String id);
 }

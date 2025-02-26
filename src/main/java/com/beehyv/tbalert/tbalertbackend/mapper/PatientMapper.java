@@ -16,12 +16,12 @@ import org.springframework.stereotype.Component;
 public class PatientMapper {
 
     private final PatientRepo patientRepo;
-    private final AddressRepo addressRepo;
     private LocalDateMapper localDateMapper;
 
-    public Patient findPatient(String patientId) {
+    public Patient find(String patientId) {
         log.info("Mapper called for Find patient with id {}", patientId);
-        return patientRepo.findById(patientId).orElseThrow(()-> new IllegalArgumentException(
+
+        return patientRepo.findByIdAndPerson_IsDeletedFalse(patientId).orElseThrow(() -> new IllegalArgumentException(
                 "Patient with id " + patientId + " not found"));
     }
 
@@ -29,9 +29,9 @@ public class PatientMapper {
         log.info("Mapper called for toPatientOutputDTO with id {}", patient.getId());
 
         Person person = patient.getPerson();
-        Address address=person.getAddress();
+        Address address = person.getAddress();
 
-        if(address==null) {
+        if (address == null) {
             throw new IllegalArgumentException("Patient with id " + patient.getId() + " not found");
         }
         log.info("Email {}", person.getUpdatedBy());
@@ -48,8 +48,8 @@ public class PatientMapper {
                 .block(address.getBlock())
                 .village(address.getVillage())
                 .district(address.getDistrict())
-                .state(address.getState())
-                .currentStatus(patient.getCurrentStatus()==null?"alive":patient.getCurrentStatus())
+                .state(address.getState().getStateName())
+                .currentStatus(patient.getCurrentStatus() == null ? "alive" : patient.getCurrentStatus())
                 .cured(patient.isCured())
                 .createdBy(person.getCreatedBy())
                 .createdAt(localDateMapper.toDateTime(person.getCreatedOn()))

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Medication {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "name",nullable = false,unique = true)

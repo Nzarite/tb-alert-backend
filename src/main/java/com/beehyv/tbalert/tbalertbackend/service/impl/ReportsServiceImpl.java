@@ -50,7 +50,7 @@ public class ReportsServiceImpl implements ReportsService {
     public Integer getAllDead() throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             long totalPatients = patientRepo.count();
-            int deadPatients = patientRepo.countByCurrentStatus("dead");
+            int deadPatients = patientRepo.countByCurrentStatusAndPerson_IsDeletedFalse("dead");
 
             Sheet sheet = reportsHelperService.createSheetWithHeader(7000,workbook, "Patient Report for Dead", "Category", "Count");
             reportsHelperService.addDataRow(sheet, 1, "Total Patients", totalPatients);

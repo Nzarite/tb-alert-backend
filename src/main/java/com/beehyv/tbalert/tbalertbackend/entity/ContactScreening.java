@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Table(name = "contact_screening")
 public class ContactScreening {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "contact_screening_status", nullable = false)
@@ -52,7 +52,7 @@ public class ContactScreening {
     @Column(name = "hhcs_initiated_tpt")
     private Integer noOfHHCsInitiatedTPT;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 }

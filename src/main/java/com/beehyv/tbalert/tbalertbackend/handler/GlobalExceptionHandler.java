@@ -1,10 +1,15 @@
 package com.beehyv.tbalert.tbalertbackend.handler;
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.JDBCException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -80,7 +85,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DateTimeParseException.class)
     public ResponseEntity<String> handleDateTimeParseException(DateTimeParseException ex) {
         log.warn(errorMessage(ex));
-        return new ResponseEntity<>("Invalid Date format "+ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Invalid Date format " + ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IOException.class)
@@ -95,15 +100,39 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<String> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+        log.error(errorMessage(ex));
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        log.error(errorMessage(ex));
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InvalidDataAccessResourceUsageException.class)
+    public ResponseEntity<String> handleInvalidDataAccessResourceUsageException(InvalidDataAccessResourceUsageException ex) {
+        log.error(errorMessage(ex));
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
         log.error(errorMessage(ex));
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(IncorrectResultSizeDataAccessException.class)
+    public ResponseEntity<String> handleIncorrectResultSizeDataAccessException(IncorrectResultSizeDataAccessException ex) {
+        log.error(errorMessage(ex));
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.valueOf(409));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralExceptions(Exception e) {
         log.error(errorMessage(e));
-        return new ResponseEntity<>(e.getMessage()+" "+e.getClass().getSimpleName(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(e.getMessage() + " " + e.getClass().getSimpleName(), HttpStatus.I_AM_A_TEAPOT);
     }
 }

@@ -6,6 +6,7 @@ import com.beehyv.tbalert.tbalertbackend.entity.Setting;
 import com.beehyv.tbalert.tbalertbackend.mapper.SettingMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.SettingRepo;
 import com.beehyv.tbalert.tbalertbackend.service.SettingService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class SettingServiceImpl implements SettingService {
     private SettingRepo settingRepo;
     private SettingMapper settingMapper;

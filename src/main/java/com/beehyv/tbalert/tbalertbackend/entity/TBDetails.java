@@ -15,8 +15,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Table(name = "tb_details")
 public class TBDetails {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false, name = "date_of_diagnosis")
@@ -34,7 +35,7 @@ public class TBDetails {
     @Column(nullable = false, name = "dstb_drtb")
     private String dstbOrDrtb;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 }

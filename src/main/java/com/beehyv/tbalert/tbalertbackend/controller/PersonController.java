@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/person")
+@PreAuthorize("hasAuthority('ROLE_Telecaller')")
 @AllArgsConstructor
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
 public class PersonController {
@@ -40,8 +42,8 @@ public class PersonController {
         return new ResponseEntity<>(personService.get(id),HttpStatus.OK);
     }
 
-    @GetMapping("/email")
-    public ResponseEntity<PersonOutputDTO> getPersonByEmail(@RequestBody String email) {
+    @GetMapping("/email/{email}")
+    public ResponseEntity<PersonOutputDTO> getPersonByEmail(@PathVariable String email) {
         log.info("Controller called for Getting person by email: {}", email);
         return new ResponseEntity<>(personService.getByEmail(email),HttpStatus.OK);
     }
