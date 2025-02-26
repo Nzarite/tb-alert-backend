@@ -9,6 +9,7 @@ import com.beehyv.tbalert.tbalertbackend.util.SMSTemplateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@ConditionalOnBean(PlivoSmsService.class)
 public class MedicationReminderService {
 
     @Value("${app.notification.sender-id}")

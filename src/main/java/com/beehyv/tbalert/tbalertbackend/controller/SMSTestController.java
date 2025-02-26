@@ -2,6 +2,7 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.service.impl.PlivoSmsService;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/test")
 @AllArgsConstructor
+@ConditionalOnBean(PlivoSmsService.class)
 public class SMSTestController {
 
     private final PlivoSmsService smsService;

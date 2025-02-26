@@ -5,6 +5,7 @@ import com.plivo.api.exceptions.PlivoRestException;
 import com.plivo.api.models.message.Message;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.List;
 @Service
 @Slf4j
 @AllArgsConstructor
+@ConditionalOnProperty(name = "app.config.plivo-connection", havingValue = "true", matchIfMissing = false)
 public class PlivoSmsService {
 
     private final PlivoClient plivoClient;

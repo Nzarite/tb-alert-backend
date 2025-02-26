@@ -2,9 +2,11 @@ package com.beehyv.tbalert.tbalertbackend.job;
 
 import com.beehyv.tbalert.tbalertbackend.repository.SettingRepo;
 import com.beehyv.tbalert.tbalertbackend.service.impl.MedicationReminderService;
+import com.beehyv.tbalert.tbalertbackend.service.impl.PlivoSmsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.concurrent.ScheduledFuture;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@ConditionalOnBean(PlivoSmsService.class)
 public class MedicationReminderJob {
 
     private final MedicationReminderService medicationReminderService;
