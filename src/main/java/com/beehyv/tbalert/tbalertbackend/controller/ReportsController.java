@@ -1,6 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.StateInputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.input.StateReportsInputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.ReportsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +43,9 @@ public class ReportsController {
     }
 
     @PostMapping("/telecaller")
-    public ResponseEntity<byte[]> getTeleCallerOfAState(@RequestBody String state) throws IOException {
+    public ResponseEntity<byte[]> getTeleCallerOfAState(@RequestBody StateReportsInputDTO state) throws IOException {
         log.info("Controller called for Getting telecallers for state: {}", state);
-        byte[] excelData = reportsService.getTeleCallerOfAState(state);
+        byte[] excelData = reportsService.getTeleCallerOfAState(state.getState());
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=telecaller.xlsx")

@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class PersonServiceImpl implements PersonService {
     private PersonMapper personMapper;
 
     private void checkForEmail(String email) {
-        if(personRepo.existsByEmailAndIsDeletedFalse(email)) {
+        if(!ObjectUtils.isEmpty(email) && personRepo.existsByEmailAndIsDeletedFalse(email)) {
             throw new RuntimeException("Email already exists");
         }
     }
