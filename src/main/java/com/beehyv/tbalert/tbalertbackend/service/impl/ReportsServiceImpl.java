@@ -108,7 +108,7 @@ public class ReportsServiceImpl implements ReportsService {
             ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
         {
             List<TeleCallerOutputDTO>teleCallerOutputDTOList;
-            if(state!=null && !state.isEmpty())
+            if(!state.isEmpty())
                 teleCallerOutputDTOList=teleCallerService.getByState(state);
             else teleCallerOutputDTOList=teleCallerService.getAllNotDeleted();
             log.info(teleCallerOutputDTOList.toString());
@@ -251,7 +251,7 @@ public class ReportsServiceImpl implements ReportsService {
 
         Person person=personMapper.find(teleCallerOutputDTO.getPersonId());
         reportsHelperService.createOrUpdateCell(row,1,person.getFirstName()+person.getLastName(),cellStyle);
-        reportsHelperService.createOrUpdateCell(row,2,person.getAddress().getState(),cellStyle);
+        reportsHelperService.createOrUpdateCell(row,2,person.getAddress().getState().getStateName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,3,person.getEmail(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,4,person.getPhoneNumber(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,5,teleCallerOutputDTO.getDateOfJoining(),cellStyle);
@@ -263,7 +263,7 @@ public class ReportsServiceImpl implements ReportsService {
 
         Person person=personMapper.find(stateHeadOutputDTO.getPersonId());
         reportsHelperService.createOrUpdateCell(row,1,person.getFirstName()+person.getLastName(),cellStyle);
-        reportsHelperService.createOrUpdateCell(row,2,person.getAddress().getState(),cellStyle);
+        reportsHelperService.createOrUpdateCell(row,2,person.getAddress().getState().getStateName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,3,person.getEmail(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,4,person.getPhoneNumber(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,5,stateHeadOutputDTO.getDateOfJoining(),cellStyle);
