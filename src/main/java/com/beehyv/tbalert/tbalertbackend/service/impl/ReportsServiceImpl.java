@@ -284,7 +284,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     private void populatePatientRow(Row row, PatientOutputDTO patient, CellStyle cellStyle) {
 
-        if (patient.getIsDeleted()) {
+        if (Boolean.TRUE.equals(patient.getIsDeleted())) {
             cellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
             cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         }
@@ -370,7 +370,7 @@ public class ReportsServiceImpl implements ReportsService {
         }
         startColumn=temp;
         reportsHelperService.createOrUpdateCell(row,startColumn++,patient.getIsDeleted(),cellStyle);
-        if(patient.getIsDeleted()) {
+        if(Boolean.TRUE.equals(patient.getIsDeleted())) {
             row.setRowStyle(cellStyle);
         }
     }
