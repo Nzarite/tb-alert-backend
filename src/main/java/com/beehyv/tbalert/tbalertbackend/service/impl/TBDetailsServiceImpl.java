@@ -6,15 +6,14 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientMedicationInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.TBDetailsInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.TBDetailsOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
+import com.beehyv.tbalert.tbalertbackend.entity.Setting;
 import com.beehyv.tbalert.tbalertbackend.entity.TBDetails;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.TBDetailsMapper;
+import com.beehyv.tbalert.tbalertbackend.repository.SettingRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.TBDetailsRepo;
-import com.beehyv.tbalert.tbalertbackend.service.MissedMedicationService;
-import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
-import com.beehyv.tbalert.tbalertbackend.service.PatientMedicationService;
-import com.beehyv.tbalert.tbalertbackend.service.TBDetailsService;
+import com.beehyv.tbalert.tbalertbackend.service.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +35,11 @@ public class TBDetailsServiceImpl implements TBDetailsService {
     private final PatientFollowUpService patientFollowUpService;
     private final PatientMedicationService patientMedicationService;
     private final MissedMedicationService missedMedicationService;
+    private final SettingService settingService;
+    private final SettingRepo settingRepo;
+
+
+
 
     @Override
     public TBDetailsOutputDTO getTBDetails(String patientId) {
@@ -53,32 +57,36 @@ public class TBDetailsServiceImpl implements TBDetailsService {
         TBDetails tbDetails = tbDetailsMapper.toTBDetails(tbDetailsInputDTO);
         tbDetailsRepo.save(tbDetails);
 
-        Patient patient=patientMapper.find(tbDetails.getPatient().getId());
+        Patient patient = patientMapper.find(tbDetails.getPatient().getId());
         LocalDate localDate = LocalDate.now();
-        int curr=15;
-        List<PatientMedicationInputDTO> patientMedicationInputDTO=List.of(PatientMedicationInputDTO
+        int curr = 15;
+        List<PatientMedicationInputDTO> patientMedicationInputDTO = List.of(PatientMedicationInputDTO
                 .builder()
                 .medicationId(1)
                 .frequency(1)
                 .build());
-        List<MissedMedicationInputDTO> missedMedicationInputDTO=List.of(MissedMedicationInputDTO
+        List<MissedMedicationInputDTO> missedMedicationInputDTO = List.of(MissedMedicationInputDTO
                 .builder()
                 .medicationId(1)
                 .missedDosages(0)
                 .comments("")
                 .build());
-        patientMedicationService.add(patient.getId(),patientMedicationInputDTO);
-        for (int i = 0; i < 8; i++)
-        {
+        patientMedicationService.add(patient.getId(), patientMedicationInputDTO);
+
+        String searchQuery=tbDetails.getDstbOrDrtb().equals("DS-TB")?"dstb_followup":"drtb_followup";
+
+        int followUpCount = Integer.parseInt(settingService.getSettingsValue(searchQuery)!=null?settingService.getSettingsValue(searchQuery):"8");
+
+        for (int i = 0; i < followUpCount; i++) {
             PatientFollowUpInputDTO patientFollowUpInputDTO = PatientFollowUpInputDTO.builder()
                     .date(localDate.toString())
                     .followUpStatus("Missed")
                     .remarks("")
                     .build();
-            missedMedicationService.add(patient.getId(),missedMedicationInputDTO,localDate);
+            missedMedicationService.add(patient.getId(), missedMedicationInputDTO, localDate);
             patientFollowUpService.add(patient.getId(), patientFollowUpInputDTO);
             localDate = localDate.plusDays(curr);
-            if(i==2) curr=30;
+            if (i == 2) curr = 30;
         }
 
         return tbDetailsMapper.toOutputDto(tbDetails);
