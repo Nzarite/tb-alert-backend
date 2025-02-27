@@ -11,10 +11,7 @@ import com.beehyv.tbalert.tbalertbackend.repository.*;
 import com.beehyv.tbalert.tbalertbackend.service.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
@@ -92,7 +89,8 @@ public class ReportsServiceImpl implements ReportsService {
                     "Follow up 5 Date", "Follow up 5 Missed Medication", "Follow up 5 Patient Condition",
                     "Follow up 6 Date", "Follow up 6 Missed Medication", "Follow up 6 Patient Condition",
                     "Follow up 7 Date", "Follow up 7 Missed Medication", "Follow up 7 Patient Condition",
-                    "Follow up 8 Date", "Follow up 8 Missed Medication", "Follow up 8 Patient Condition"
+                    "Follow up 8 Date", "Follow up 8 Missed Medication", "Follow up 8 Patient Condition",
+                    "Patient Is Deleted"
             );
             applyFontAndPopulateSheet(patientList, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "Patient_Report_Filtered.xlsx");
@@ -111,8 +109,8 @@ public class ReportsServiceImpl implements ReportsService {
         {
             List<TeleCallerOutputDTO>teleCallerOutputDTOList;
             if(!state.isEmpty())
-                teleCallerOutputDTOList=teleCallerService.getByState(state);
-            else teleCallerOutputDTOList=teleCallerService.getAllNotDeleted();
+                teleCallerOutputDTOList=teleCallerService.getAllByState(state);
+            else teleCallerOutputDTOList=teleCallerService.getAll();
             log.info(teleCallerOutputDTOList.toString());
             Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Telecaller Details","Id","Name",stateLiteral,emailLiteral,
                     "Phone number","Date Of Joining","Patients Registered","Date of Leaving");
@@ -133,7 +131,7 @@ public class ReportsServiceImpl implements ReportsService {
         try(Workbook workbook=new XSSFWorkbook();
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
         {
-            List<StateHeadOutputDTO>stateHeadOutputDTOS=stateHeadService.getAllNotDeleted();
+            List<StateHeadOutputDTO>stateHeadOutputDTOS=stateHeadService.getAll();
             Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"StateHead Details","Id","Name",stateLiteral,emailLiteral,
                     "Phone number","Date Of Joining","TeleCallers Registered","Date of Leaving");
             applyFontAndPopulateSheet(stateHeadOutputDTOS, workbook, sheet);
@@ -156,6 +154,7 @@ public class ReportsServiceImpl implements ReportsService {
         {
             List<PatientFollowUpOutputForFrontEndDto>patientFollowUpOutputForFrontEndDtos;
             List<PatientOutputDTO>patients;
+            filter.put("isDeleted", Boolean.FALSE);
             patients=patientRegistrationService.getFilteredPatients(filter);
             patientFollowUpOutputForFrontEndDtos=patientFollowUpService.getFollowUpForPatientList(patients);
             Sheet sheet=reportsHelperService.createSheetWithHeader(9000,workbook,"PatientFollowUp Details",
@@ -259,7 +258,7 @@ public class ReportsServiceImpl implements ReportsService {
     private void populateTeleCallerRow(Row row, TeleCallerOutputDTO teleCallerOutputDTO, CellStyle cellStyle) {
         reportsHelperService.createOrUpdateCell(row,0,teleCallerOutputDTO.getTeleCallerId(),cellStyle);
 
-        Person person=personMapper.find(teleCallerOutputDTO.getPersonId());
+        Person person=personMapper.findEverything(teleCallerOutputDTO.getPersonId());
         reportsHelperService.createOrUpdateCell(row,1,person.getFirstName()+person.getLastName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,2,person.getAddress().getState().getStateName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,3,person.getEmail(),cellStyle);
@@ -285,6 +284,10 @@ public class ReportsServiceImpl implements ReportsService {
 
     private void populatePatientRow(Row row, PatientOutputDTO patient, CellStyle cellStyle) {
 
+        if (patient.getIsDeleted()) {
+            cellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+            cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        }
         reportsHelperService.createOrUpdateCell(row, 0, patient.getPatientId(), cellStyle);
         reportsHelperService.createOrUpdateCell(row, 1, patient.getFirstName() + " " + patient.getLastName(), cellStyle);
         reportsHelperService.createOrUpdateCell(row, 2, patient.getGender(), cellStyle);
@@ -362,8 +365,13 @@ public class ReportsServiceImpl implements ReportsService {
                     reportsHelperService.createOrUpdateCell(row, currentColumn++, null, cellStyle);
 
                 }
-                temp=currentColumn;
+                temp=currentColumn+1;
             }
+        }
+        startColumn=temp;
+        reportsHelperService.createOrUpdateCell(row,startColumn++,patient.getIsDeleted(),cellStyle);
+        if(patient.getIsDeleted()) {
+            row.setRowStyle(cellStyle);
         }
     }
 

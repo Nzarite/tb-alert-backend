@@ -25,6 +25,13 @@ public class PatientMapper {
                 "Patient with id " + patientId + " not found"));
     }
 
+    public Patient findEverything(String patientId) {
+
+        log.info("Mapper called for Find patient deleted or not with id {}", patientId);
+
+        return patientRepo.findById(patientId).orElseThrow(() -> new IllegalArgumentException("Patient with id " + patientId + " not found"));
+    }
+
     public PatientOutputDTO toPatientOutputDTO(Patient patient) {
         log.info("Mapper called for toPatientOutputDTO with id {}", patient.getId());
 
@@ -56,6 +63,7 @@ public class PatientMapper {
                 .updatedBy(person.getUpdatedBy())
                 .age(patient.getAge())
                 .consentForMessage(patient.getConsentForMessage())
+                .isDeleted(person.getIsDeleted())
                 .build();
     }
 

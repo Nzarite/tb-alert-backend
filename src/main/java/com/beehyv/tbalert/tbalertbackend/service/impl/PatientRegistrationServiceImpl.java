@@ -126,7 +126,6 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         patient.getPerson().setEmail(null);
         personRepo.save(patient.getPerson());
         nikshayMitraService.deleteNikshayDetails(patientId);
-        tbDetailsService.deleteTBDetails(patientId);
         contactScreeningService.deleteContactScreeningByPatientId(patientId);
         patientMedicationService.delete(patientId);
         patientFollowUpService.delete(patientId);

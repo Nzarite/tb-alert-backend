@@ -14,4 +14,6 @@ public interface TeleCallerRepo extends JpaRepository<TeleCaller, Long> {
     List<TeleCaller> findAllByPerson_IsDeletedFalse();
 
     List<TeleCaller> findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCaseAndPerson_IsDeletedFalse(String name, String name1);
+
+    List<TeleCaller> findAllByPerson_Address_State_StateName(String personAddressStateStateName);
 }

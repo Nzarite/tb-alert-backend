@@ -27,6 +27,12 @@ public class PersonMapper {
         return personRepo.findByIdAndIsDeletedFalse(id).orElseThrow(()->new IllegalArgumentException("Invalid Person Id " +id));
     }
 
+
+    public Person findEverything(Long id)
+    {
+        return personRepo.findById(id).orElseThrow(()->new IllegalArgumentException("Invalid Person Id " +id));
+    }
+
     public <T> Person toPerson(T personInputDTO) {
         String firstName = getField(personInputDTO, "getFirstName");
         String lastName = getField(personInputDTO, "getLastName");

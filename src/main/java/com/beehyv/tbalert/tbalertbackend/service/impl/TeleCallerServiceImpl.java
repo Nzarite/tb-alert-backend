@@ -133,4 +133,10 @@ public class TeleCallerServiceImpl implements TeleCallerService {
             log.warn("TeleCaller with ID {} not found in Keycloak", id);
         }
     }
+
+    @Override
+    public List<TeleCallerOutputDTO> getAllByState(String state) {
+        List<TeleCaller>teleCallers=teleCallerRepo.findAllByPerson_Address_State_StateName(state);
+        return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
+    }
 }
