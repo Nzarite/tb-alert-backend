@@ -20,7 +20,15 @@ import java.util.Map;
 public class TBDetailsSpecification {
 
     private final LocalDateMapper localDateMapper;
-
+    private static final String START_DATE ="START_DATE";
+    private static final String END_DATE ="END_DATE";
+    private static final String STATE ="STATE";
+    private static final String GENDER ="GENDER";
+    private static final String AGE ="age";
+    private static final String CURRENT_STATUS ="CURRENT_STATUS";
+    private static final String DSTB_OR_DRTB ="DSTB_OR_DRTB";
+    private static final String CREATED_BY ="CREATED_BY";
+    
     public Specification<TBDetails> getPatientsByFilter(Map<String, Object> criteria) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
@@ -28,29 +36,46 @@ public class TBDetailsSpecification {
             Join<TBDetails, Patient> patientJoin = root.join("patient", JoinType.INNER);
             Join<Patient, Person> personJoin = patientJoin.join("person", JoinType.INNER);
 
-            if (criteria.containsKey("dateOfDiagnosis") && criteria.get("dateOfDiagnosis") != null) {
-                LocalDate diagnosisDate = localDateMapper.toLocalDate((String) criteria.get("dateOfDiagnosis"));
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("dateOfDiagnosis"), diagnosisDate));
+            if (criteria.containsKey(START_DATE) && criteria.get(START_DATE) != null && criteria.containsKey(END_DATE) && criteria.get(END_DATE) != null) {
+                LocalDate diagnosisDateStart = localDateMapper.toLocalDate((String) criteria.get(START_DATE));
+                LocalDate diagnosisDateEnd = localDateMapper.toLocalDate((String) criteria.get(END_DATE));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.between(root.get("dateOfDiagnosis"), diagnosisDateStart, diagnosisDateEnd));
             }
 
-            if (criteria.containsKey("dstbOrDrtb") && criteria.get("dstbOrDrtb") != null && !criteria.get("dstbOrDrtb").toString().isEmpty()) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("dstbOrDrtb"), criteria.get("dstbOrDrtb")));
+            if (criteria.containsKey(DSTB_OR_DRTB) && criteria.get(DSTB_OR_DRTB) != null && !criteria.get(DSTB_OR_DRTB).toString().isEmpty()) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(DSTB_OR_DRTB), criteria.get(DSTB_OR_DRTB)));
             }
 
-            if (criteria.containsKey("currentStatus") && criteria.get("currentStatus") != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(patientJoin.get("currentStatus"), criteria.get("currentStatus")));
+            if (criteria.containsKey(CURRENT_STATUS) && criteria.get(CURRENT_STATUS) != null && !criteria.get(CURRENT_STATUS).toString().isEmpty()) {
+                String currentStatusString = (String) criteria.get(CURRENT_STATUS);
+                predicate = switch (currentStatusString) {
+                    case "dead" ->
+                            criteriaBuilder.and(predicate, criteriaBuilder.equal(patientJoin.get(CURRENT_STATUS), "dead"));
+                    case "alive" ->
+                            criteriaBuilder.and(predicate, criteriaBuilder.equal(patientJoin.get(CURRENT_STATUS), "alive"));
+                    case "cured" ->
+                            criteriaBuilder.and(predicate, criteriaBuilder.equal(patientJoin.get("cured"), true));
+                    default -> predicate;
+                };
             }
 
-            if (criteria.containsKey("gender") && criteria.get("gender") != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(personJoin.get("gender"), criteria.get("gender")));
+            if (criteria.containsKey(GENDER) && criteria.get(GENDER) != null && !criteria.get(GENDER).toString().isEmpty()) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(personJoin.get(GENDER), criteria.get(GENDER)));
             }
 
-            if (criteria.containsKey("state") && !criteria.get("state").toString().isEmpty()) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(personJoin.get("address").get("state"), criteria.get("state")));
+            if (criteria.containsKey(STATE) && !criteria.get(STATE).toString().isEmpty()) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(personJoin.get("address").get(STATE).get("stateName"), criteria.get(STATE)));
             }
 
-            if(criteria.containsKey("createdBy") && !criteria.get("createdBy").toString().isEmpty()) {
-                predicate=criteriaBuilder.and(predicate, criteriaBuilder.equal(personJoin.get("createdBy"), criteria.get("createdBy")));
+            if(criteria.containsKey(AGE)) {
+                Integer ageInt = criteria.get(AGE) instanceof Number ? ((Number) criteria.get(AGE)).intValue() : null;
+                if (ageInt != null && ageInt > 0) {
+                    predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(patientJoin.get(AGE), ageInt));
+                }
+            }
+
+            if(criteria.containsKey(CREATED_BY) && !criteria.get(CREATED_BY).toString().isEmpty()) {
+                predicate=criteriaBuilder.and(predicate, criteriaBuilder.equal(personJoin.get(CREATED_BY), criteria.get(CREATED_BY)));
             }
 
             predicate = addNikshayMitraSubquery(predicate, query, criteriaBuilder, patientJoin, criteria, "udstStatus");

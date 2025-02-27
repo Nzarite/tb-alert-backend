@@ -82,14 +82,14 @@ public class ReportsServiceImpl implements ReportsService {
                     "No Of HHCs TB Initiated ATT", "No Of HHCs Undergone LTBI Test", "No Of Eligible For TPT",
                     "No Of HHCs Initiated TPT", "Date Of Diagnosis", "Date Of Treatment Initiation",
                     "Type Of PWTB", "Type Of TB", "DSTB Or DRTB",
-                    "Follow up 1 Date", "Follow up 1 Missed Medication", "Follow up 1 Status",
-                    "Follow up 2 Date", "Follow up 2 Missed Medication", "Follow up 2 Status",
-                    "Follow up 3 Date", "Follow up 3 Missed Medication", "Follow up 3 Status",
-                    "Follow up 4 Date", "Follow up 4 Missed Medication", "Follow up 4 Status",
-                    "Follow up 5 Date", "Follow up 5 Missed Medication", "Follow up 5 Status",
-                    "Follow up 6 Date", "Follow up 6 Missed Medication", "Follow up 6 Status",
-                    "Follow up 7 Date", "Follow up 7 Missed Medication", "Follow up 7 Status",
-                    "Follow up 8 Date", "Follow up 8 Missed Medication", "Follow up 8 Status",
+                    "Follow up 1 Date", "Follow up 1 Missed Medication", "Follow up 1 Status","Follow Up 1 Patient Condition",
+                    "Follow up 2 Date", "Follow up 2 Missed Medication", "Follow up 2 Status","Follow Up 2 Patient Condition",
+                    "Follow up 3 Date", "Follow up 3 Missed Medication", "Follow up 3 Status","Follow Up 3 Patient Condition",
+                    "Follow up 4 Date", "Follow up 4 Missed Medication", "Follow up 4 Status","Follow Up 4 Patient Condition",
+                    "Follow up 5 Date", "Follow up 5 Missed Medication", "Follow up 5 Status","Follow Up 5 Patient Condition",
+                    "Follow up 6 Date", "Follow up 6 Missed Medication", "Follow up 6 Status","Follow Up 6 Patient Condition",
+                    "Follow up 7 Date", "Follow up 7 Missed Medication", "Follow up 7 Status","Follow Up 7 Patient Condition",
+                    "Follow up 8 Date", "Follow up 8 Missed Medication", "Follow up 8 Status","Follow Up 8 Patient Condition",
                     "TeleCaller Email"
             );
             applyFontAndPopulateSheet(patientList, workbook, sheet);
@@ -113,7 +113,7 @@ public class ReportsServiceImpl implements ReportsService {
             else teleCallerOutputDTOList=teleCallerService.getAllNotDeleted();
             log.info(teleCallerOutputDTOList.toString());
             Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Telecaller Details","Id","Name",stateLiteral,emailLiteral,
-                    "Phone number","Date Of Joining","Patients Registered");
+                    "Phone number","Date Of Joining","Patients Registered","Date of Leaving");
             applyFontAndPopulateSheet(teleCallerOutputDTOList, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "TeleCallerDetails.xlsx");
             workbook.write(byteArrayOutputStream);
@@ -133,7 +133,7 @@ public class ReportsServiceImpl implements ReportsService {
         {
             List<StateHeadOutputDTO>stateHeadOutputDTOS=stateHeadService.getAllNotDeleted();
             Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"StateHead Details","Id","Name",stateLiteral,emailLiteral,
-                    "Phone number","Date Of Joining","TeleCallers Registered");
+                    "Phone number","Date Of Joining","TeleCallers Registered","Date of Leaving");
             applyFontAndPopulateSheet(stateHeadOutputDTOS, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "StateHeads.xlsx");
             workbook.write(byteArrayOutputStream);
@@ -188,7 +188,7 @@ public class ReportsServiceImpl implements ReportsService {
             List<String>patientIds=patientRegistrationService.getFilteredPatients(filter).stream().map(PatientOutputDTO::getPatientId).toList();
             List<PatientFollowUp>patientFollowUps=patientFollowUpRepo.findAllByDateAndPatient_IdIn(LocalDate.now(),patientIds);
 
-            Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Follow Up for Today","Patient Name","Patient Phone Number");
+            Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Follow Up for Today","Patient Id","Patient Name","Patient Phone Number","Type of TB");
             sheet.setColumnWidth(0,sheet.getColumnWidth(0));
             applyFontAndPopulateSheet(patientFollowUps, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "FollowUpsForToday.xlsx");
@@ -226,8 +226,16 @@ public class ReportsServiceImpl implements ReportsService {
 
     private void populateFollowUpForToday(Row row, PatientFollowUp patientFollowUp, CellStyle cellStyle) {
         int ind=0;
+        reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getPatient().getId(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getPatient().getPerson().getFirstName()+" "+patientFollowUp.getPatient().getPerson().getLastName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getPatient().getPerson().getPhoneNumber(),cellStyle);
+
+        TBDetails tbDetails=tbDetailsRepo.findByPatient_Id(patientFollowUp.getPatient().getId()).orElse(null);
+        String typeOfTb="";
+
+        if(tbDetails!=null) typeOfTb=tbDetails.getTypeOfTb();
+
+        reportsHelperService.createOrUpdateCell(row,ind++,typeOfTb,cellStyle);
     }
 
     private void populatePatientFollowUpRow(Row row, PatientFollowUpOutputForFrontEndDto followUp, CellStyle cellStyle) {
@@ -256,6 +264,7 @@ public class ReportsServiceImpl implements ReportsService {
         reportsHelperService.createOrUpdateCell(row,4,person.getPhoneNumber(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,5,teleCallerOutputDTO.getDateOfJoining(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,6,personService.getCountOfUsersCreated(teleCallerOutputDTO.getPersonId()),cellStyle);
+        reportsHelperService.createOrUpdateCell(row,7,teleCallerOutputDTO.getDateOfLeaving(),cellStyle);
     }
 
     private void populateStateHeadRow(Row row, StateHeadOutputDTO stateHeadOutputDTO, CellStyle cellStyle) {
@@ -268,6 +277,8 @@ public class ReportsServiceImpl implements ReportsService {
         reportsHelperService.createOrUpdateCell(row,4,person.getPhoneNumber(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,5,stateHeadOutputDTO.getDateOfJoining(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,6,personService.getCountOfUsersCreated(stateHeadOutputDTO.getPersonId()),cellStyle);
+        reportsHelperService.createOrUpdateCell(row,7,stateHeadOutputDTO.getDateOfLeaving(),cellStyle);
+
     }
 
     private void populatePatientRow(Row row, PatientOutputDTO patient, CellStyle cellStyle) {
@@ -339,14 +350,17 @@ public class ReportsServiceImpl implements ReportsService {
                     int totalMissed = followUp.getMedicationDetails().stream()
                             .mapToInt(MedicationDetails::getMissedDosages)
                             .sum();
-                    reportsHelperService.createOrUpdateCell(row, currentColumn + 1, totalMissed, cellStyle);
-                    reportsHelperService.createOrUpdateCell(row, currentColumn + 2, followUp.getFollowUpStatus(), cellStyle);
+                    reportsHelperService.createOrUpdateCell(row, currentColumn++, totalMissed, cellStyle);
+                    reportsHelperService.createOrUpdateCell(row, currentColumn++, followUp.getFollowUpStatus(), cellStyle);
+                    reportsHelperService.createOrUpdateCell(row,currentColumn++,followUp.getPatientCondition(), cellStyle);
                 } else {
                     reportsHelperService.createOrUpdateCell(row, currentColumn, null, cellStyle);
-                    reportsHelperService.createOrUpdateCell(row, currentColumn + 1, null, cellStyle);
-                    reportsHelperService.createOrUpdateCell(row, currentColumn + 2, null, cellStyle);
+                    reportsHelperService.createOrUpdateCell(row, currentColumn++, null, cellStyle);
+                    reportsHelperService.createOrUpdateCell(row, currentColumn++, null, cellStyle);
+                    reportsHelperService.createOrUpdateCell(row,currentColumn++,null, cellStyle);
+
                 }
-                startColumn=currentColumn + 1;
+                startColumn=currentColumn;
             }
         }
         reportsHelperService.createOrUpdateCell(row, startColumn++, patient.getCreatedBy(), cellStyle);
