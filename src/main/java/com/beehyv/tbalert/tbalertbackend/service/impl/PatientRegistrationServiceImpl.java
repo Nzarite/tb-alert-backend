@@ -134,7 +134,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     }
 
     @Override
-    public List<PatientOutputDTO> getAll() {
+    public List<PatientOutputDTO> getAllNotDeleted() {
         log.info("Service getAll patients");
 
         return patientRepo.findAllByPerson_IsDeletedFalse()
