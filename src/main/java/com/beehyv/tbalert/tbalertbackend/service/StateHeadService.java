@@ -16,5 +16,7 @@ public interface StateHeadService {
 
     StateHeadOutputDTO update(Long id, StateHeadInputDTO stateHeadInputDTO);
 
+    List<StateHeadOutputDTO> getAll();
+
     void deleteStateHead(Long id);
 }

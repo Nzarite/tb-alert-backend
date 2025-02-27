@@ -16,6 +16,8 @@ public interface TeleCallerService {
 
     List<TeleCallerOutputDTO> getAllNotDeleted();
 
+    List<TeleCallerOutputDTO> getAll();
+
     List<TeleCallerOutputDTO> getByName(String name);
 
     TeleCallerOutputDTO updateTeleCaller(Long id, TeleCallerInputDTO teleCallerInputDTO);

@@ -75,7 +75,15 @@ public class TeleCallerServiceImpl implements TeleCallerService {
 
     @Override
     public List<TeleCallerOutputDTO> getAllNotDeleted() {
-        return teleCallerRepo.findByPerson_IsDeletedFalse()
+        return teleCallerRepo.findAllByPerson_IsDeletedFalse()
+                .stream()
+                .map(teleCallerMapper::toTeleCallerOutputDTO)
+                .toList();
+    }
+
+    @Override
+    public List<TeleCallerOutputDTO> getAll() {
+        return teleCallerRepo.findAll()
                 .stream()
                 .map(teleCallerMapper::toTeleCallerOutputDTO)
                 .toList();
