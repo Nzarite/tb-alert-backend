@@ -76,6 +76,14 @@ public class StateHeadServiceImpl implements StateHeadService {
     }
 
     @Override
+    public List<StateHeadOutputDTO> getAll() {
+        return stateHeadRepo.findAll()
+                .stream()
+                .map(stateHeadMapper::toStateHeadOutputDTO)
+                .toList();
+    }
+
+    @Override
     public void deleteStateHead(Long id) {
         StateHead stateHead = stateHeadMapper.find(id);
         stateHead.getPerson().setIsDeleted(true);
