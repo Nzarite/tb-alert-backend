@@ -502,11 +502,7 @@
                                  referencedTableName="person"/>
     </changeSet>
     <changeSet id="1740545825496-32" author="bhcp0212">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="medication"/>
-            </not>
-        </preConditions>
+
         <insert tableName="medication">
             <column name="id" value="1"/>
             <column name="name" value="TB Medicine"/>
@@ -515,11 +511,7 @@
     </changeSet>
 
     <changeSet id="1740545825496-33" author="bhcp0212">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="state"/>
-            </not>
-        </preConditions>
+
         <createTable tableName="state">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -534,11 +526,7 @@
     </changeSet>
 
     <changeSet id="1740545825496-34" author="bhcp0212">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists tableName="address" columnName="state_id"/>
-            </not>
-        </preConditions>
+
         <!-- Drop the old state column if it exists -->
         <dropColumn tableName="address" columnName="state"/>
 
@@ -558,11 +546,7 @@
     </changeSet>
 
     <changeSet id="1740545825496-36" author="bhcp0212">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="state"/>
-            </not>
-        </preConditions>
+
         <insert tableName="state">
             <column name="id" value="1"/>
             <column name="state_name" value="BIHAR"/>
@@ -581,11 +565,7 @@
     </changeSet>
 
     <changeSet id="1740545825496-39" author="bhcp0212">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="address"/>
-            </not>
-        </preConditions>
+
         <insert tableName="address">
             <column name="id" value="1"/>
             <column name="block" value="SA"/>
@@ -597,11 +577,7 @@
     </changeSet>
 
     <changeSet id="1740545825496-40" author="bhcp0212">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="person"/>
-            </not>
-        </preConditions>
+
         <insert tableName="person">
             <column name="id" value="1"/> <!-- Assuming 1 is the ID for superadmin -->
             <column name="first_name" value="Super"/>
@@ -617,11 +593,7 @@
     </changeSet>
 
     <changeSet id="1740545825496-41" author="bhcp0212">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="settings"/>
-            </not>
-        </preConditions>
+
         <comment>Insert initial settings into the settings table</comment>
 
         <!-- Insert drtb setting -->
