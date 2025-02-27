@@ -103,14 +103,30 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     @Override
-    public byte[] getTeleCallerOfAState(String state) throws IOException {
+    public byte[] getTeleCallerOfAState(Map<String, Object> filter) throws IOException {
         try(Workbook workbook=new XSSFWorkbook();
             ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
         {
+            String state=filter.get("state").toString();
+            String isDeleted=filter.get("isDeleted").toString();
             List<TeleCallerOutputDTO>teleCallerOutputDTOList;
-            if(!state.isEmpty())
-                teleCallerOutputDTOList=teleCallerService.getAllByState(state);
-            else teleCallerOutputDTOList=teleCallerService.getAll();
+            if(isDeleted.isEmpty())
+            {
+                if(state.isEmpty())
+                    teleCallerOutputDTOList=teleCallerService.getAll();
+                else teleCallerOutputDTOList=teleCallerService.getAllByState(state);
+            }
+            else if(isDeleted.equals("true"))
+            {
+                if(state.isEmpty())
+                    teleCallerOutputDTOList=teleCallerService.getAllDeleted();
+                else teleCallerOutputDTOList=teleCallerService.getDeletedByState(state);
+            }
+            else {
+                if(state.isEmpty())
+                    teleCallerOutputDTOList=teleCallerService.getAllNotDeleted();
+                else teleCallerOutputDTOList=teleCallerService.getByState(state);
+            }
             log.info(teleCallerOutputDTOList.toString());
             Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Telecaller Details","Id","Name",stateLiteral,emailLiteral,
                     "Phone number","Date Of Joining","Patients Registered","Date of Leaving");
@@ -127,11 +143,34 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     @Override
-    public byte[] getStateHeads() throws IOException {
+    public byte[] getStateHeads(Map<String, Object> filter) throws IOException {
         try(Workbook workbook=new XSSFWorkbook();
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream())
         {
-            List<StateHeadOutputDTO>stateHeadOutputDTOS=stateHeadService.getAll();
+            List<StateHeadOutputDTO>stateHeadOutputDTOS;
+            String state="";
+            if(filter.get("state") != null)
+                state=filter.get("state").toString();
+            String isDeleted="";
+            if(filter.get("isDeleted") != null)
+                isDeleted=filter.get("isDeleted").toString();
+            if(isDeleted.isEmpty())
+            {
+                if(state.isEmpty())
+                    stateHeadOutputDTOS=stateHeadService.getAll();
+                else stateHeadOutputDTOS=stateHeadService.getAllByState(state);
+            }
+            else if(isDeleted.equals("true"))
+            {
+                if(state.isEmpty())
+                    stateHeadOutputDTOS=stateHeadService.getAllDeleted();
+                else stateHeadOutputDTOS=stateHeadService.getAllDeletedByState(state);
+            }
+            else {
+                if(state.isEmpty())
+                    stateHeadOutputDTOS=stateHeadService.getAllNotDeleted();
+                else stateHeadOutputDTOS=stateHeadService.getAllNotDeletedByState(state);
+            }
             Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"StateHead Details","Id","Name",stateLiteral,emailLiteral,
                     "Phone number","Date Of Joining","TeleCallers Registered","Date of Leaving");
             applyFontAndPopulateSheet(stateHeadOutputDTOS, workbook, sheet);
@@ -154,7 +193,6 @@ public class ReportsServiceImpl implements ReportsService {
         {
             List<PatientFollowUpOutputForFrontEndDto>patientFollowUpOutputForFrontEndDtos;
             List<PatientOutputDTO>patients;
-            filter.put("isDeleted", Boolean.FALSE);
             patients=patientRegistrationService.getFilteredPatients(filter);
             patientFollowUpOutputForFrontEndDtos=patientFollowUpService.getFollowUpForPatientList(patients);
             Sheet sheet=reportsHelperService.createSheetWithHeader(9000,workbook,"PatientFollowUp Details",
@@ -211,10 +249,13 @@ public class ReportsServiceImpl implements ReportsService {
             Row row = sheet.createRow(rowIndex++);
             if(object.getClass()== PatientOutputDTO.class)
                 populatePatientRow(row, (PatientOutputDTO) object, cellStyle);
+
             else if(object.getClass()== TeleCallerOutputDTO.class)
                 populateTeleCallerRow(row,(TeleCallerOutputDTO) object,cellStyle);
+
             else if(object.getClass()== StateHeadOutputDTO.class)
                 populateStateHeadRow(row,(StateHeadOutputDTO) object,cellStyle);
+
             else if(object.getClass()== PatientFollowUpOutputForFrontEndDto.class) {
                 populatePatientFollowUpRow(row, (PatientFollowUpOutputForFrontEndDto) object, cellStyle);
             }
@@ -259,7 +300,7 @@ public class ReportsServiceImpl implements ReportsService {
         reportsHelperService.createOrUpdateCell(row,0,teleCallerOutputDTO.getTeleCallerId(),cellStyle);
 
         Person person=personMapper.findEverything(teleCallerOutputDTO.getPersonId());
-        reportsHelperService.createOrUpdateCell(row,1,person.getFirstName()+person.getLastName(),cellStyle);
+        reportsHelperService.createOrUpdateCell(row,1,person.getFirstName()+" "+person.getLastName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,2,person.getAddress().getState().getStateName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,3,person.getEmail(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,4,person.getPhoneNumber(),cellStyle);
@@ -271,8 +312,8 @@ public class ReportsServiceImpl implements ReportsService {
     private void populateStateHeadRow(Row row, StateHeadOutputDTO stateHeadOutputDTO, CellStyle cellStyle) {
         reportsHelperService.createOrUpdateCell(row,0,stateHeadOutputDTO.getStateHeadId(),cellStyle);
 
-        Person person=personMapper.find(stateHeadOutputDTO.getPersonId());
-        reportsHelperService.createOrUpdateCell(row,1,person.getFirstName()+person.getLastName(),cellStyle);
+        Person person=personMapper.findEverything(stateHeadOutputDTO.getPersonId());
+        reportsHelperService.createOrUpdateCell(row,1,person.getFirstName()+" "+person.getLastName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,2,person.getAddress().getState().getStateName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,3,person.getEmail(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,4,person.getPhoneNumber(),cellStyle);
@@ -283,63 +324,65 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     private void populatePatientRow(Row row, PatientOutputDTO patient, CellStyle cellStyle) {
-
+        CellStyle newCellStyle = row.getSheet().getWorkbook().createCellStyle();
+        newCellStyle.cloneStyleFrom(cellStyle);
         if (Boolean.TRUE.equals(patient.getIsDeleted())) {
-            cellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
-            cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            newCellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+            newCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         }
-        reportsHelperService.createOrUpdateCell(row, 0, patient.getPatientId(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 1, patient.getFirstName() + " " + patient.getLastName(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 2, patient.getGender(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 3, patient.getAge(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 4, patient.getPhoneNumber(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 5, patient.getEmail(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 6, patient.getBlock(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 7, patient.getGp(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 8, patient.getVillage(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 9, patient.getDistrict(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 10, patient.getState(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 11, patientRegistrationService.determinePatientStatus(patient), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 12, patient.getCurrentStatus(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 13, patient.getCreatedAt(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 14, patient.getCreatedBy(), cellStyle);
-        reportsHelperService.createOrUpdateCell(row, 15, patient.getUpdatedBy(), cellStyle);
+        row.setRowStyle(newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 0, patient.getPatientId(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 1, patient.getFirstName() + " " + patient.getLastName(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 2, patient.getGender(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 3, patient.getAge(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 4, patient.getPhoneNumber(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 5, patient.getEmail(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 6, patient.getBlock(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 7, patient.getGp(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 8, patient.getVillage(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 9, patient.getDistrict(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 10, patient.getState(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 11, patientRegistrationService.determinePatientStatus(patient), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 12, patient.getCurrentStatus(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 13, patient.getCreatedAt(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 14, patient.getCreatedBy(), newCellStyle);
+        reportsHelperService.createOrUpdateCell(row, 15, patient.getUpdatedBy(), newCellStyle);
 
         NikshayMitra nikshayMitra = nikshayMitraRepo.findByPatient_Id(patient.getPatientId()).orElse(null);
         if (nikshayMitra != null) {
-            reportsHelperService.createOrUpdateCell(row, 16, nikshayMitra.getNikshayId(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 17, nikshayMitra.getUdstStatus(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 18, nikshayMitra.getDateOfUdst(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 19, nikshayMitra.getResultOfUdst(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 20, nikshayMitra.getDbtStatus(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 21, nikshayMitra.getDateOfDbt(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 22, nikshayMitra.getNikshayMitraStatus(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 23, nikshayMitra.getNikshayMitraDate(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 24, nikshayMitra.getNikshayMitraName(), cellStyle);
+            reportsHelperService.createOrUpdateCell(row, 16, nikshayMitra.getNikshayId(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 17, nikshayMitra.getUdstStatus(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 18, nikshayMitra.getDateOfUdst(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 19, nikshayMitra.getResultOfUdst(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 20, nikshayMitra.getDbtStatus(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 21, nikshayMitra.getDateOfDbt(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 22, nikshayMitra.getNikshayMitraStatus(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 23, nikshayMitra.getNikshayMitraDate(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 24, nikshayMitra.getNikshayMitraName(), newCellStyle);
         }
 
         ContactScreening contactScreening = contactScreeningRepos.findByPatient_Id(patient.getPatientId()).orElse(null);
         if (contactScreening != null) {
-            reportsHelperService.createOrUpdateCell(row, 25, contactScreening.getContactScreeningDone(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 26, contactScreening.getDateOfContactScreening(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 27, contactScreening.getNoOfHHCsAvailable(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 28, contactScreening.getNoOfHHCsScreened(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 29, contactScreening.getNoOfHHCsWithTBSymptoms(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 30, contactScreening.getNoOfHHCsReferredTBTesting(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 31, contactScreening.getNoOfHHCsDiagnosedTB(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 32, contactScreening.getNoOfHHCsTBInitiatedATT(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 33, contactScreening.getNoOfHHCsUndergoneLTBITest(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 34, contactScreening.getNoOfEligibleForTPT(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 35, contactScreening.getNoOfHHCsInitiatedTPT(), cellStyle);
+            reportsHelperService.createOrUpdateCell(row, 25, contactScreening.getContactScreeningDone(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 26, contactScreening.getDateOfContactScreening(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 27, contactScreening.getNoOfHHCsAvailable(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 28, contactScreening.getNoOfHHCsScreened(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 29, contactScreening.getNoOfHHCsWithTBSymptoms(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 30, contactScreening.getNoOfHHCsReferredTBTesting(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 31, contactScreening.getNoOfHHCsDiagnosedTB(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 32, contactScreening.getNoOfHHCsTBInitiatedATT(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 33, contactScreening.getNoOfHHCsUndergoneLTBITest(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 34, contactScreening.getNoOfEligibleForTPT(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 35, contactScreening.getNoOfHHCsInitiatedTPT(), newCellStyle);
         }
 
         TBDetails tbDetails = tbDetailsRepo.findByPatient_Id(patient.getPatientId()).orElse(null);
         if (tbDetails != null) {
-            reportsHelperService.createOrUpdateCell(row, 36, tbDetails.getDateOfDiagnosis(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 37, tbDetails.getDateOfTreatmentInitiation(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 38, tbDetails.getTypeOfPwtb(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 39, tbDetails.getTypeOfTb(), cellStyle);
-            reportsHelperService.createOrUpdateCell(row, 40, tbDetails.getDstbOrDrtb(), cellStyle);
+            reportsHelperService.createOrUpdateCell(row, 36, tbDetails.getDateOfDiagnosis(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 37, tbDetails.getDateOfTreatmentInitiation(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 38, tbDetails.getTypeOfPwtb(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 39, tbDetails.getTypeOfTb(), newCellStyle);
+            reportsHelperService.createOrUpdateCell(row, 40, tbDetails.getDstbOrDrtb(), newCellStyle);
         }
 
         PatientFollowUpOutputForFrontEndDto patientFollowUpOutputForFrontEndDto = patientFollowUpService.get(patient.getPatientId());
@@ -352,27 +395,24 @@ public class ReportsServiceImpl implements ReportsService {
                 if (i < followUps.size()) {
                     FollowUpDetails followUp = followUps.get(i);
 
-                    reportsHelperService.createOrUpdateCell(row, currentColumn, followUp.getDate(), cellStyle);
+                    reportsHelperService.createOrUpdateCell(row, currentColumn, followUp.getDate(), newCellStyle);
                     int totalMissed = followUp.getMedicationDetails().stream()
                             .mapToInt(MedicationDetails::getMissedDosages)
                             .sum();
-                    reportsHelperService.createOrUpdateCell(row, currentColumn++, totalMissed, cellStyle);
-                    reportsHelperService.createOrUpdateCell(row, currentColumn++, followUp.getFollowUpStatus(), cellStyle);
-                    reportsHelperService.createOrUpdateCell(row,currentColumn++,followUp.getPatientCondition(), cellStyle);
+                    reportsHelperService.createOrUpdateCell(row, currentColumn++, totalMissed, newCellStyle);
+                    reportsHelperService.createOrUpdateCell(row, currentColumn++, followUp.getFollowUpStatus(), newCellStyle);
+                    reportsHelperService.createOrUpdateCell(row,currentColumn++,followUp.getPatientCondition(), newCellStyle);
                 } else {
-                    reportsHelperService.createOrUpdateCell(row, currentColumn, null, cellStyle);
-                    reportsHelperService.createOrUpdateCell(row, currentColumn++, null, cellStyle);
-                    reportsHelperService.createOrUpdateCell(row, currentColumn++, null, cellStyle);
-
+                    reportsHelperService.createOrUpdateCell(row, currentColumn, null, newCellStyle);
+                    reportsHelperService.createOrUpdateCell(row, currentColumn++, null, newCellStyle);
+                    reportsHelperService.createOrUpdateCell(row, currentColumn++, null, newCellStyle);
+                    reportsHelperService.createOrUpdateCell(row, currentColumn++, null, newCellStyle);
                 }
-                temp=currentColumn+1;
+                temp=currentColumn;
             }
         }
         startColumn=temp;
-        reportsHelperService.createOrUpdateCell(row,startColumn++,patient.getIsDeleted(),cellStyle);
-        if(Boolean.TRUE.equals(patient.getIsDeleted())) {
-            row.setRowStyle(cellStyle);
-        }
+        reportsHelperService.createOrUpdateCell(row,startColumn++,patient.getIsDeleted(),newCellStyle);
     }
 
 

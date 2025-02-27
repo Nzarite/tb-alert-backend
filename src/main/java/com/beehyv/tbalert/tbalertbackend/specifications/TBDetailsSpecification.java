@@ -81,8 +81,8 @@ public class TBDetailsSpecification {
             predicate = addNikshayMitraSubquery(predicate, query, criteriaBuilder, patientJoin, criteria, "udstStatus");
             predicate = addNikshayMitraSubquery(predicate, query, criteriaBuilder, patientJoin, criteria, "dbtStatus");
 
-            if(criteria.containsKey("isDeleted") && criteria.get("isDeleted").equals(false))
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(personJoin.get("isDeleted"), Boolean.FALSE));
+            if(criteria.containsKey("isDeleted") && !criteria.get("isDeleted").toString().isEmpty())
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(personJoin.get("isDeleted"), Boolean.parseBoolean(criteria.get("isDeleted").toString())));
             return predicate;
         };
     }

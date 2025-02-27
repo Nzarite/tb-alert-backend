@@ -114,7 +114,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public int getCountOfUsersCreated(Long personId) {
-        Person person = personMapper.find(personId);
-        return personRepo.countByCreatedByAndIsDeletedFalse(person.getEmail());
+        Person person = personMapper.findEverything(personId);
+        return personRepo.countByCreatedBy(person.getEmail());
     }
 }

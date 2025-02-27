@@ -57,7 +57,7 @@ public class ReportsHelperService {
     public void createOrUpdateCell(Row row, int columnIndex, Object value, CellStyle cellStyle) {
         Cell cell = row.createCell(columnIndex);
         if(value!=null) {
-            if (value.getClass().equals(String.class)) {
+            if (value.getClass().equals(String.class) && !value.toString().isEmpty()) {
                 cell.setCellValue((String) value);
             } else if (value.getClass().equals(Integer.class)) {
                 cell.setCellValue((Integer) value);

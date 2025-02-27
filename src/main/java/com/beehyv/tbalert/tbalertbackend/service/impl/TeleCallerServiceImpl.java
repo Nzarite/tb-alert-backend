@@ -139,4 +139,14 @@ public class TeleCallerServiceImpl implements TeleCallerService {
         List<TeleCaller>teleCallers=teleCallerRepo.findAllByPerson_Address_State_StateName(state);
         return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
+
+    @Override
+    public List<TeleCallerOutputDTO> getAllDeleted() {
+        return teleCallerRepo.findAllByPerson_IsDeletedTrue().stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
+    }
+
+    @Override
+    public List<TeleCallerOutputDTO> getDeletedByState(String state) {
+        return teleCallerRepo.findAllByPerson_IsDeletedTrueAndPerson_Address_State_StateName(state).stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
+    }
 }

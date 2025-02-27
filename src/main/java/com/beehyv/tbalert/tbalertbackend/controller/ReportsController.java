@@ -1,7 +1,5 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
-import com.beehyv.tbalert.tbalertbackend.dto.input.StateInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.input.StateReportsInputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.ReportsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +41,9 @@ public class ReportsController {
     }
 
     @PostMapping("/telecaller")
-    public ResponseEntity<byte[]> getTeleCallerOfAState(@RequestBody StateReportsInputDTO state) throws IOException {
-        log.info("Controller called for Getting telecallers for state: {}", state);
-        byte[] excelData = reportsService.getTeleCallerOfAState(state.getState());
+    public ResponseEntity<byte[]> getTeleCallerOfAState(@RequestBody  Map<String,Object>filter) throws IOException {
+        log.info("Controller called for Getting telecallers for state: {}", filter);
+        byte[] excelData = reportsService.getTeleCallerOfAState(filter);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=telecaller.xlsx")
@@ -53,9 +51,9 @@ public class ReportsController {
     }
 
     @PostMapping("/statehead")
-    public ResponseEntity<byte[]> getStateHeads() throws IOException {
+    public ResponseEntity<byte[]> getStateHeads(@RequestBody Map<String,Object>filter) throws IOException {
         log.info("Controller called for Getting state heads");
-        byte[] excelData = reportsService.getStateHeads();
+        byte[] excelData = reportsService.getStateHeads(filter);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=statehead.xlsx")
