@@ -16,7 +16,7 @@ public class PatientFollowUpInputDTO {
 
     private String remarks;
 
-    private String aliveOrDead;
+    private String currentStatus;
 
     private List<MissedMedicationInputDTO>missedMedications;
 

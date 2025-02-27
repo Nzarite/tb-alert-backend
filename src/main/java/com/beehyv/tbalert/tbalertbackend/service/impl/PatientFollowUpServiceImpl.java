@@ -95,13 +95,10 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
 
         patientFollowUp.setRemarks(patientFollowUpInputDTO.getRemarks());
         patientFollowUp.setDate(date);
-        if (patientFollowUpInputDTO.getAliveOrDead() != null) {
-            patient.setCurrentStatus(patientFollowUpInputDTO.getAliveOrDead());
-
-        }
 
 
-        if ((patientFollowUpInputDTO.getAliveOrDead() != null && patientFollowUpInputDTO.getAliveOrDead().equals("dead")) || (patientFollowUpInputDTO.getCured()!= null && patientFollowUpInputDTO.getCured().equals(true))) {
+
+        if ((patientFollowUpInputDTO.getCurrentStatus() != null && patientFollowUpInputDTO.getCurrentStatus().equals("dead")) || (patientFollowUpInputDTO.getCured()!= null && patientFollowUpInputDTO.getCured().equals(true))) {
             List<PatientFollowUp> followUps = patientFollowUpRepo.findAllByPatient_Id(patient.getId());
             for (PatientFollowUp followUp : followUps) {
                 if (followUp.getDate().isAfter(date))
@@ -111,7 +108,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         } else {
             patientFollowUp.setStatus("Occured");
         }
-        if ((patient.isCured() && !patientFollowUpInputDTO.getCured()) || (patient.getCurrentStatus().equals("dead") && patientFollowUpInputDTO.getAliveOrDead().equals("alive"))) {
+        if ((patient.isCured() && !patientFollowUpInputDTO.getCured()) || (patient.getCurrentStatus().equals("dead") && patientFollowUpInputDTO.getCurrentStatus().equals("alive"))) {
             List<PatientFollowUp> followUps = patientFollowUpRepo.findAllByPatient_Id(patient.getId());
             for (PatientFollowUp followUp : followUps) {
                 if (followUp.getStatus().equals("Cancelled"))
@@ -119,7 +116,10 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
             }
             patientFollowUpRepo.saveAll(followUps.stream().toList());
         }
+        if (patientFollowUpInputDTO.getCurrentStatus() != null) {
+            patient.setCurrentStatus(patientFollowUpInputDTO.getCurrentStatus());
 
+        }
         patient.setCured(patientFollowUpInputDTO.getCured());
 
         patientFollowUp.setPatientCondition(patientFollowUpInputDTO.getPatientCondition());
