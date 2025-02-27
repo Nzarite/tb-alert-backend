@@ -22,7 +22,7 @@ public class TBDetailsSpecification {
     private final LocalDateMapper localDateMapper;
     private static final String START_DATE ="START_DATE";
     private static final String END_DATE ="END_DATE";
-    private static final String STATE ="STATE";
+    private static final String STATE ="state";
     private static final String GENDER ="GENDER";
     private static final String AGE ="age";
     private static final String CURRENT_STATUS ="CURRENT_STATUS";
