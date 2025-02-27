@@ -19,6 +19,8 @@ public interface PatientRegistrationService {
 
     List<PatientOutputDTO> getAllNotDeleted();
 
+    List<PatientOutputDTO> getAll();
+
     List<PatientOutputDTO> getPatientByNameOrNikshayIdOrPatientId(String patientName);
 
     List<PatientOutputDTO> getFilteredPatients(Map<String, Object> filters);
