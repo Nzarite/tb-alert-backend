@@ -6,6 +6,7 @@ import com.beehyv.tbalert.tbalertbackend.entity.*;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
+import com.beehyv.tbalert.tbalertbackend.mapper.StateHeadMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.*;
 import com.beehyv.tbalert.tbalertbackend.service.*;
 import lombok.AllArgsConstructor;
@@ -44,6 +45,8 @@ public class ReportsServiceImpl implements ReportsService {
     private final PatientFollowUpRepo patientFollowUpRepo;
     private final String stateLiteral="State";
     private final String emailLiteral="Email";
+    private final StateHeadRepo stateHeadRepo;
+    private final StateHeadMapper stateHeadMapper;
 
 
     @Override
@@ -71,7 +74,7 @@ public class ReportsServiceImpl implements ReportsService {
         log.info(patientList.toString());
         try (Workbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            Sheet sheet = reportsHelperService.createSheetWithHeader(7000,workbook, "Patient Report",
+            Sheet sheet = reportsHelperService.createSheetWithHeader(10000,workbook, "Patient Report",
                     "Patient ID", "Name", "Gender", "Age",
                     "Phone Number", emailLiteral, "Block", "GP", "Village", "District", stateLiteral, "Current Status",
                     "Cured", "Created At", "Created By", "Updated By", "Nikshay ID", "UDST Status",
@@ -82,15 +85,14 @@ public class ReportsServiceImpl implements ReportsService {
                     "No Of HHCs TB Initiated ATT", "No Of HHCs Undergone LTBI Test", "No Of Eligible For TPT",
                     "No Of HHCs Initiated TPT", "Date Of Diagnosis", "Date Of Treatment Initiation",
                     "Type Of PWTB", "Type Of TB", "DSTB Or DRTB",
-                    "Follow up 1 Date", "Follow up 1 Missed Medication", "Follow up 1 Status","Follow Up 1 Patient Condition",
-                    "Follow up 2 Date", "Follow up 2 Missed Medication", "Follow up 2 Status","Follow Up 2 Patient Condition",
-                    "Follow up 3 Date", "Follow up 3 Missed Medication", "Follow up 3 Status","Follow Up 3 Patient Condition",
-                    "Follow up 4 Date", "Follow up 4 Missed Medication", "Follow up 4 Status","Follow Up 4 Patient Condition",
-                    "Follow up 5 Date", "Follow up 5 Missed Medication", "Follow up 5 Status","Follow Up 5 Patient Condition",
-                    "Follow up 6 Date", "Follow up 6 Missed Medication", "Follow up 6 Status","Follow Up 6 Patient Condition",
-                    "Follow up 7 Date", "Follow up 7 Missed Medication", "Follow up 7 Status","Follow Up 7 Patient Condition",
-                    "Follow up 8 Date", "Follow up 8 Missed Medication", "Follow up 8 Status","Follow Up 8 Patient Condition",
-                    "TeleCaller Email"
+                    "Follow up 1 Date", "Follow up 1 Missed Medication", "Follow up 1 Patient Condition",
+                    "Follow up 2 Date", "Follow up 2 Missed Medication", "Follow up 2 Patient Condition",
+                    "Follow up 3 Date", "Follow up 3 Missed Medication", "Follow up 3 Patient Condition",
+                    "Follow up 4 Date", "Follow up 4 Missed Medication", "Follow up 4 Patient Condition",
+                    "Follow up 5 Date", "Follow up 5 Missed Medication", "Follow up 5 Patient Condition",
+                    "Follow up 6 Date", "Follow up 6 Missed Medication", "Follow up 6 Patient Condition",
+                    "Follow up 7 Date", "Follow up 7 Missed Medication", "Follow up 7 Patient Condition",
+                    "Follow up 8 Date", "Follow up 8 Missed Medication", "Follow up 8 Patient Condition"
             );
             applyFontAndPopulateSheet(patientList, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "Patient_Report_Filtered.xlsx");
@@ -338,7 +340,8 @@ public class ReportsServiceImpl implements ReportsService {
         }
 
         PatientFollowUpOutputForFrontEndDto patientFollowUpOutputForFrontEndDto = patientFollowUpService.get(patient.getPatientId());
-            int startColumn = 41;
+        int startColumn = 41;
+        int temp=-1;
         if (patientFollowUpOutputForFrontEndDto != null) {
             List<FollowUpDetails> followUps = patientFollowUpOutputForFrontEndDto.getFollowUpDetails();
             for (int i = 0; i < 8; i++) {
@@ -357,13 +360,11 @@ public class ReportsServiceImpl implements ReportsService {
                     reportsHelperService.createOrUpdateCell(row, currentColumn, null, cellStyle);
                     reportsHelperService.createOrUpdateCell(row, currentColumn++, null, cellStyle);
                     reportsHelperService.createOrUpdateCell(row, currentColumn++, null, cellStyle);
-                    reportsHelperService.createOrUpdateCell(row,currentColumn++,null, cellStyle);
 
                 }
-                startColumn=currentColumn;
+                temp=currentColumn;
             }
         }
-        reportsHelperService.createOrUpdateCell(row, startColumn++, patient.getCreatedBy(), cellStyle);
     }
 
 

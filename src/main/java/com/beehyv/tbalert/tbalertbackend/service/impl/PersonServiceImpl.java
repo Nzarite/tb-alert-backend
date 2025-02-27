@@ -15,6 +15,7 @@ import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class PersonServiceImpl implements PersonService {
     private PersonMapper personMapper;
 
     private void checkForEmail(String email) {
-        if(personRepo.existsByEmailAndIsDeletedFalse(email)) {
+        if(!ObjectUtils.isEmpty(email) && personRepo.existsByEmailAndIsDeletedFalse(email)) {
             throw new RuntimeException("Email already exists");
         }
     }
