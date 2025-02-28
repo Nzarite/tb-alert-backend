@@ -17,6 +17,8 @@ public class TBDetailsInputDTO {
     private String typeOfTb;
     @NotEmpty
     private String dstbOrDrtb;
+    @NotEmpty
+    private String clinicalOrMicrobiological;
 
     private String patientId;
 }
