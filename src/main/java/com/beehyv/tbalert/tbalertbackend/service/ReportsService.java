@@ -9,9 +9,9 @@ public interface ReportsService {
 
     byte[] getPatients(Map<String, Object> input) throws IOException;
 
-    byte[] getTeleCallerOfAState(String state) throws IOException;
+    byte[] getTeleCallerOfAState(Map<String,Object>filter) throws IOException;
 
-    byte[] getStateHeads() throws IOException;
+    byte[] getStateHeads(Map<String,Object>filter) throws IOException;
 
     byte[] getPatientFollowUp(Map<String, Object> filter) throws IOException;
 

@@ -16,5 +16,15 @@ public interface StateHeadService {
 
     StateHeadOutputDTO update(Long id, StateHeadInputDTO stateHeadInputDTO);
 
+    List<StateHeadOutputDTO> getAll();
+
     void deleteStateHead(Long id);
+
+    List<StateHeadOutputDTO> getAllByState(String state);
+
+    List<StateHeadOutputDTO> getAllDeleted();
+
+    List<StateHeadOutputDTO> getAllDeletedByState(String state);
+
+    List<StateHeadOutputDTO> getAllNotDeletedByState(String state);
 }

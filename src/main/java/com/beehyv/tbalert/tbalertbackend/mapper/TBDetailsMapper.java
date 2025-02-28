@@ -24,6 +24,7 @@ public class TBDetailsMapper {
                 .typeOfPwtb(tbDetailsInputDTO.getTypeOfPwtb())
                 .typeOfTb(tbDetailsInputDTO.getTypeOfTb())
                 .dstbOrDrtb(tbDetailsInputDTO.getDstbOrDrtb())
+                .clinicalOrMicrobiological(tbDetailsInputDTO.getClinicalOrMicrobiological())
                 .patient(patient)
                 .build();
     }
@@ -36,6 +37,7 @@ public class TBDetailsMapper {
                 .typeOfPwtb(tbDetails.getTypeOfPwtb())
                 .typeOfTb(tbDetails.getTypeOfTb())
                 .dstbOrDrtb(tbDetails.getDstbOrDrtb())
+                .clinicalOrMicrobiological(tbDetails.getClinicalOrMicrobiological())
                 .patientId(tbDetails.getPatient().getId())
                 .build();
     }

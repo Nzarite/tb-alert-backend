@@ -66,4 +66,10 @@ public class SettingServiceImpl implements SettingService {
             throw new IllegalArgumentException("Setting does not exist");
         }
     }
+
+    @Override
+    public String getSettingsValue(String keyName) {
+        Setting setting = settingRepo.findByKeyName(keyName);
+        return setting != null ? setting.getValue() : null;
+    }
 }

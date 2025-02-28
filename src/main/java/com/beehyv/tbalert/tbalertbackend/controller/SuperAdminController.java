@@ -36,6 +36,6 @@ public class SuperAdminController {
     public ResponseEntity<List<PatientOutputDTO>> getAllPatients() {
         log.info("Controller called for getting all patients");
 
-        return new ResponseEntity<>(patientRegistrationService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(patientRegistrationService.getAllNotDeleted(), HttpStatus.OK);
     }
 }

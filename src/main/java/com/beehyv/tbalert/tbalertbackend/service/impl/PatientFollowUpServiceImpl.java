@@ -50,7 +50,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         log.info("Service called to Get patient follow up with patient id {}", id);
         List<PatientFollowUp> patientFollowUps = patientFollowUpRepo.findByPatient_Id(id);
 
-        Patient patient = patientMapper.find(id);
+        Patient patient = patientMapper.findEverything(id);
         List<PatientFollowUpOutputForFrontEndDto.FollowUpDetails> followUpDetails = new ArrayList<>();
 
         List<PatientMedication> patientMedications = patientMedicationRepo.getPatientMedicationsByPatient(patient);
@@ -135,7 +135,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     public List<PatientFollowUp> findBeforeDate(String id, LocalDate localDate) {
         log.info("Service called to Find patient follow up with patient id {}", id);
 
-        Patient patient=patientMapper.find(id);
+        Patient patient=patientMapper.findEverything(id);
         return patientFollowUpRepo.findByPatientAndDateBefore(patient, localDate);
     }
 

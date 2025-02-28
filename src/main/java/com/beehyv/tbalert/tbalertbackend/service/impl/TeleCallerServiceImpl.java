@@ -75,7 +75,15 @@ public class TeleCallerServiceImpl implements TeleCallerService {
 
     @Override
     public List<TeleCallerOutputDTO> getAllNotDeleted() {
-        return teleCallerRepo.findByPerson_IsDeletedFalse()
+        return teleCallerRepo.findAllByPerson_IsDeletedFalse()
+                .stream()
+                .map(teleCallerMapper::toTeleCallerOutputDTO)
+                .toList();
+    }
+
+    @Override
+    public List<TeleCallerOutputDTO> getAll() {
+        return teleCallerRepo.findAll()
                 .stream()
                 .map(teleCallerMapper::toTeleCallerOutputDTO)
                 .toList();
@@ -83,7 +91,7 @@ public class TeleCallerServiceImpl implements TeleCallerService {
 
     @Override
     public List<TeleCallerOutputDTO> getByName(String name) {
-        List<TeleCaller> teleCallers = teleCallerRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCaseAndPerson_IsDeletedFalse(name, name);
+        List<TeleCaller> teleCallers = teleCallerRepo.findAllByPerson_IsDeletedFalseAndPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name);
         return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
 
@@ -124,5 +132,21 @@ public class TeleCallerServiceImpl implements TeleCallerService {
         } else {
             log.warn("TeleCaller with ID {} not found in Keycloak", id);
         }
+    }
+
+    @Override
+    public List<TeleCallerOutputDTO> getAllByState(String state) {
+        List<TeleCaller>teleCallers=teleCallerRepo.findAllByPerson_Address_State_StateName(state);
+        return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
+    }
+
+    @Override
+    public List<TeleCallerOutputDTO> getAllDeleted() {
+        return teleCallerRepo.findAllByPerson_IsDeletedTrue().stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
+    }
+
+    @Override
+    public List<TeleCallerOutputDTO> getDeletedByState(String state) {
+        return teleCallerRepo.findAllByPerson_IsDeletedTrueAndPerson_Address_State_StateName(state).stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
 }

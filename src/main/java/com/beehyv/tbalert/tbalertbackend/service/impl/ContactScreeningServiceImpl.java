@@ -3,9 +3,9 @@ package com.beehyv.tbalert.tbalertbackend.service.impl;
 import com.beehyv.tbalert.tbalertbackend.dto.input.ContactScreeningInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.ContactScreeningOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.ContactScreening;
-import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.mapper.ContactScreeningMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.ContactScreeningRepo;
+import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import com.beehyv.tbalert.tbalertbackend.service.ContactScreeningService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,6 +21,7 @@ import java.time.LocalDate;
 public class ContactScreeningServiceImpl implements ContactScreeningService {
     private final ContactScreeningRepo contactScreeningRepo;
     private final ContactScreeningMapper contactScreeningMapper;
+    private final PatientRepo patientRepo;
 
     @Override
     public ContactScreeningOutputDTO getContactScreeningById(String patientId) {
@@ -32,9 +33,12 @@ public class ContactScreeningServiceImpl implements ContactScreeningService {
     }
 
     @Override
-    public ContactScreeningOutputDTO setContactScreening(String patientId, ContactScreeningInputDTO contactScreeningInputDTO) {
+    public ContactScreeningOutputDTO setContactScreening(ContactScreeningInputDTO contactScreeningInputDTO) {
         log.info("inside saveContactScreening");
-
+        String patientId = contactScreeningInputDTO.getPatientId();
+        if(patientRepo.findById(patientId).isEmpty()) {
+            throw new IllegalArgumentException("Patient with id " + patientId + " does not exist");
+        }
         ContactScreening contactScreening = contactScreeningMapper.toContactScreening(patientId, contactScreeningInputDTO);
         ContactScreening savedContactScreening = contactScreeningRepo.save(contactScreening);
         return contactScreeningMapper.toContactScreeningOutputDTO(savedContactScreening);

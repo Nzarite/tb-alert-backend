@@ -12,6 +12,7 @@ public class TBDetailsOutputDTO {
     private String typeOfPwtb;
     private String typeOfTb;
     private String dstbOrDrtb;
+    private String clinicalOrMicrobiological;
     private String patientId;
 
     @Data
