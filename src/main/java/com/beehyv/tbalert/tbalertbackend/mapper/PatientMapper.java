@@ -4,7 +4,6 @@ import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
-import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

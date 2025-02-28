@@ -1,11 +1,6 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
-import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.input.StateHeadInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.input.TeleCallerInputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
-import com.beehyv.tbalert.tbalertbackend.repository.StateRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
