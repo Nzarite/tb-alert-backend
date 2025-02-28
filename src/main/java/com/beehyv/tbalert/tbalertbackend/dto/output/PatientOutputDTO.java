@@ -45,4 +45,6 @@ public class PatientOutputDTO {
 
     private Boolean consentForMessage;
 
+    private Boolean isDeleted;
+
 }

@@ -126,7 +126,6 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         patient.getPerson().setEmail(null);
         personRepo.save(patient.getPerson());
         nikshayMitraService.deleteNikshayDetails(patientId);
-        tbDetailsService.deleteTBDetails(patientId);
         contactScreeningService.deleteContactScreeningByPatientId(patientId);
         patientMedicationService.delete(patientId);
         patientFollowUpService.delete(patientId);
@@ -134,10 +133,20 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     }
 
     @Override
+    public List<PatientOutputDTO> getAllNotDeleted() {
+        log.info("Service getAllNotDeleted patients");
+
+        return patientRepo.findAllByPerson_IsDeletedFalse()
+                .stream()
+                .map(patientMapper::toPatientOutputDTO)
+                .toList();
+    }
+
+    @Override
     public List<PatientOutputDTO> getAll() {
         log.info("Service getAll patients");
 
-        return patientRepo.findAllByPerson_IsDeletedFalse()
+        return patientRepo.findAll()
                 .stream()
                 .map(patientMapper::toPatientOutputDTO)
                 .toList();

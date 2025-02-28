@@ -15,8 +15,8 @@ import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -114,7 +114,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public int getCountOfUsersCreated(Long personId) {
-        Person person = personMapper.find(personId);
-        return personRepo.countByCreatedByAndIsDeletedFalse(person.getEmail());
+        Person person = personMapper.findEverything(personId);
+        return personRepo.countByCreatedBy(person.getEmail());
     }
 }

@@ -1,13 +1,15 @@
 package com.beehyv.tbalert.tbalertbackend.repository;
 
+import com.beehyv.tbalert.tbalertbackend.dto.output.StateHeadOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.StateHead;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface StateHeadRepo extends JpaRepository<StateHead, Long> {
@@ -17,5 +19,14 @@ public interface StateHeadRepo extends JpaRepository<StateHead, Long> {
 
     List<StateHead> findByPerson_IsDeletedFalse();
 
-    List<StateHead> findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(String name, String name1);
+    @Query("SELECT t FROM StateHead t WHERE t.person.isDeleted = FALSE AND (t.person.firstName LIKE %:name% OR t.person.lastName LIKE %:name%)")
+    List<StateHead> findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(@Param("name")String name);
+
+    List<StateHead> findAllByPerson_Address_State_StateName(String state);
+
+    List<StateHead> findAllByPerson_IsDeletedTrue();
+
+    List<StateHead> findAllByPerson_IsDeletedTrueAndPerson_Address_State_StateName(String personAddressStateStateName);
+
+    List<StateHead> findAllByPerson_IsDeletedFalseAndPerson_Address_State_StateName(String state);
 }

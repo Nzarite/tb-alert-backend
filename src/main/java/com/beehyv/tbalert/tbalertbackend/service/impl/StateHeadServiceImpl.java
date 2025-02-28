@@ -76,6 +76,14 @@ public class StateHeadServiceImpl implements StateHeadService {
     }
 
     @Override
+    public List<StateHeadOutputDTO> getAll() {
+        return stateHeadRepo.findAll()
+                .stream()
+                .map(stateHeadMapper::toStateHeadOutputDTO)
+                .toList();
+    }
+
+    @Override
     public void deleteStateHead(Long id) {
         StateHead stateHead = stateHeadMapper.find(id);
         stateHead.getPerson().setIsDeleted(true);
@@ -86,8 +94,29 @@ public class StateHeadServiceImpl implements StateHeadService {
     }
 
     @Override
+    public List<StateHeadOutputDTO> getAllByState(String state) {
+
+        return stateHeadRepo.findAllByPerson_Address_State_StateName(state).stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
+    }
+
+    @Override
+    public List<StateHeadOutputDTO> getAllDeleted() {
+        return stateHeadRepo.findAllByPerson_IsDeletedTrue().stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
+    }
+
+    @Override
+    public List<StateHeadOutputDTO> getAllDeletedByState(String state) {
+        return stateHeadRepo.findAllByPerson_IsDeletedTrueAndPerson_Address_State_StateName(state).stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
+    }
+
+    @Override
+    public List<StateHeadOutputDTO> getAllNotDeletedByState(String state) {
+        return stateHeadRepo.findAllByPerson_IsDeletedFalseAndPerson_Address_State_StateName(state).stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
+    }
+
+    @Override
     public List<StateHeadOutputDTO> getStateHeadByName(String name) {
-        List<StateHead> stateHeads = stateHeadRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name, name);
+        List<StateHead> stateHeads = stateHeadRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name);
         return stateHeads.stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
     }
 
