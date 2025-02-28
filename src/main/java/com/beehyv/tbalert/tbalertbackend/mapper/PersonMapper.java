@@ -1,13 +1,8 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
-import com.beehyv.tbalert.tbalertbackend.dto.input.PatientInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.input.PersonInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.input.StateHeadInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.input.TeleCallerInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
-import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PersonRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,7 +15,6 @@ public class PersonMapper {
 
     private final PersonRepo personRepo;
     private final LocalDateMapper localDateMapper;
-    private final AddressRepo addressRepo;
 
     public Person find(Long id)
     {

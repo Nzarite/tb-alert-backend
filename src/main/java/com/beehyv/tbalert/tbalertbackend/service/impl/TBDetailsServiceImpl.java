@@ -103,6 +103,7 @@ public class TBDetailsServiceImpl implements TBDetailsService {
         tbDetails.setTypeOfPwtb(tbDetailsInputDTO.getTypeOfPwtb());
         tbDetails.setTypeOfTb(tbDetailsInputDTO.getTypeOfTb());
         tbDetails.setDstbOrDrtb(tbDetailsInputDTO.getDstbOrDrtb());
+        tbDetails.setClinicalOrMicrobiological(tbDetailsInputDTO.getClinicalOrMicrobiological());
         TBDetails updatedTBDetails = tbDetailsRepo.save(tbDetails);
 
         return tbDetailsMapper.toOutputDto(updatedTBDetails);
