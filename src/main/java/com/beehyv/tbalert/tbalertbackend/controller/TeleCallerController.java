@@ -1,6 +1,5 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
-
 import com.beehyv.tbalert.tbalertbackend.dto.input.TeleCallerInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
@@ -44,6 +43,13 @@ public class TeleCallerController {
     @GetMapping("/state/{name}")
     public ResponseEntity<List<TeleCallerOutputDTO>> getByState(@PathVariable String name) {
         return new ResponseEntity<>(teleCallerService.getByState(name), HttpStatus.OK);
+    }
+
+    @GetMapping("/state/{state}/name/{name}")
+    public ResponseEntity<List<TeleCallerOutputDTO>> getByStateAndName(@PathVariable String state, @PathVariable String name) {
+        log.info("Controller called for Getting patient by state and name: {}", state);
+
+        return new ResponseEntity<>(teleCallerService.getTelecallerByState(state,name), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

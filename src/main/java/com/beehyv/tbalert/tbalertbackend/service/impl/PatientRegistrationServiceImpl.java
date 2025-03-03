@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -208,6 +207,16 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         log.info("Service getAllByState state: {}", state);
 
         List<Patient> patients = patientRepo.findAllByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(state);
+        return patients.stream()
+                .map(patientMapper::toPatientOutputDTO)
+                .toList();
+    }
+
+    @Override
+    public List<PatientOutputDTO> getPatientByState(String state, String name) {
+        log.info("Service getPatientByState state: {}, name: {}", state, name);
+
+        List<Patient> patients = patientRepo.findPatientByNameAndState(name,state);
         return patients.stream()
                 .map(patientMapper::toPatientOutputDTO)
                 .toList();
