@@ -1,6 +1,5 @@
 package com.beehyv.tbalert.tbalertbackend.service;
 
-
 import com.beehyv.tbalert.tbalertbackend.dto.input.TeleCallerInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
 
