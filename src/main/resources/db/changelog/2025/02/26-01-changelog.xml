@@ -261,6 +261,12 @@
             <column name="key_name" type="VARCHAR(255)"/>
             <column name="value" type="VARCHAR(255)"/>
             <column name="type" type="VARCHAR(255)"/>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="label" type="VARCHAR(255)"/>
+            <column name="placeholder" type="VARCHAR(255)"/>
+            <column name="endpoint" type="VARCHAR(255)">
+                <constraints nullable="true" />
+            </column>
         </createTable>
     </changeSet>
 
@@ -308,6 +314,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="patient_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="clinical_microbiological" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -501,15 +510,48 @@
                                  constraintName="FK_TELECALLER_ON_PERSON" referencedColumnNames="id"
                                  referencedTableName="person"/>
     </changeSet>
+
+<!--    Initializing default Medicines-->
     <changeSet id="1740545825496-32" author="bhcp0212">
 
         <insert tableName="medication">
             <column name="id" value="1"/>
-            <column name="name" value="TB Medicine"/>
+            <column name="name" value="Isoniazid"/>
+            <column name="before_meal" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="medication">
+            <column name="id" value="2"/>
+            <column name="name" value="Rifampin"/>
+            <column name="before_meal" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="medication">
+            <column name="id" value="3"/>
+            <column name="name" value="Rifapentine"/>
+            <column name="before_meal" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="medication">
+            <column name="id" value="4"/>
+            <column name="name" value="Pyrazinamide"/>
+            <column name="before_meal" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="medication">
+            <column name="id" value="5"/>
+            <column name="name" value="Ethambutol"/>
+            <column name="before_meal" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="medication">
+            <column name="id" value="6"/>
+            <column name="name" value="Moxifloxacin"/>
             <column name="before_meal" valueBoolean="true"/>
         </insert>
     </changeSet>
 
+<!--    Create State Table-->
     <changeSet id="1740545825496-33" author="bhcp0212">
 
         <createTable tableName="state">
@@ -525,6 +567,7 @@
         </createTable>
     </changeSet>
 
+<!--    Create Address Table-->
     <changeSet id="1740545825496-34" author="bhcp0212">
 
         <!-- Drop the old state column if it exists -->
@@ -545,6 +588,7 @@
                                  referencedTableName="state"/>
     </changeSet>
 
+<!--    Initializing states-->
     <changeSet id="1740545825496-36" author="bhcp0212">
 
         <insert tableName="state">
@@ -564,6 +608,7 @@
         </insert>
     </changeSet>
 
+<!--    Initialize address for SuperAdmin-->
     <changeSet id="1740545825496-39" author="bhcp0212">
 
         <insert tableName="address">
@@ -576,7 +621,9 @@
         </insert>
     </changeSet>
 
+<!--    Adding SuperAdmin to Person -->
     <changeSet id="1740545825496-40" author="bhcp0212">
+        <comment>Insert Superadmin to the person Table</comment>
 
         <insert tableName="person">
             <column name="id" value="1"/> <!-- Assuming 1 is the ID for superadmin -->
@@ -592,43 +639,102 @@
         </insert>
     </changeSet>
 
+<!--    Initializing Settings-->
     <changeSet id="1740545825496-41" author="bhcp0212">
-
         <comment>Insert initial settings into the settings table</comment>
 
-        <!-- Insert drtb setting -->
+        <!-- Contact us -->
         <insert tableName="settings">
-            <column name="key_name" value="drtb"/>
-            <column name="type" value="followup"/>
-            <column name="value" value="8"/>
+            <column name="key_name" value="org_contact"/>
+            <column name="value" value="tbalert@gmail.com"/>
+            <column name="type" value="text"/>
+            <column name="category" value="General" />
+            <column name="label" value="Contact Us" />
+            <column name="placeholder" value="Organisation contact info (eg. Phone number, email)" />
         </insert>
 
-        <!-- Insert dstb setting -->
+        <!-- Plivo Console -->
         <insert tableName="settings">
-            <column name="key_name" value="dstb"/>
-            <column name="type" value="followup"/>
-            <column name="value" value="8"/>
+            <column name="key_name" value="plivo_console"/>
+            <column name="value" value="https://console.plivo.com/sms/reporting/"/>
+            <column name="type" value="button"/>
+            <column name="category" value="General" />
+            <column name="label" value="Plivo Console" />
+            <column name="placeholder" value="Go to Plivo Console" />
         </insert>
 
-        <!-- Insert sms_reminder_time setting -->
+        <!-- sms_reminder_time -->
         <insert tableName="settings">
             <column name="key_name" value="sms_reminder_time"/>
-            <column name="type" value="reminder"/>
             <column name="value" value="08:00"/>
+            <column name="type" value="time"/>
+            <column name="category" value="SMS" />
+            <column name="label" value="Preferred Time" />
+            <column name="placeholder" value="Preferred time for reminder" />
         </insert>
 
         <!-- Insert sms_template setting -->
         <insert tableName="settings">
             <column name="key_name" value="sms_template"/>
-            <column name="type" value="reminder"/>
             <column name="value" value="Hi {patientId}:{nikshayId} {firstName} {lastName},\n\nThis is your daily medicine reminder.\nYour scheduled medications for today ({medication_date}) is/are: {medication_names}.\n\nFor any queries, contact us at {org_phone_number}."/>
+            <column name="type" value="longtext"/>
+            <column name="category" value="SMS" />
+            <column name="label" value="Template" />
+            <column name="placeholder" value="Template for SMS. (Don't modify the text inside. It is advised to keep the placeholders as it is for efficient mapping to values.)" />
         </insert>
 
-        <!-- Insert org_email_id setting -->
+        <!-- drtb followups -->
         <insert tableName="settings">
-            <column name="key_name" value="org_email_id"/>
-            <column name="type" value="org"/>
-            <column name="value" value="tbalert@gmail.com"/>
+            <column name="key_name" value="drtb_followup"/>
+            <column name="value" value="8"/>
+            <column name="type" value="number"/>
+            <column name="category" value="Followup" />
+            <column name="label" value="DRTB" />
+            <column name="placeholder" value="Number of followups for DRTB" />
         </insert>
+
+        <!-- dstb followups -->
+        <insert tableName="settings">
+            <column name="key_name" value="dstb_followup"/>
+            <column name="value" value="8"/>
+            <column name="type" value="number"/>
+            <column name="category" value="Followup" />
+            <column name="label" value="DSTB" />
+            <column name="placeholder" value="Number of followups for DSTB" />
+        </insert>
+
+        <!-- dstb medicine -->
+        <insert tableName="settings">
+            <column name="key_name" value="dstb_medicines"/>
+            <column name="value" value="2,3,4,5"/>
+            <column name="type" value="chips"/>
+            <column name="category" value="Medication" />
+            <column name="label" value="DSTB" />
+            <column name="placeholder" value="Default medicines for all patients with DSTB" />
+            <column name="endpoint" value="/medication" />
+        </insert>
+
+        <!-- drtb medicine -->
+        <insert tableName="settings">
+            <column name="key_name" value="drtb_medicines"/>
+            <column name="value" value="1,2,3"/>
+            <column name="type" value="chips"/>
+            <column name="category" value="Medication" />
+            <column name="label" value="DRTB" />
+            <column name="placeholder" value="Default medicines for all patients with DRTB" />
+            <column name="endpoint" value="/medication" />
+        </insert>
+
+        <!-- state -->
+        <insert tableName="settings">
+            <column name="key_name" value="state"/>
+            <column name="value" value="1,2,3"/>
+            <column name="type" value="select"/>
+            <column name="category" value="State" />
+            <column name="label" value="State" />
+            <column name="placeholder" value="Select a State from the list to add" />
+            <column name="endpoint" value="/state/add" />
+        </insert>
+
     </changeSet>
 </databaseChangeLog>

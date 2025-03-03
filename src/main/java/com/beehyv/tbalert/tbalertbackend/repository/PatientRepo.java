@@ -2,14 +2,12 @@ package com.beehyv.tbalert.tbalertbackend.repository;
 
 import com.beehyv.tbalert.tbalertbackend.dao.MedicationReminderProjection;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
-import org.apache.el.stream.Stream;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +15,6 @@ import java.util.Optional;
 public interface PatientRepo extends JpaRepository<Patient, String>, JpaSpecificationExecutor<Patient> {
 
     int countByCurrentStatusAndPerson_IsDeletedFalse(String currentStatus);
-
-    List<Patient> findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCaseAndPerson_IsDeletedFalse(String patientName, String patientName1);
 
     @Query(value = "SELECT p FROM Patient p LEFT JOIN NikshayMitra n " +
             "ON p.id = n.patient.id " +
@@ -51,10 +47,18 @@ public interface PatientRepo extends JpaRepository<Patient, String>, JpaSpecific
             """, nativeQuery = true)
     List<MedicationReminderProjection> findAllMedicationReminders();
 
-
     List<Patient> findAllByPerson_IsDeletedFalse();
 
     List<Patient> findAllByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(String state);
 
     Optional<Patient> findByIdAndPerson_IsDeletedFalse(String patientId);
+
+    @Query("""
+                SELECT p FROM Patient p
+                WHERE (LOWER(p.person.firstName) LIKE LOWER(CONCAT('%', :name, '%'))
+                   OR LOWER(p.person.lastName) LIKE LOWER(CONCAT('%', :name, '%')))
+                  AND p.person.address.state.stateName = :state
+                  AND p.person.isDeleted = false
+            """)
+    List<Patient> findPatientByNameAndState(@Param("name") String name, @Param("state") String state);
 }
