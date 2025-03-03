@@ -80,13 +80,7 @@ public class SettingServiceImpl implements SettingService {
     public SettingOutputDTO updateSetting(SettingInputDTO settingInputDTO) {
         Setting setting = settingRepo.findByKeyName(settingInputDTO.getKeyName());
         if (setting != null) {
-            setting.setKeyName(settingInputDTO.getKeyName());
             setting.setValue(settingInputDTO.getValue());
-            setting.setType(settingInputDTO.getType());
-            setting.setCategory(settingInputDTO.getCategory());
-            setting.setLabel(settingInputDTO.getLabel());
-            setting.setPlaceholder(settingInputDTO.getPlaceholder());
-            setting.setEndpoint(settingInputDTO.getEndpoint());
         }
         else{
             throw new IllegalArgumentException("Setting does not exist");
