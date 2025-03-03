@@ -91,7 +91,7 @@ public class TeleCallerServiceImpl implements TeleCallerService {
 
     @Override
     public List<TeleCallerOutputDTO> getByName(String name) {
-        List<TeleCaller> teleCallers = teleCallerRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCaseAndPerson_IsDeletedFalse(name, name);
+        List<TeleCaller> teleCallers = teleCallerRepo.findAllByPerson_IsDeletedFalseAndPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name);
         return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
 

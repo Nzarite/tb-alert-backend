@@ -33,4 +33,7 @@ public interface TeleCallerRepo extends JpaRepository<TeleCaller, Long> {
             """)
     List<TeleCaller> findTeleCallerByNameAndState(@Param("name") String name, @Param("state") String state);
 
+
+    @Query("SELECT t FROM TeleCaller t WHERE t.person.isDeleted = FALSE AND (t.person.firstName LIKE %:name% OR t.person.lastName LIKE %:name%)")
+    List<TeleCaller> findAllByPerson_IsDeletedFalseAndPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(@Param("name") String name);
 }

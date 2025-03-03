@@ -30,6 +30,5 @@ public class ContactScreeningInputDTO {
 
     private Integer noOfHHCsInitiatedTPT;
 
-    @NotNull(message = "Patient Id cannot be empty")
     private String patientId;
 }

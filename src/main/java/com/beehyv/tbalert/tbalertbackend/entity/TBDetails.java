@@ -35,6 +35,9 @@ public class TBDetails {
     @Column(nullable = false, name = "dstb_drtb")
     private String dstbOrDrtb;
 
+    @Column(nullable = false, name = "clinical_microbiological")
+    private String clinicalOrMicrobiological;
+
     @OneToOne
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
