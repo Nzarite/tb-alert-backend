@@ -28,4 +28,6 @@ public interface PatientRegistrationService {
     String determinePatientStatus(PatientOutputDTO patientOutputDTO);
 
     List<PatientOutputDTO> getAllByState(String state);
+
+    List<PatientOutputDTO> getPatientByState(String state, String name);
 }

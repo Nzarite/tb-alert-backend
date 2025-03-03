@@ -29,4 +29,6 @@ public interface TeleCallerService {
     List<TeleCallerOutputDTO> getAllDeleted();
 
     List<TeleCallerOutputDTO> getDeletedByState(String state);
+
+    List<TeleCallerOutputDTO> getTelecallerByState(String state, String name);
 }

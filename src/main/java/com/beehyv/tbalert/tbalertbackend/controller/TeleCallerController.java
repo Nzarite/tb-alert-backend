@@ -46,6 +46,13 @@ public class TeleCallerController {
         return new ResponseEntity<>(teleCallerService.getByState(name), HttpStatus.OK);
     }
 
+    @GetMapping("/state/{state}/name/{name}")
+    public ResponseEntity<List<TeleCallerOutputDTO>> getByStateAndName(@PathVariable String state, @PathVariable String name) {
+        log.info("Controller called for Getting patient by state and name: {}", state);
+
+        return new ResponseEntity<>(teleCallerService.getTelecallerByState(state,name), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<TeleCallerOutputDTO> delete(@PathVariable Long id) {
         log.info("Controller called for deleting telecaller: {}", id);
