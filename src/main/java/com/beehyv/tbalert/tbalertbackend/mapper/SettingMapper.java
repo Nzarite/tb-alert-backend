@@ -17,6 +17,10 @@ public class SettingMapper {
                 .keyName(settingInputDTO.getKeyName())
                 .value(settingInputDTO.getValue())
                 .type(settingInputDTO.getType())
+                .category(settingInputDTO.getCategory())
+                .label(settingInputDTO.getLabel())
+                .placeholder(settingInputDTO.getPlaceholder())
+                .endpoint(settingInputDTO.getEndpoint())
                 .build();
     }
 
@@ -25,6 +29,10 @@ public class SettingMapper {
                 .keyName(setting.getKeyName())
                 .value(setting.getValue())
                 .type(setting.getType())
+                .category(setting.getCategory())
+                .label(setting.getLabel())
+                .placeholder(setting.getPlaceholder())
+                .endpoint(setting.getEndpoint())
                 .build();
     }
 }
