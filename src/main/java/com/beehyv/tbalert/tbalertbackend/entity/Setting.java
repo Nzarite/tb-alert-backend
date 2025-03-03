@@ -17,12 +17,23 @@ public class Setting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String keyName;
 
-    @Column
+    @Column(nullable = false)
     private String value;
 
-    @Column
+    @Column(nullable = false)
     private String type;
+
+    @Column(nullable = false)
+    private String category;
+
+    @Column(nullable = false)
+    private String label;
+
+    @Column(nullable = false)
+    private String placeholder;
+
+    private String endpoint;
 }

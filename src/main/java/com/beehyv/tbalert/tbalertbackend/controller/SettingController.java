@@ -2,6 +2,7 @@ package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.SettingInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.SettingOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.GroupedSettingsOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.SettingService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/setting")
@@ -22,9 +24,19 @@ public class SettingController {
     private final SettingService settingService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<SettingOutputDTO>> getSettings() {
+    public ResponseEntity<List<GroupedSettingsOutputDTO>> getSettings() {
 
         return new ResponseEntity<>(settingService.getSettings(), HttpStatus.OK);
+    }
+
+    @GetMapping("/key/{keyName}")
+    public ResponseEntity<SettingOutputDTO> getSetting(@PathVariable String keyName) {
+        return new ResponseEntity<>(settingService.getSetting(keyName), HttpStatus.OK);
+    }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<SettingOutputDTO>> getCategorySettings(@PathVariable String category) {
+        return new ResponseEntity<>(settingService.getCategorySettings(category), HttpStatus.OK);
     }
 
     @PostMapping

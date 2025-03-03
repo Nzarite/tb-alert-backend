@@ -12,9 +12,5 @@ public class SettingInputDTO {
 
     @NotEmpty(message = "Value cannot be empty")
     private String value;
-
-    @NotEmpty(message = "Type cannot be empty")
-    private String type;
-
 }
 

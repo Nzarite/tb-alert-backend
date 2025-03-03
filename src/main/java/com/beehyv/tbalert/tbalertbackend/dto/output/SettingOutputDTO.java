@@ -9,4 +9,9 @@ public class SettingOutputDTO {
     private String keyName;
     private String value;
     private String type;
+    private String category;
+    private String label;
+    private String placeholder;
+    private String endpoint;
+
 }
