@@ -4,7 +4,10 @@ import com.beehyv.tbalert.tbalertbackend.entity.Setting;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface SettingRepo extends JpaRepository<Setting, String> {
     Setting findByKeyName(String keyName);
+    List<Setting> findAllByCategory(String keyName);
 }
