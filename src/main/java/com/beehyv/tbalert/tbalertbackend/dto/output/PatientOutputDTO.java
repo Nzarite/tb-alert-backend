@@ -45,6 +45,7 @@ public class PatientOutputDTO {
 
     private Boolean consentForMessage;
 
-    private Boolean isDeleted;
+    private String reminderTime;
 
+    private Boolean isDeleted;
 }

@@ -153,6 +153,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="consent_for_message" type="bit"/>
+            <column name="reminder_time" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
 

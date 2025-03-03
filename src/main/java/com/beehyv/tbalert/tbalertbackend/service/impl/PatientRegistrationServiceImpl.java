@@ -58,6 +58,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         String id = state.getStateCode() + currCnt;
         patient.setId(id);
         patient.setConsentForMessage(patientInputDTO.getConsentForMessage());
+        patient.setReminderTime(patientInputDTO.getReminderTime());
         Patient savedPatient = patientRepo.save(patient);
 
         return patientMapper.toPatientOutputDTO(savedPatient);
