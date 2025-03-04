@@ -31,6 +31,7 @@ public interface PatientRepo extends JpaRepository<Patient, String>, JpaSpecific
                     nm.nikshay_id AS nikshayId,
                     per.first_name AS firstName,
                     per.last_name AS lastName,
+                    p.reminder_time AS reminderTime,
                     per.phone_number AS phoneNumber,
                     MAX(pf.date) AS lastFollowupDate,
                     m.id AS medicationId,

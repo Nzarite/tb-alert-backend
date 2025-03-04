@@ -9,6 +9,8 @@ public interface MedicationReminderProjection {
 
     String getLastName();
 
+    String getReminderTime();
+
     String getPhoneNumber();
 
     String getLastFollowupDate();
