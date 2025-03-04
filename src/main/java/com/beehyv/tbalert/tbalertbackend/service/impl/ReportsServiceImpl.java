@@ -225,9 +225,10 @@ public class ReportsServiceImpl implements ReportsService {
         {
 
             List<String>patientIds=patientRegistrationService.getFilteredPatients(filter).stream().map(PatientOutputDTO::getPatientId).toList();
-            List<PatientFollowUp>patientFollowUps=patientFollowUpRepo.findAllByDateAndPatient_IdIn(LocalDate.now(),patientIds);
+            List<PatientFollowUp>patientFollowUps=patientFollowUpRepo.findAllByDateLessThanEqualAndPatient_IdInAndStatus(LocalDate.now(),patientIds,"Missed");
 
-            Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Follow Up for Today","Patient Id","Patient Name","Patient Phone Number","Type of TB");
+            Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Follow Up for Today",
+                    "Patient Id","Patient Name","Patient Phone Number","Type of TB","Follow Up Date");
             sheet.setColumnWidth(0,sheet.getColumnWidth(0));
             applyFontAndPopulateSheet(patientFollowUps, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "FollowUpsForToday.xlsx");
@@ -268,6 +269,11 @@ public class ReportsServiceImpl implements ReportsService {
 
     private void populateFollowUpForToday(Row row, PatientFollowUp patientFollowUp, CellStyle cellStyle) {
         int ind=0;
+        CellStyle cellStyleForOlderDates=row.getSheet().getWorkbook().createCellStyle();
+        cellStyleForOlderDates.cloneStyleFrom(cellStyle);
+        cellStyleForOlderDates.setFillForegroundColor(IndexedColors.RED.getIndex());
+        cellStyleForOlderDates.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
         reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getPatient().getId(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getPatient().getPerson().getFirstName()+" "+patientFollowUp.getPatient().getPerson().getLastName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getPatient().getPerson().getPhoneNumber(),cellStyle);
@@ -278,12 +284,15 @@ public class ReportsServiceImpl implements ReportsService {
         if(tbDetails!=null) typeOfTb=tbDetails.getTypeOfTb();
 
         reportsHelperService.createOrUpdateCell(row,ind++,typeOfTb,cellStyle);
+        if(patientFollowUp.getDate().isBefore(LocalDate.now()))
+            reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getDate(),cellStyleForOlderDates);
+        else reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getDate(),cellStyle);
     }
 
     private void populatePatientFollowUpRow(Row row, PatientFollowUpOutputForFrontEndDto followUp, CellStyle cellStyle) {
         int ind=0;
         reportsHelperService.createOrUpdateCell(row,ind++,followUp.getPatient().getPatientId(),cellStyle);
-        reportsHelperService.createOrUpdateCell(row,ind++,followUp.getPatient().getFirstName()+followUp.getPatient().getLastName(),cellStyle);
+        reportsHelperService.createOrUpdateCell(row,ind++,followUp.getPatient().getFirstName()+" "+followUp.getPatient().getLastName(),cellStyle);
 
         for(FollowUpDetails followUpDetails : followUp.getFollowUpDetails())
         {

@@ -20,6 +20,11 @@ public class ReportsHelperService {
 
     public CellStyle createDataCellStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
+        BorderStyle border = BorderStyle.THIN;
+        style.setBorderTop(border);
+        style.setBorderBottom(border);
+        style.setBorderLeft(border);
+        style.setBorderRight(border);
         style.setAlignment(HorizontalAlignment.CENTER);
         return style;
     }
@@ -40,7 +45,14 @@ public class ReportsHelperService {
 
     public CellStyle createHeaderStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
+        BorderStyle border = BorderStyle.THIN;
+        style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         Font font = workbook.createFont();
+        style.setBorderTop(border);
+        style.setBorderBottom(border);
+        style.setBorderLeft(border);
+        style.setBorderRight(border);
         font.setBold(true);
         font.setFontHeightInPoints((short) 14);
         style.setFont(font);
