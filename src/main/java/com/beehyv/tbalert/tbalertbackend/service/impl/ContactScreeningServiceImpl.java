@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -79,7 +80,7 @@ public class ContactScreeningServiceImpl implements ContactScreeningService {
     public void deleteContactScreeningByPatientId(String patientId) {
         log.info("inside deleteContactScreeningByPatientId");
 
-        ContactScreening contactScreening = contactScreeningRepo.findByPatient_Id(patientId).orElseThrow(()->new IllegalArgumentException("Patient with id " + patientId + " not found"));
-        contactScreeningRepo.delete(contactScreening);
+        Optional<ContactScreening> contactScreening = contactScreeningRepo.findByPatient_Id(patientId);
+        contactScreening.ifPresent(contactScreeningRepo::delete);
     }
 }

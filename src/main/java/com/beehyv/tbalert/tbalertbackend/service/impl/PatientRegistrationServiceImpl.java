@@ -46,7 +46,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
-        log.info("Service called to Register patient: {}", patientInputDTO);
+        log.info("Service called to register patient");
 
         PersonOutputDTO person = personService.add(patientInputDTO);
         Patient patient = new Patient();
@@ -110,12 +110,14 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             patient.setAge(patientUpdateInputDTO.getAge());
         if (patientUpdateInputDTO.getConsentForMessage() != null)
             patient.setConsentForMessage(patientUpdateInputDTO.getConsentForMessage());
+        if (patientUpdateInputDTO.getReminderTime() != null)
+            patient.setReminderTime(patientUpdateInputDTO.getReminderTime());
+
         person.setAddress(address);
         person = personRepo.save(person);
         patient.setPerson(person);
 
         patientRepo.save(patient);
-
     }
 
     @Override
@@ -218,7 +220,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     public List<PatientOutputDTO> getPatientByState(String state, String name) {
         log.info("Service getPatientByState state: {}, name: {}", state, name);
 
-        List<Patient> patients = patientRepo.findPatientByNameAndState(name,state);
+        List<Patient> patients = patientRepo.findPatientByNameAndState(name, state);
         return patients.stream()
                 .map(patientMapper::toPatientOutputDTO)
                 .toList();
