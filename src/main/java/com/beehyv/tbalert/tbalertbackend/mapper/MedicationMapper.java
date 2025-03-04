@@ -37,4 +37,24 @@ public class MedicationMapper {
                 .beforeMeal(medication.isBeforeMeal())
                 .build();
     }
+
+    public String nameToId (String name) {
+        log.info("Mappper called for mapNameToId by input: {}", name);
+        try{
+            return String.valueOf(medicationRepo.findByName(name).getId());
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("Medication not found for name: " + name);
+        }
+    }
+
+    public String idToName(int id) {
+        log.info("Mappper called for mapIdToName by input: {}", id);
+        try{
+            return String.valueOf(medicationRepo.findById(id).get().getName());
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("Medication not found for id: " + id);
+        }
+    }
 }

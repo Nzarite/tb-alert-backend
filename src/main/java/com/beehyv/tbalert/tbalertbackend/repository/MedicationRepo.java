@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface MedicationRepo extends JpaRepository<Medication, Integer> {
     List<Medication> findAllByIdIn(List<Integer> ids);
+
+    Medication findByName(String name);
 }
