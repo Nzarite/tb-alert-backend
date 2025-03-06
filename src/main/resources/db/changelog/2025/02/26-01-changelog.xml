@@ -6,8 +6,28 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
 
-    <!-- Address Table -->
+    <!-- Create State Table -->
     <changeSet id="1740545825496-1" author="bhcp0212">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="state"/>
+            </not>
+        </preConditions>
+        <createTable tableName="state">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="state_name" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="state_code" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Create Address Table -->
+    <changeSet id="1740545825496-2" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="address"/>
@@ -21,14 +41,15 @@
             <column name="gp" type="VARCHAR(255)"/>
             <column name="village" type="VARCHAR(255)"/>
             <column name="district" type="VARCHAR(255)"/>
-            <column name="state" type="VARCHAR(255)">
+            <!-- Change state from VARCHAR to BIGINT for proper FK -->
+            <column name="state_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
 
     <!-- Contact Screening Table -->
-    <changeSet id="1740545825496-2" author="bhcp0212">
+    <changeSet id="1740545825496-3" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="contact_screening"/>
@@ -58,7 +79,7 @@
     </changeSet>
 
     <!-- Medication Table -->
-    <changeSet id="1740545825496-3" author="bhcp0212">
+    <changeSet id="1740545825496-4" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="medication"/>
@@ -78,7 +99,7 @@
     </changeSet>
 
     <!-- Missed Medication Table -->
-    <changeSet id="1740545825496-4" author="bhcp0212">
+    <changeSet id="1740545825496-5" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="missed_medication"/>
@@ -100,7 +121,7 @@
     </changeSet>
 
     <!-- Nikshay Mitra Table -->
-    <changeSet id="1740545825496-5" author="bhcp0212">
+    <changeSet id="1740545825496-6" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="nikshay_mitra"/>
@@ -134,7 +155,7 @@
     </changeSet>
 
     <!-- Patient Table -->
-    <changeSet id="1740545825496-6" author="bhcp0212">
+    <changeSet id="1740545825496-7" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="patient"/>
@@ -154,11 +175,12 @@
             </column>
             <column name="consent_for_message" type="bit"/>
             <column name="reminder_time" type="VARCHAR(255)"/>
+            <column name="is_diagnosed_with_tb" type="boolean"/>
         </createTable>
     </changeSet>
 
     <!-- Patient Follow Up Table -->
-    <changeSet id="1740545825496-7" author="bhcp0212">
+    <changeSet id="1740545825496-8" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="patient_follow_up"/>
@@ -181,7 +203,7 @@
     </changeSet>
 
     <!-- Patient Medication Table -->
-    <changeSet id="1740545825496-8" author="bhcp0212">
+    <changeSet id="1740545825496-9" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="patient_medication"/>
@@ -200,7 +222,7 @@
     </changeSet>
 
     <!-- Person Table -->
-    <changeSet id="1740545825496-37" author="bhcp0212">
+    <changeSet id="1740545825496-10" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="person"/>
@@ -249,7 +271,7 @@
     </changeSet>
 
     <!-- Settings Table -->
-    <changeSet id="1740545825496-10" author="bhcp0212">
+    <changeSet id="1740545825496-11" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="settings"/>
@@ -266,13 +288,13 @@
             <column name="label" type="VARCHAR(255)"/>
             <column name="placeholder" type="VARCHAR(255)"/>
             <column name="endpoint" type="VARCHAR(255)">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
         </createTable>
     </changeSet>
 
     <!-- State Head Table -->
-    <changeSet id="1740545825496-11" author="bhcp0212">
+    <changeSet id="1740545825496-12" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="state_head"/>
@@ -288,8 +310,42 @@
         </createTable>
     </changeSet>
 
+    <!-- GP Head Table -->
+    <changeSet id="1740545825496-13" author="bhcp0212">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="gp_head"/>
+            </not>
+        </preConditions>
+        <createTable tableName="gp_head">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_gpHead"/>
+            </column>
+            <column name="person_id" type="BIGINT"/>
+            <column name="date_of_joining" type="DATE"/>
+            <column name="date_of_leaving" type="DATE"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Field Coordinator Table -->
+    <changeSet id="1740545825496-14" author="bhcp0212">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="field_coordinator"/>
+            </not>
+        </preConditions>
+        <createTable tableName="field_coordinator">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_field_coordinator"/>
+            </column>
+            <column name="person_id" type="BIGINT"/>
+            <column name="date_of_joining" type="DATE"/>
+            <column name="date_of_leaving" type="DATE"/>
+        </createTable>
+    </changeSet>
+
     <!-- TB Details Table -->
-    <changeSet id="1740545825496-12" author="bhcp0212">
+    <changeSet id="1740545825496-15" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="tb_details"/>
@@ -324,7 +380,7 @@
     </changeSet>
 
     <!-- Tele Caller Table -->
-    <changeSet id="1740545825496-13" author="bhcp0212">
+    <changeSet id="1740545825496-16" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="tele_caller"/>
@@ -341,7 +397,7 @@
     </changeSet>
 
     <!-- Unique Constraints -->
-    <changeSet id="1740545825496-14" author="bhcp0212">
+    <changeSet id="1740545825496-17" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <uniqueConstraintExists constraintName="uc_contact_screening_patient" tableName="contact_screening"/>
@@ -350,7 +406,7 @@
         <addUniqueConstraint columnNames="patient_id" constraintName="uc_contact_screening_patient"
                              tableName="contact_screening"/>
     </changeSet>
-    <changeSet id="1740545825496-15" author="bhcp0212">
+    <changeSet id="1740545825496-18" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <uniqueConstraintExists constraintName="uc_medication_name" tableName="medication"/>
@@ -358,7 +414,7 @@
         </preConditions>
         <addUniqueConstraint columnNames="name" constraintName="uc_medication_name" tableName="medication"/>
     </changeSet>
-    <changeSet id="1740545825496-16" author="bhcp0212">
+    <changeSet id="1740545825496-19" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <uniqueConstraintExists constraintName="uc_nikshay_mitra_patient" tableName="nikshay_mitra"/>
@@ -367,7 +423,7 @@
         <addUniqueConstraint columnNames="patient_id" constraintName="uc_nikshay_mitra_patient"
                              tableName="nikshay_mitra"/>
     </changeSet>
-    <changeSet id="1740545825496-17" author="bhcp0212">
+    <changeSet id="1740545825496-20" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <uniqueConstraintExists constraintName="uc_person_email" tableName="person"/>
@@ -375,7 +431,7 @@
         </preConditions>
         <addUniqueConstraint columnNames="email" constraintName="uc_person_email" tableName="person"/>
     </changeSet>
-    <changeSet id="1740545825496-18" author="bhcp0212">
+    <changeSet id="1740545825496-21" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <uniqueConstraintExists constraintName="uc_statehead_person" tableName="state_head"/>
@@ -383,7 +439,7 @@
         </preConditions>
         <addUniqueConstraint columnNames="person_id" constraintName="uc_statehead_person" tableName="state_head"/>
     </changeSet>
-    <changeSet id="1740545825496-19" author="bhcp0212">
+    <changeSet id="1740545825496-22" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <uniqueConstraintExists constraintName="uc_tb_details_patient" tableName="tb_details"/>
@@ -391,7 +447,7 @@
         </preConditions>
         <addUniqueConstraint columnNames="patient_id" constraintName="uc_tb_details_patient" tableName="tb_details"/>
     </changeSet>
-    <changeSet id="1740545825496-20" author="bhcp0212">
+    <changeSet id="1740545825496-23" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <uniqueConstraintExists constraintName="uc_telecaller_person" tableName="tele_caller"/>
@@ -401,7 +457,7 @@
     </changeSet>
 
     <!-- Foreign Key Constraints -->
-    <changeSet id="1740545825496-21" author="bhcp0212">
+    <changeSet id="1740545825496-24" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_CONTACT_SCREENING_ON_PATIENT"/>
@@ -411,7 +467,7 @@
                                  constraintName="FK_CONTACT_SCREENING_ON_PATIENT" referencedColumnNames="id"
                                  referencedTableName="patient"/>
     </changeSet>
-    <changeSet id="1740545825496-22" author="bhcp0212">
+    <changeSet id="1740545825496-25" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_MISSEDMEDICATION_ON_PATIENT_MEDICATION"/>
@@ -421,7 +477,7 @@
                                  constraintName="FK_MISSEDMEDICATION_ON_PATIENT_MEDICATION" referencedColumnNames="id"
                                  referencedTableName="patient_medication"/>
     </changeSet>
-    <changeSet id="1740545825496-23" author="bhcp0212">
+    <changeSet id="1740545825496-26" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_NIKSHAY_MITRA_ON_PATIENT"/>
@@ -431,7 +487,7 @@
                                  constraintName="FK_NIKSHAY_MITRA_ON_PATIENT" referencedColumnNames="id"
                                  referencedTableName="patient"/>
     </changeSet>
-    <changeSet id="1740545825496-24" author="bhcp0212">
+    <changeSet id="1740545825496-27" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_PATIENTFOLLOWUP_ON_PATIENT"/>
@@ -441,7 +497,7 @@
                                  constraintName="FK_PATIENTFOLLOWUP_ON_PATIENT" referencedColumnNames="id"
                                  referencedTableName="patient"/>
     </changeSet>
-    <changeSet id="1740545825496-25" author="bhcp0212">
+    <changeSet id="1740545825496-28" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_PATIENTMEDICATION_ON_MEDICATION"/>
@@ -451,7 +507,7 @@
                                  constraintName="FK_PATIENTMEDICATION_ON_MEDICATION" referencedColumnNames="id"
                                  referencedTableName="medication"/>
     </changeSet>
-    <changeSet id="1740545825496-26" author="bhcp0212">
+    <changeSet id="1740545825496-29" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_PATIENTMEDICATION_ON_PATIENT"/>
@@ -461,7 +517,7 @@
                                  constraintName="FK_PATIENTMEDICATION_ON_PATIENT" referencedColumnNames="id"
                                  referencedTableName="patient"/>
     </changeSet>
-    <changeSet id="1740545825496-27" author="bhcp0212">
+    <changeSet id="1740545825496-30" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_PATIENT_ON_PERSON"/>
@@ -471,7 +527,7 @@
                                  constraintName="FK_PATIENT_ON_PERSON" referencedColumnNames="id"
                                  referencedTableName="person"/>
     </changeSet>
-    <changeSet id="1740545825496-28" author="bhcp0212">
+    <changeSet id="1740545825496-31" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_PERSON_ON_ADDRESS"/>
@@ -481,7 +537,7 @@
                                  constraintName="FK_PERSON_ON_ADDRESS" referencedColumnNames="id"
                                  referencedTableName="address"/>
     </changeSet>
-    <changeSet id="1740545825496-29" author="bhcp0212">
+    <changeSet id="1740545825496-32" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_STATEHEAD_ON_PERSON"/>
@@ -491,7 +547,7 @@
                                  constraintName="FK_STATEHEAD_ON_PERSON" referencedColumnNames="id"
                                  referencedTableName="person"/>
     </changeSet>
-    <changeSet id="1740545825496-30" author="bhcp0212">
+    <changeSet id="1740545825496-33" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_TB_DETAILS_ON_PATIENT"/>
@@ -501,7 +557,7 @@
                                  constraintName="FK_TB_DETAILS_ON_PATIENT" referencedColumnNames="id"
                                  referencedTableName="patient"/>
     </changeSet>
-    <changeSet id="1740545825496-31" author="bhcp0212">
+    <changeSet id="1740545825496-34" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_TELECALLER_ON_PERSON"/>
@@ -511,9 +567,21 @@
                                  constraintName="FK_TELECALLER_ON_PERSON" referencedColumnNames="id"
                                  referencedTableName="person"/>
     </changeSet>
+    <changeSet id="1740545825496-35" author="bhcp0212">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_address_state"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="state_id"
+                                 baseTableName="address"
+                                 constraintName="fk_address_state"
+                                 referencedColumnNames="id"
+                                 referencedTableName="state"/>
+    </changeSet>
 
-<!--    Initializing default Medicines-->
-    <changeSet id="1740545825496-32" author="bhcp0212">
+    <!--    Initializing default Medicines-->
+    <changeSet id="1740545825496-36" author="bhcp0212">
 
         <insert tableName="medication">
             <column name="id" value="1"/>
@@ -552,49 +620,8 @@
         </insert>
     </changeSet>
 
-<!--    Create State Table-->
-    <changeSet id="1740545825496-33" author="bhcp0212">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="state"/>
-            </not>
-        </preConditions>
-        <createTable tableName="state">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="state_name" type="VARCHAR(255)">
-                <constraints unique="true" nullable="false"/>
-            </column>
-            <column name="state_code" type="VARCHAR(255)">
-                <constraints unique="true" nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-<!--    Create Address Table-->
-    <changeSet id="1740545825496-34" author="bhcp0212">
-
-        <!-- Drop the old state column if it exists -->
-        <dropColumn tableName="address" columnName="state"/>
-
-        <!-- Add the new state_id column -->
-        <addColumn tableName="address">
-            <column name="state_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-
-        <!-- Add a foreign key constraint -->
-        <addForeignKeyConstraint baseColumnNames="state_id"
-                                 baseTableName="address"
-                                 constraintName="fk_address_state"
-                                 referencedColumnNames="id"
-                                 referencedTableName="state"/>
-    </changeSet>
-
-<!--    Initializing states-->
-    <changeSet id="1740545825496-36" author="bhcp0212">
+    <!--    Initializing states-->
+    <changeSet id="1740545825496-37" author="bhcp0212">
 
         <insert tableName="state">
             <column name="id" value="1"/>
@@ -613,8 +640,8 @@
         </insert>
     </changeSet>
 
-<!--    Initialize address for SuperAdmin-->
-    <changeSet id="1740545825496-39" author="bhcp0212">
+    <!--    Initialize address for SuperAdmin-->
+    <changeSet id="1740545825496-38" author="bhcp0212">
 
         <insert tableName="address">
             <column name="id" value="1"/>
@@ -626,8 +653,8 @@
         </insert>
     </changeSet>
 
-<!--    Adding SuperAdmin to Person -->
-    <changeSet id="1740545825496-40" author="bhcp0212">
+    <!--    Adding SuperAdmin to Person -->
+    <changeSet id="1740545825496-39" author="bhcp0212">
         <comment>Insert Superadmin to the person Table</comment>
 
         <insert tableName="person">
@@ -644,8 +671,8 @@
         </insert>
     </changeSet>
 
-<!--    Initializing Settings-->
-    <changeSet id="1740545825496-41" author="bhcp0212">
+    <!--    Initializing Settings-->
+    <changeSet id="1740545825496-40" author="bhcp0212">
         <comment>Insert initial settings into the settings table</comment>
 
         <!-- Contact us -->
@@ -653,9 +680,9 @@
             <column name="key_name" value="org_contact"/>
             <column name="value" value="tbalert@gmail.com"/>
             <column name="type" value="text"/>
-            <column name="category" value="General" />
-            <column name="label" value="Contact Us" />
-            <column name="placeholder" value="Organisation contact info (eg. Phone number, email)" />
+            <column name="category" value="General"/>
+            <column name="label" value="Contact Us"/>
+            <column name="placeholder" value="Organisation contact info (eg. Phone number, email)"/>
         </insert>
 
         <!-- Plivo Console -->
@@ -663,9 +690,9 @@
             <column name="key_name" value="plivo_console"/>
             <column name="value" value="https://console.plivo.com/sms/reporting/"/>
             <column name="type" value="button"/>
-            <column name="category" value="General" />
-            <column name="label" value="Plivo Console" />
-            <column name="placeholder" value="Go to Plivo Console" />
+            <column name="category" value="General"/>
+            <column name="label" value="Plivo Console"/>
+            <column name="placeholder" value="Go to Plivo Console"/>
         </insert>
 
         <!-- sms_reminder_time -->
@@ -673,19 +700,21 @@
             <column name="key_name" value="sms_reminder_time"/>
             <column name="value" value="08:00"/>
             <column name="type" value="time"/>
-            <column name="category" value="SMS" />
-            <column name="label" value="Preferred Time" />
-            <column name="placeholder" value="Preferred time for reminder" />
+            <column name="category" value="SMS"/>
+            <column name="label" value="Preferred Time"/>
+            <column name="placeholder" value="Preferred time for reminder"/>
         </insert>
 
         <!-- Insert sms_template setting -->
         <insert tableName="settings">
             <column name="key_name" value="sms_template"/>
-            <column name="value" value="Hi {patientId}:{nikshayId} {firstName} {lastName},\n\nThis is your daily medicine reminder.\nYour scheduled medications for today ({medication_date}) is/are: {medication_names}.\n\nFor any queries, contact us at {org_phone_number}."/>
+            <column name="value"
+                    value="Hi {patientId}:{nikshayId} {firstName} {lastName},\n\nThis is your daily medicine reminder.\nYour scheduled medications for today ({medication_date}) is/are: {medication_names}.\n\nFor any queries, contact us at {org_phone_number}."/>
             <column name="type" value="longtext"/>
-            <column name="category" value="SMS" />
-            <column name="label" value="Template" />
-            <column name="placeholder" value="Template for SMS. (Don't modify the text inside. It is advised to keep the placeholders as it is for efficient mapping to values.)" />
+            <column name="category" value="SMS"/>
+            <column name="label" value="Template"/>
+            <column name="placeholder"
+                    value="Template for SMS. (Don't modify the text inside. It is advised to keep the placeholders as it is for efficient mapping to values.)"/>
         </insert>
 
         <!-- drtb followups -->
@@ -693,9 +722,9 @@
             <column name="key_name" value="drtb_followup"/>
             <column name="value" value="8"/>
             <column name="type" value="number"/>
-            <column name="category" value="Followup" />
-            <column name="label" value="DRTB" />
-            <column name="placeholder" value="Number of followups for DRTB" />
+            <column name="category" value="Followup"/>
+            <column name="label" value="DRTB"/>
+            <column name="placeholder" value="Number of followups for DRTB"/>
         </insert>
 
         <!-- dstb followups -->
@@ -703,9 +732,9 @@
             <column name="key_name" value="dstb_followup"/>
             <column name="value" value="8"/>
             <column name="type" value="number"/>
-            <column name="category" value="Followup" />
-            <column name="label" value="DSTB" />
-            <column name="placeholder" value="Number of followups for DSTB" />
+            <column name="category" value="Followup"/>
+            <column name="label" value="DSTB"/>
+            <column name="placeholder" value="Number of followups for DSTB"/>
         </insert>
 
         <!-- dstb medicine -->
@@ -713,10 +742,10 @@
             <column name="key_name" value="dstb_medicines"/>
             <column name="value" value="2,3,4,5"/>
             <column name="type" value="chips"/>
-            <column name="category" value="Medication" />
-            <column name="label" value="DSTB" />
-            <column name="placeholder" value="Default medicines for all patients with DSTB" />
-            <column name="endpoint" value="/medication" />
+            <column name="category" value="Medication"/>
+            <column name="label" value="DSTB"/>
+            <column name="placeholder" value="Default medicines for all patients with DSTB"/>
+            <column name="endpoint" value="/medication"/>
         </insert>
 
         <!-- drtb medicine -->
@@ -724,10 +753,10 @@
             <column name="key_name" value="drtb_medicines"/>
             <column name="value" value="1,2,3"/>
             <column name="type" value="chips"/>
-            <column name="category" value="Medication" />
-            <column name="label" value="DRTB" />
-            <column name="placeholder" value="Default medicines for all patients with DRTB" />
-            <column name="endpoint" value="/medication" />
+            <column name="category" value="Medication"/>
+            <column name="label" value="DRTB"/>
+            <column name="placeholder" value="Default medicines for all patients with DRTB"/>
+            <column name="endpoint" value="/medication"/>
         </insert>
 
         <!-- state -->
@@ -735,10 +764,10 @@
             <column name="key_name" value="state"/>
             <column name="value" value="1,2,3"/>
             <column name="type" value="select"/>
-            <column name="category" value="State" />
-            <column name="label" value="State" />
-            <column name="placeholder" value="Select a State from the list to add" />
-            <column name="endpoint" value="/state/add" />
+            <column name="category" value="State"/>
+            <column name="label" value="State"/>
+            <column name="placeholder" value="Select a State from the list to add"/>
+            <column name="endpoint" value="/state/add"/>
         </insert>
 
     </changeSet>

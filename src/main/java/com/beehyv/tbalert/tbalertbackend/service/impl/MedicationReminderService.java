@@ -25,35 +25,22 @@ public class MedicationReminderService {
     private String senderId;
 
     private final PatientRepo patientRepo;
-    private final SettingRepo settingRepo;
     private final PlivoSmsService smsService;
     private final SMSTemplateUtil smsTemplateUtil;
 
-    public void sendMedicationReminder() {
+    public void sendMedicationReminder(MedicationReminderDAO reminder, String smsTemplate) {
+        try {
+            String smsContent = smsTemplateUtil.buildSmsMessage(smsTemplate, reminder);
 
-        List<MedicationReminderDAO> reminders = getAllMedicationReminders();
-        String smsTemplate = settingRepo.findByKeyName("sms_template").getValue();
+            smsService.sendSms(senderId, "+91" + reminder.getPhoneNumber(), smsContent);
 
-//        String smsTemplate = "Hi {patientId}:{nikshayId} {firstName} {lastName},\n\nThis is your daily medicine reminder.\nYour scheduled medications for today ({medication_date}) is/are: {medication_names}.\n\nFor any queries, contact us at {org_phone_number}. ";
-
-        log.info("Running Medication Reminder Service");
-        reminders.forEach(medicationReminderDAO -> {
-            try {
-                String smsContent = smsTemplateUtil.buildSmsMessage(smsTemplate, medicationReminderDAO);
-                log.info("SMS Template: {}", smsTemplate);
-
-                smsService.sendSms(senderId, "+91" + medicationReminderDAO.getPhoneNumber(), smsContent);
-            } catch (Exception e) {
-                log.error("Failed to send SMS to patient {} (Phone: {}). Exception: {}",
-                        medicationReminderDAO.getPatientId(),
-                        medicationReminderDAO.getPhoneNumber(),
-                        e.getMessage(),
-                        e);
-            }
-        });
+            log.info("Successfully sent SMS to Patient ID {}", reminder.getPatientId());
+        } catch (Exception e) {
+            log.error("Failed to send SMS to patient {}: {}", reminder.getPatientId(), e.getMessage(), e);
+        }
     }
 
-    private List<MedicationReminderDAO> getAllMedicationReminders() {
+    public List<MedicationReminderDAO> getAllMedicationReminders() {
         List<MedicationReminderProjection> rawReminders = patientRepo.findAllMedicationReminders();
 
         log.debug("Converting Medication Projection into MedicationReminderDAO");
@@ -75,6 +62,7 @@ public class MedicationReminderService {
                             firstRecord.getNikshayId(),
                             firstRecord.getFirstName(),
                             firstRecord.getLastName(),
+                            firstRecord.getReminderTime(),
                             firstRecord.getPhoneNumber(),
                             firstRecord.getLastFollowupDate(),
                             medications
@@ -82,5 +70,4 @@ public class MedicationReminderService {
                 })
                 .toList();
     }
-
 }

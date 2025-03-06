@@ -1,6 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.service.impl;
 
 import com.plivo.api.PlivoClient;
+import com.plivo.api.exceptions.InvalidRequestException;
 import com.plivo.api.exceptions.PlivoRestException;
 import com.plivo.api.models.message.Message;
 import lombok.AllArgsConstructor;
@@ -27,9 +28,10 @@ public class PlivoSmsService {
                     .create();
 
             log.info("SMS sent to {}", dest);
+        } catch (InvalidRequestException e) {
+            log.error("Failed to send SMS to {}: {}", dest, e.getMessage(), e);
         } catch (PlivoRestException | IOException e) {
             log.error("Failed to send SMS to {}: {}", dest, e.getMessage());
-            throw new RuntimeException(e);
         }
     }
 

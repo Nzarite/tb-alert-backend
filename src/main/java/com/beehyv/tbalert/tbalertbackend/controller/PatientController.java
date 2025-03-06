@@ -48,7 +48,7 @@ public class PatientController {
     public ResponseEntity<HttpStatus> updatePatient(@PathVariable String patientId, @RequestBody @Valid PatientUpdateInputDTO patientUpdateInputDTO) {
         log.info("Controller being called for Updating patient: {}", patientUpdateInputDTO.toString());
         patientRegistrationService.updatePatient(patientId, patientUpdateInputDTO);
-        log.info("Patient successfully updated: {}", patientUpdateInputDTO.toString());
+        log.info("Patient successfully updated: {}", patientUpdateInputDTO);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
     }

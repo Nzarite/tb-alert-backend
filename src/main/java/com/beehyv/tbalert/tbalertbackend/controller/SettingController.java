@@ -1,8 +1,8 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.SettingInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.output.SettingOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.GroupedSettingsOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.SettingOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.SettingService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/setting")

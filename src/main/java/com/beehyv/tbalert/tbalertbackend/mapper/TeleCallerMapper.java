@@ -4,7 +4,6 @@ import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
 import com.beehyv.tbalert.tbalertbackend.entity.TeleCaller;
-import com.beehyv.tbalert.tbalertbackend.repository.AddressRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.TeleCallerRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,8 +14,6 @@ public class TeleCallerMapper {
 
     private final TeleCallerRepo teleCallerRepo;
     private final LocalDateMapper localDateMapper;
-    private final AddressMapper addressMapper;
-    private final AddressRepo addressRepo;
 
     public TeleCaller find(Long id) {
         return teleCallerRepo.findById(id).filter(teleCaller -> !teleCaller.getPerson().getIsDeleted()).orElseThrow(()-> new IllegalArgumentException("TeleCaller not found for id: " + id));

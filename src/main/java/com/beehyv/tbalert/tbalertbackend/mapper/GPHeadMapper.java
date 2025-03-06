@@ -1,10 +1,10 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
-import com.beehyv.tbalert.tbalertbackend.dto.output.StateHeadOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.GPHeadOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
+import com.beehyv.tbalert.tbalertbackend.entity.GPHead;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
-import com.beehyv.tbalert.tbalertbackend.entity.StateHead;
-import com.beehyv.tbalert.tbalertbackend.repository.StateHeadRepo;
+import com.beehyv.tbalert.tbalertbackend.repository.GPHeadRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -12,21 +12,21 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class StateHeadMapper {
+public class GPHeadMapper {
 
-    private final StateHeadRepo stateHeadRepo;
+    private final GPHeadRepo GPHeadRepo;
     private final LocalDateMapper localDateMapper;
 
-    public StateHead find(long id) {
-        log.info("Mapper called to find StateHead with id {}", id);
-        return stateHeadRepo.findById(id).filter(stateHead -> !stateHead.getPerson().getIsDeleted()).orElseThrow(() -> new IllegalArgumentException("State head not found for Id: " + id));
+    public GPHead find(Long id) {
+        log.debug("Finding GP Head with id {}", id);
+        return GPHeadRepo.findById(id).filter(gp -> !gp.getPerson().getIsDeleted()).orElseThrow(() -> new IllegalArgumentException("GP Head not found for id: " + id));
     }
 
-    public StateHeadOutputDTO toStateHeadOutputDTO(StateHead stateHead) {
-        Person person = stateHead.getPerson();
+    public GPHeadOutputDTO toGPHeadOutputDTO(GPHead gpHead) {
+        Person person = gpHead.getPerson();
         Address address = person.getAddress();
-        return StateHeadOutputDTO.builder()
-                .stateHeadId(stateHead.getId())
+        return GPHeadOutputDTO.builder()
+                .id(gpHead.getId())
                 .personId(person.getId())
                 .firstName(person.getFirstName())
                 .lastName(person.getLastName())
@@ -41,8 +41,8 @@ public class StateHeadMapper {
                 .district(address.getDistrict())
                 .block(address.getBlock())
                 .updatedBy(person.getUpdatedBy())
-                .dateOfLeaving(localDateMapper.toDate(stateHead.getDateOfLeaving()))
-                .dateOfJoining(localDateMapper.toDate(stateHead.getDateOfJoining()))
+                .dateOfLeaving(localDateMapper.toDate(gpHead.getDateOfLeaving()))
+                .dateOfJoining(localDateMapper.toDate(gpHead.getDateOfJoining()))
                 .build();
     }
 }
