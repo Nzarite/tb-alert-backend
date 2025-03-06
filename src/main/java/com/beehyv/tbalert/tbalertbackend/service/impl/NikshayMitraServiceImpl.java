@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -65,7 +67,7 @@ public class NikshayMitraServiceImpl implements NikshayMitraService {
     public void deleteNikshayDetails(String patientId) {
         log.info("inside deleteNikshayDetails");
 
-        NikshayMitra nikshayMitra = nikshayMitraRepo.findByPatient_Id(patientId).orElseThrow(() -> new IllegalArgumentException("Patient with id " + patientId + " not found"));
-        nikshayMitraRepo.delete(nikshayMitra);
+        Optional<NikshayMitra> nikshayMitra = nikshayMitraRepo.findByPatient_Id(patientId);
+        nikshayMitra.ifPresent(nikshayMitraRepo::delete);
     }
 }
