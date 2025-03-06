@@ -5,9 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PatientOutputDTO {
-
-    private String patientId;
+public class FieldCoordinatorOutputDTO {
+    private Long id;
 
     private Long personId;
 
@@ -15,13 +14,11 @@ public class PatientOutputDTO {
 
     private String lastName;
 
-    private String gender;
-
-    private int age;
-
     private String phoneNumber;
 
     private String email;
+
+    private String gender;
 
     private String block;
 
@@ -33,21 +30,13 @@ public class PatientOutputDTO {
 
     private String state;
 
-    private String currentStatus;
-
-    private boolean cured;
-
-    private String createdAt;
-
     private String createdBy;
+
+    private String createdOn;
 
     private String updatedBy;
 
-    private Boolean consentForMessage;
+    private String dateOfJoining;
 
-    private String reminderTime;
-
-    private Boolean isDeleted;
-
-    private Boolean isDiagnosedWithTB;
+    private String dateOfLeaving;
 }
