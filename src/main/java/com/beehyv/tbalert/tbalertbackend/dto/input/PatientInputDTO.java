@@ -49,4 +49,6 @@ public class PatientInputDTO {
     @NotNull(message = "Provide the patient consent for message reminders")
     private Boolean consentForMessage;
 
+    private String reminderTime;
+
 }

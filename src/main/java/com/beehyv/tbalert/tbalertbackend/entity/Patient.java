@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+
 @Entity
 @Data
 @Builder
@@ -27,4 +29,6 @@ public class Patient {
     private int age;
 
     private Boolean consentForMessage=false;
+
+    private String reminderTime;
 }
