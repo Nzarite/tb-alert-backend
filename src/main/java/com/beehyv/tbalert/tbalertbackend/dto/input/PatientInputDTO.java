@@ -51,4 +51,5 @@ public class PatientInputDTO {
 
     private String reminderTime;
 
+    private Boolean isDiagnosedWithTB;
 }

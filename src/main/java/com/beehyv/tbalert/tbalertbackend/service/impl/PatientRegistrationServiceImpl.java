@@ -49,16 +49,20 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         log.info("Service called to Register patient: {}", patientInputDTO);
 
         PersonOutputDTO person = personService.add(patientInputDTO);
+
         Patient patient = new Patient();
         patient.setPerson(personMapper.find(person.getId()));
         patient.setAge(patientInputDTO.getAge());
+        patient.setConsentForMessage(patientInputDTO.getConsentForMessage());
+        patient.setReminderTime(patientInputDTO.getReminderTime());
+        patient.setIsDiagnosedWithTB(patientInputDTO.getIsDiagnosedWithTB());
+
         String stateName = person.getState();
         State state = stateMapper.getStateByName(stateName);
+
         long currCnt = patientRepo.count();
         String id = state.getStateCode() + currCnt;
         patient.setId(id);
-        patient.setConsentForMessage(patientInputDTO.getConsentForMessage());
-        patient.setReminderTime(patientInputDTO.getReminderTime());
 
         Patient savedPatient = patientRepo.save(patient);
         return patientMapper.toPatientOutputDTO(savedPatient);
@@ -166,7 +170,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         log.info("Service getPatientByNameOrNikshayIdOrPatientId patientName: {}", patientName);
 
         List<String> userRoles = userDetailsUtil.getUserRolesFromKeycloak();
-        boolean onlyShowDiagnosedWithTB = userRoles.contains("Telecaller");
+        boolean onlyShowDiagnosedWithTB = userRoles.size() == 1 && userRoles.getFirst().equals("Telecaller");
 
         return patientRepo.findAllByPatientIdOrNameOrNikshayId(patientName, onlyShowDiagnosedWithTB)
                 .stream()

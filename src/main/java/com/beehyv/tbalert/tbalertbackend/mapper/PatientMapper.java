@@ -64,6 +64,7 @@ public class PatientMapper {
                 .consentForMessage(patient.getConsentForMessage())
                 .reminderTime(patient.getReminderTime())
                 .isDeleted(person.getIsDeleted())
+                .isDiagnosedWithTB(patient.getIsDiagnosedWithTB())
                 .build();
     }
 
