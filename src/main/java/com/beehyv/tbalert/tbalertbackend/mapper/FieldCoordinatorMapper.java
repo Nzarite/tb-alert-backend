@@ -1,10 +1,10 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
-import com.beehyv.tbalert.tbalertbackend.dto.output.StateHeadOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.FieldCoordinatorOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
+import com.beehyv.tbalert.tbalertbackend.entity.FieldCoordinator;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
-import com.beehyv.tbalert.tbalertbackend.entity.StateHead;
-import com.beehyv.tbalert.tbalertbackend.repository.StateHeadRepo;
+import com.beehyv.tbalert.tbalertbackend.repository.FieldCoordinatorRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -12,21 +12,22 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class StateHeadMapper {
+public class FieldCoordinatorMapper {
 
-    private final StateHeadRepo stateHeadRepo;
+    private final FieldCoordinatorRepo fieldCoordinatorRepo;
     private final LocalDateMapper localDateMapper;
 
-    public StateHead find(long id) {
-        log.info("Mapper called to find StateHead with id {}", id);
-        return stateHeadRepo.findById(id).filter(stateHead -> !stateHead.getPerson().getIsDeleted()).orElseThrow(() -> new IllegalArgumentException("State head not found for Id: " + id));
+    public FieldCoordinator find(Long id) {
+        log.debug("Finding Field Coordinator with id {}", id);
+        return fieldCoordinatorRepo.findById(id).filter(fc -> !fc.getPerson().getIsDeleted()).orElseThrow(() -> new IllegalArgumentException("Field Coordinator not found for id: " + id));
     }
 
-    public StateHeadOutputDTO toStateHeadOutputDTO(StateHead stateHead) {
-        Person person = stateHead.getPerson();
+    public FieldCoordinatorOutputDTO toFieldCoordinatorOutputDTO(FieldCoordinator fieldCoordinator) {
+        Person person = fieldCoordinator.getPerson();
         Address address = person.getAddress();
-        return StateHeadOutputDTO.builder()
-                .stateHeadId(stateHead.getId())
+
+        return FieldCoordinatorOutputDTO.builder()
+                .id(fieldCoordinator.getId())
                 .personId(person.getId())
                 .firstName(person.getFirstName())
                 .lastName(person.getLastName())
@@ -41,8 +42,8 @@ public class StateHeadMapper {
                 .district(address.getDistrict())
                 .block(address.getBlock())
                 .updatedBy(person.getUpdatedBy())
-                .dateOfLeaving(localDateMapper.toDate(stateHead.getDateOfLeaving()))
-                .dateOfJoining(localDateMapper.toDate(stateHead.getDateOfJoining()))
+                .dateOfLeaving(localDateMapper.toDate(fieldCoordinator.getDateOfLeaving()))
+                .dateOfJoining(localDateMapper.toDate(fieldCoordinator.getDateOfJoining()))
                 .build();
     }
 }

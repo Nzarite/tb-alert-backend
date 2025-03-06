@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/state")
 @AllArgsConstructor
-@CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
 @PreAuthorize("hasAuthority('ROLE_SuperAdmin')")
 public class StateController {
 

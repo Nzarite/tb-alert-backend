@@ -8,13 +8,13 @@ import com.beehyv.tbalert.tbalertbackend.entity.*;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.StateMapper;
-import com.beehyv.tbalert.tbalertbackend.repository.*;
+import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
+import com.beehyv.tbalert.tbalertbackend.repository.PersonRepo;
+import com.beehyv.tbalert.tbalertbackend.repository.TBDetailsRepo;
 import com.beehyv.tbalert.tbalertbackend.service.*;
 import com.beehyv.tbalert.tbalertbackend.specifications.TBDetailsSpecification;
+import com.beehyv.tbalert.tbalertbackend.util.UserDetailsUtil;
 import jakarta.transaction.Transactional;
-import com.beehyv.tbalert.tbalertbackend.service.PatientFollowUpService;
-import com.beehyv.tbalert.tbalertbackend.service.PatientRegistrationService;
-import com.beehyv.tbalert.tbalertbackend.service.PersonService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -39,28 +39,32 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final TBDetailsSpecification tbDetailsSpecification;
     private final ContactScreeningService contactScreeningService;
     private final NikshayMitraService nikshayMitraService;
-    private final TBDetailsService tbDetailsService;
     private final PatientMedicationService patientMedicationService;
     private final StateMapper stateMapper;
     private final TBDetailsRepo tbDetailsRepo;
+    private final UserDetailsUtil userDetailsUtil;
 
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
         log.info("Service called to register patient");
 
         PersonOutputDTO person = personService.add(patientInputDTO);
+
         Patient patient = new Patient();
         patient.setPerson(personMapper.find(person.getId()));
         patient.setAge(patientInputDTO.getAge());
+        patient.setConsentForMessage(patientInputDTO.getConsentForMessage());
+        patient.setReminderTime(patientInputDTO.getReminderTime());
+        patient.setIsDiagnosedWithTB(patientInputDTO.getIsDiagnosedWithTB());
+
         String stateName = person.getState();
         State state = stateMapper.getStateByName(stateName);
+
         long currCnt = patientRepo.count();
         String id = state.getStateCode() + currCnt;
         patient.setId(id);
-        patient.setConsentForMessage(patientInputDTO.getConsentForMessage());
-        patient.setReminderTime(patientInputDTO.getReminderTime());
-        Patient savedPatient = patientRepo.save(patient);
 
+        Patient savedPatient = patientRepo.save(patient);
         return patientMapper.toPatientOutputDTO(savedPatient);
     }
 
@@ -78,6 +82,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         log.info("Service called to update patient with Id: {}", patientId);
 
         Patient patient = patientMapper.find(patientId);
+
+        // Person specific details
         Person person = patient.getPerson();
 
         person.setUpdatedBy(patientUpdateInputDTO.getUpdatedBy());
@@ -92,7 +98,9 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         if (patientUpdateInputDTO.getEmail() != null)
             person.setEmail(patientUpdateInputDTO.getEmail());
 
+        // Address specific details
         Address address = person.getAddress();
+
         if (patientUpdateInputDTO.getBlock() != null)
             address.setBlock(patientUpdateInputDTO.getBlock());
         if (patientUpdateInputDTO.getState() != null)
@@ -104,12 +112,16 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         if (patientUpdateInputDTO.getVillage() != null)
             address.setVillage(patientUpdateInputDTO.getVillage());
 
+        // Patient specific details
         if (patientUpdateInputDTO.getCurrentStatus() != null)
             patient.setCurrentStatus(patientUpdateInputDTO.getCurrentStatus());
         if (patientUpdateInputDTO.getAge() > 0)
             patient.setAge(patientUpdateInputDTO.getAge());
         if (patientUpdateInputDTO.getConsentForMessage() != null)
             patient.setConsentForMessage(patientUpdateInputDTO.getConsentForMessage());
+        if (patientUpdateInputDTO.getIsDiagnosedWithTB() != null)
+            patient.setIsDiagnosedWithTB(patientUpdateInputDTO.getIsDiagnosedWithTB());
+
         if (patientUpdateInputDTO.getReminderTime() != null)
             patient.setReminderTime(patientUpdateInputDTO.getReminderTime());
 
@@ -159,7 +171,10 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     public List<PatientOutputDTO> getPatientByNameOrNikshayIdOrPatientId(String patientName) {
         log.info("Service getPatientByNameOrNikshayIdOrPatientId patientName: {}", patientName);
 
-        return patientRepo.findAllByPatientIdOrNameOrNikshayId(patientName)
+        List<String> userRoles = userDetailsUtil.getUserRolesFromKeycloak();
+        boolean onlyShowDiagnosedWithTB = userRoles.size() == 1 && userRoles.getFirst().equals("Telecaller");
+
+        return patientRepo.findAllByPatientIdOrNameOrNikshayId(patientName, onlyShowDiagnosedWithTB)
                 .stream()
                 .map(patientMapper::toPatientOutputDTO)
                 .toList();

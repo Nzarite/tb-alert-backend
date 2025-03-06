@@ -19,7 +19,7 @@ public interface StateHeadRepo extends JpaRepository<StateHead, Long> {
 
     List<StateHead> findByPerson_IsDeletedFalse();
 
-    @Query("SELECT t FROM StateHead t WHERE t.person.isDeleted = FALSE AND (t.person.firstName LIKE %:name% OR t.person.lastName LIKE %:name%)")
+    @Query("SELECT s FROM StateHead s WHERE s.person.isDeleted = FALSE AND (s.person.firstName LIKE %:name% OR s.person.lastName LIKE %:name%)")
     List<StateHead> findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(@Param("name")String name);
 
     List<StateHead> findAllByPerson_Address_State_StateName(String state);

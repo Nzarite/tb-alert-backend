@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalTime;
-
 @Entity
 @Data
 @Builder
@@ -22,13 +20,16 @@ public class Patient {
     @OneToOne
     private Person person;
 
-    private String currentStatus="alive";
+    private String currentStatus = "alive";
 
-    private boolean cured=false;
+    private boolean cured = false;
 
     private int age;
 
-    private Boolean consentForMessage=false;
+    private Boolean consentForMessage = false;
 
     private String reminderTime;
+
+    @Column(name = "is_diagnosed_with_TB")
+    private Boolean isDiagnosedWithTB = false;
 }

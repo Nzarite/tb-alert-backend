@@ -20,4 +20,8 @@ public interface SettingService {
     void deleteSetting(String keyName);
 
     String getSettingsValue(String keyName);
+
+    String convertMedicationIdsToNames(String value);
+
+    String convertMedicationNamesToIds(String value);
 }

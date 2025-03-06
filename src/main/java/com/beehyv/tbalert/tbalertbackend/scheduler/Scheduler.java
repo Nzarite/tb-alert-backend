@@ -23,7 +23,7 @@ public class Scheduler {
     public void dailyMidnightScheduler() {
         try {
             log.info("Daily Scheduler called at {}", LocalDateTime.now());
-            reminderJob.scheduleMedicationReminder();
+            reminderJob.scheduleMedicationReminderForAllPatients();
         } catch (Exception e) {
             log.error("Daily Scheduler failed at {}, error msg: ", LocalDateTime.now(), e);
         }
@@ -32,6 +32,6 @@ public class Scheduler {
     @PostConstruct
     public void startupScheduler() {
         log.info("Initializing Medication Reminder Scheduler on startup at {}", LocalDateTime.now());
-        reminderJob.scheduleMedicationReminder();
+        reminderJob.scheduleMedicationReminderForAllPatients();
     }
 }

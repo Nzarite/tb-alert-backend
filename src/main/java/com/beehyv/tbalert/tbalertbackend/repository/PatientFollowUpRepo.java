@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -28,4 +29,6 @@ public interface PatientFollowUpRepo extends JpaRepository<PatientFollowUp, Inte
     List<PatientFollowUp> findAllByDateAndPatient_IdIn(LocalDate now, List<String> patientIds);
 
     void deleteAllByPatient_Id(String patientId);
+
+    List<PatientFollowUp> findAllByDateLessThanEqualAndPatient_IdInAndStatus(LocalDate dateIsLessThan, Collection<String> patientIds, String status);
 }
