@@ -40,17 +40,17 @@ public class GPController {
         return new ResponseEntity<>(personService.getByEmail(email), HttpStatus.OK);
     }
 
-//    @GetMapping("/state/{name}")
-//    public ResponseEntity<List<GPHeadOutputDTO>> getByState(@PathVariable String name) {
-//        return new ResponseEntity<>(GPHeadService.getByState(name), HttpStatus.OK);
-//    }
-//
-//    @GetMapping("/state/{state}/name/{name}")
-//    public ResponseEntity<List<GPHeadOutputDTO>> getByStateAndName(@PathVariable String state, @PathVariable String name) {
-//        log.info("Controller called for Getting patient by state and name: {}", state);
-//
-//        return new ResponseEntity<>(GPHeadService.getGPByState(state,name), HttpStatus.OK);
-//    }
+    @GetMapping("/state/{name}")
+    public ResponseEntity<List<GPHeadOutputDTO>> getByState(@PathVariable String name) {
+        return new ResponseEntity<>(GPHeadService.getByState(name), HttpStatus.OK);
+    }
+
+    @GetMapping("/state/{state}/name/{name}")
+    public ResponseEntity<List<GPHeadOutputDTO>> getByStateAndName(@PathVariable String state, @PathVariable String name) {
+        log.info("Controller called for Getting patient by state and name: {}", state);
+
+        return new ResponseEntity<>(GPHeadService.getGPByState(state, name), HttpStatus.OK);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<GPHeadOutputDTO> delete(@PathVariable Long id) {

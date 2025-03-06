@@ -12,6 +12,10 @@ public interface FieldCoordinatorService {
 
     List<FieldCoordinatorOutputDTO> getByName(String name);
 
+    List<FieldCoordinatorOutputDTO> getByState(String name);
+
+    List<FieldCoordinatorOutputDTO> getFieldCoordinatorByState(String state, String name);
+
     FieldCoordinatorOutputDTO updateFieldCoordinator(Long id, FieldCoordinatorInputDTO fieldCoordinatorInputDTO);
 
     void deleteFieldCoordinator(Long id);
