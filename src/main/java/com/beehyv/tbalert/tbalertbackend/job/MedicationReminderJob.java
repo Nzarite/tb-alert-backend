@@ -1,5 +1,6 @@
 package com.beehyv.tbalert.tbalertbackend.job;
 
+import com.beehyv.tbalert.tbalertbackend.dao.MedicationReminderDAO;
 import com.beehyv.tbalert.tbalertbackend.repository.SettingRepo;
 import com.beehyv.tbalert.tbalertbackend.service.impl.MedicationReminderService;
 import com.beehyv.tbalert.tbalertbackend.service.impl.PlivoSmsService;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
 @Service
@@ -22,68 +26,99 @@ import java.util.concurrent.ScheduledFuture;
 public class MedicationReminderJob {
 
     private final MedicationReminderService medicationReminderService;
-    private final SettingRepo settingRepo;
     private final TaskScheduler taskScheduler;
-    private ScheduledFuture<?> futureTasks;
+    private final Map<String, ScheduledFuture<?>> futureTasks = new ConcurrentHashMap<>();  // <patientId, task>
+    private final SettingRepo settingRepo;
+    private String cachedSmsTemplate;
 
     @Value("${app.notification.timezone:Asia/Kolkata}")
     private String timezone;
 
-    public void scheduleMedicationReminder() {
+    public void scheduleMedicationReminderForAllPatients() {
         try {
-            String timeSetting = settingRepo.findByKeyName("sms_reminder_time") != null
-                    ? settingRepo.findByKeyName("sms_reminder_time").getValue()
-                    : "08:00"; // Default to 8:00 AM if not set
+            // All reminders are fetched from DB
+            List<MedicationReminderDAO> reminders = medicationReminderService.getAllMedicationReminders();
 
-            if (timeSetting == null || !timeSetting.matches("\\d{2}:\\d{2}")) {
-                log.error("Invalid medication reminder time format in DB");
-                return;
-            }
-
-            LocalDateTime scheduledTime = getNextScheduledTime(timeSetting);
-            Instant instant = scheduledTime.atZone(ZoneId.of(timezone)).toInstant();
-
+            fetchSmsTemplate();
             // Cancel any previous task before scheduling a new one
-            cancelFutureTasks();
+            cancelAllScheduledTasks();
 
-            futureTasks = taskScheduler.schedule(this::execute, instant);
+            int cnt = 0;
+            for (MedicationReminderDAO reminder : reminders)
+                if (scheduleReminderForPatient(reminder))
+                    cnt++;
 
-            log.info("Medication Reminders scheduled at: {}", scheduledTime.atZone(ZoneId.of(timezone)));
+            log.info("Scheduled {} medication reminders.", cnt);
         } catch (Exception e) {
-            log.error("Failed to schedule Medication Reminder: {}", e.getMessage(), e);
+            log.error("Failed to schedule Medication Reminders: {}", e.getMessage(), e);
         }
     }
 
-    private LocalDateTime getNextScheduledTime(String timeSetting) {
+    private void fetchSmsTemplate() {
+        String newTemplate = settingRepo.findByKeyName("sms_template").getValue();
+        if (!newTemplate.equals(cachedSmsTemplate)) {
+            cachedSmsTemplate = newTemplate;
+        }
+    }
+
+    private boolean scheduleReminderForPatient(MedicationReminderDAO reminder) {
+        try {
+            String timeSetting = reminder.getReminderTime();
+
+            if (timeSetting == null || !timeSetting.matches("\\d{2}:\\d{2}")) {
+                log.error("Invalid medication reminder time format for patient: {}", reminder.getPatientId());
+                return false;
+            }
+
+            LocalDateTime scheduledTime = getSchedulingTimeForReminder(timeSetting);
+            if (scheduledTime.isBefore(LocalDateTime.now())) {
+                log.warn("Reminder time for patient {} is before current time", reminder.getPatientId());
+                return false;
+            }
+            Instant instant = scheduledTime.atZone(ZoneId.of(timezone)).toInstant();
+
+            ScheduledFuture<?> futureTask = taskScheduler.schedule(() -> execute(reminder), instant);
+            futureTasks.put(reminder.getPatientId(), futureTask);
+
+            log.debug("Scheduled reminder for Patient ID {} at {}", reminder.getPatientId(), scheduledTime);
+
+            return true;
+        } catch (Exception e) {
+            log.error("Failed to schedule reminder for patient {}: {}", reminder.getPatientId(), e.getMessage(), e);
+            return false;
+        }
+    }
+
+    private LocalDateTime getSchedulingTimeForReminder(String timeSetting) {
+        // Mapping string to localDateTime
         int hour = Integer.parseInt(timeSetting.split(":")[0]);
         int minute = Integer.parseInt(timeSetting.split(":")[1]);
 
         // Set the scheduled time for today
         LocalDateTime now = LocalDateTime.now(ZoneId.of(timezone));
-        LocalDateTime scheduledTime = now.withHour(hour).withMinute(minute).withSecond(0);
 
-        // If the scheduled time has already passed today, move to the next day
-        if (scheduledTime.isBefore(now)) {
-            scheduledTime = scheduledTime.plusDays(1);
-        }
-
-        return scheduledTime;
+        return now.withHour(hour).withMinute(minute).withSecond(0);
     }
 
-    // Ensures only one task can cancel another at a time.
-    private synchronized void cancelFutureTasks() {
-        if (futureTasks != null && !futureTasks.isCancelled()) {
-            log.info("Cancelling previously scheduled medication reminder.");
-            futureTasks.cancel(false);
-        }
+    private synchronized void cancelAllScheduledTasks() {
+        futureTasks.forEach((patientId, task) -> {
+            if (task != null && !task.isCancelled())
+                task.cancel(false);
+        });
+        futureTasks.clear();
+
+        log.info("Cancelled previously scheduled reminders successfully.");
     }
 
-    private void execute() {
+    private synchronized void execute(MedicationReminderDAO reminder) {
         try {
-            log.info("Executing Medication Reminder at {}", LocalDateTime.now());
-            medicationReminderService.sendMedicationReminder();
+            log.info("Executing Medication Reminder for patient {} at {}", reminder.getPatientId(), LocalDateTime.now());
+
+            if (cachedSmsTemplate == null) fetchSmsTemplate();
+
+            medicationReminderService.sendMedicationReminder(reminder, cachedSmsTemplate);
         } catch (Exception e) {
-            log.error("Medication Reminder Scheduler failed at {}, error: ", LocalDateTime.now(), e);
+            log.error("Failed to send reminder to Patient ID {}: {}", reminder.getPatientId(), e.getMessage(), e);
         }
     }
 }

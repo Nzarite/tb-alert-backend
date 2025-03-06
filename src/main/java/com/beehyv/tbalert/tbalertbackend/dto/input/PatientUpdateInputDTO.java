@@ -34,4 +34,6 @@ public class PatientUpdateInputDTO {
     private String updatedBy;
 
     private Boolean consentForMessage;
+
+    private Boolean isDiagnosedWithTB;
 }

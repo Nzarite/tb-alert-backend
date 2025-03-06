@@ -73,7 +73,7 @@ public class ReportsServiceImpl implements ReportsService {
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             Sheet sheet = reportsHelperService.createSheetWithHeader(10000,workbook, "Patient Report",
                     "Patient ID", "Name", "Gender", "Age",
-                    "Phone Number", emailLiteral, "Block", "GP", "Village", "District", stateLiteral, "Current Status",
+                    "Phone Number", emailLiteral, "Block", "GPHead", "Village", "District", stateLiteral, "Current Status",
                     "Cured", "Created At", "Created By", "Updated By", "Nikshay ID", "UDST Status",
                     "Date Of UDST", "UDST Result", "DBT Status", "Date Of DBT", "Nikshay Mitra Status",
                     "Nikshay Mitra Date", "Nikshay Mitra Name", "Contact Screening Done",

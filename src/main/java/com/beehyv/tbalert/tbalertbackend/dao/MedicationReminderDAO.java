@@ -17,6 +17,7 @@ public class MedicationReminderDAO {
     private String nikshayId;
     private String firstName;
     private String lastName;
+    private String reminderTime;
     private String phoneNumber;
     private String lastFollowupDate;
     private List<MedicationDTO> medications;
