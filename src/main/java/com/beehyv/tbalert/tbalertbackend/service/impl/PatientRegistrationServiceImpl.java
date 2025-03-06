@@ -46,7 +46,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
-        log.info("Service called to Register patient: {}", patientInputDTO);
+        log.info("Service called to register patient");
 
         PersonOutputDTO person = personService.add(patientInputDTO);
 
@@ -122,12 +122,14 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         if (patientUpdateInputDTO.getIsDiagnosedWithTB() != null)
             patient.setIsDiagnosedWithTB(patientUpdateInputDTO.getIsDiagnosedWithTB());
 
+        if (patientUpdateInputDTO.getReminderTime() != null)
+            patient.setReminderTime(patientUpdateInputDTO.getReminderTime());
+
         person.setAddress(address);
         person = personRepo.save(person);
         patient.setPerson(person);
 
         patientRepo.save(patient);
-
     }
 
     @Override

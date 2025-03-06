@@ -36,4 +36,6 @@ public class PatientUpdateInputDTO {
     private Boolean consentForMessage;
 
     private Boolean isDiagnosedWithTB;
+
+    private String reminderTime;
 }
