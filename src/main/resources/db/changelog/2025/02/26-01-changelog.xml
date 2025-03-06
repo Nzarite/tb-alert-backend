@@ -554,7 +554,11 @@
 
 <!--    Create State Table-->
     <changeSet id="1740545825496-33" author="bhcp0212">
-
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="state"/>
+            </not>
+        </preConditions>
         <createTable tableName="state">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
