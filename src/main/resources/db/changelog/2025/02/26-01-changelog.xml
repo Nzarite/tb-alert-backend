@@ -547,6 +547,26 @@
                                  constraintName="FK_STATEHEAD_ON_PERSON" referencedColumnNames="id"
                                  referencedTableName="person"/>
     </changeSet>
+    <changeSet id="1740545825496-41" author="bhcp0212">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_GPHEAD_ON_PERSON"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="person_id" baseTableName="gp_head"
+                                 constraintName="FK_GPHEAD_ON_PERSON" referencedColumnNames="id"
+                                 referencedTableName="person"/>
+    </changeSet>
+    <changeSet id="1740545825496-42" author="bhcp0212">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_FIELDCOORDINATOR_ON_PERSON"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="person_id" baseTableName="field_coordinator"
+                                 constraintName="FK_FIELDCOORDINATOR_ON_PERSON" referencedColumnNames="id"
+                                 referencedTableName="person"/>
+    </changeSet>
     <changeSet id="1740545825496-33" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>

@@ -40,17 +40,17 @@ public class FieldCoordinatorController {
         return new ResponseEntity<>(personService.getByEmail(email), HttpStatus.OK);
     }
 
-//    @GetMapping("/state/{name}")
-//    public ResponseEntity<List<FieldCoordinatorOutputDTO>> getByState(@PathVariable String name) {
-//        return new ResponseEntity<>(fieldCoordinatorService.getByState(name), HttpStatus.OK);
-//    }
-//
-//    @GetMapping("/state/{state}/name/{name}")
-//    public ResponseEntity<List<FieldCoordinatorOutputDTO>> getByStateAndName(@PathVariable String state, @PathVariable String name) {
-//        log.info("Controller called for Getting patient by state and name: {}", state);
-//
-//        return new ResponseEntity<>(fieldCoordinatorService.getGPByState(state,name), HttpStatus.OK);
-//    }
+    @GetMapping("/state/{name}")
+    public ResponseEntity<List<FieldCoordinatorOutputDTO>> getByState(@PathVariable String name) {
+        return new ResponseEntity<>(fieldCoordinatorService.getByState(name), HttpStatus.OK);
+    }
+
+    @GetMapping("/state/{state}/name/{name}")
+    public ResponseEntity<List<FieldCoordinatorOutputDTO>> getByStateAndName(@PathVariable String state, @PathVariable String name) {
+        log.info("Controller called for Getting patient by state and name: {}", state);
+
+        return new ResponseEntity<>(fieldCoordinatorService.getFieldCoordinatorByState(state, name), HttpStatus.OK);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<FieldCoordinatorOutputDTO> delete(@PathVariable Long id) {
