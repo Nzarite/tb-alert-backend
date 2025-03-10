@@ -7,7 +7,6 @@ import com.beehyv.tbalert.tbalertbackend.entity.GPHead;
 import com.beehyv.tbalert.tbalertbackend.mapper.GPHeadMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
-import com.beehyv.tbalert.tbalertbackend.mapper.TeleCallerMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.GPHeadRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PersonRepo;
 import com.beehyv.tbalert.tbalertbackend.service.GPHeadService;
@@ -35,7 +34,6 @@ public class GPHeadServiceImpl implements GPHeadService {
     private final GPHeadMapper gpHeadMapper;
     private final LocalDateMapper localDateMapper;
     private final PersonRepo personRepo;
-    private final TeleCallerMapper teleCallerMapper;
 
     @Override
     public GPHeadOutputDTO add(GPHeadInputDTO gpHeadInputDTO) {

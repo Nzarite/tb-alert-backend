@@ -70,8 +70,8 @@ public class FieldCoordinatorServiceImpl implements FieldCoordinatorService {
 
     @Override
     public List<FieldCoordinatorOutputDTO> getByName(String name) {
-        List<FieldCoordinator> gpHeads = fieldCoordinatorRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name);
-        return gpHeads.stream().map(fieldCoordinatorMapper::toFieldCoordinatorOutputDTO).toList();
+        List<FieldCoordinator> fieldCoordinators = fieldCoordinatorRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name);
+        return fieldCoordinators.stream().map(fieldCoordinatorMapper::toFieldCoordinatorOutputDTO).toList();
     }
 
     @Override
@@ -92,40 +92,40 @@ public class FieldCoordinatorServiceImpl implements FieldCoordinatorService {
 
     @Override
     public FieldCoordinatorOutputDTO updateFieldCoordinator(Long id, FieldCoordinatorInputDTO fieldCoordinatorInputDTO) {
-        FieldCoordinator gpHead = fieldCoordinatorMapper.find(id);
+        FieldCoordinator fieldCoordinator = fieldCoordinatorMapper.find(id);
 
         if (fieldCoordinatorInputDTO.getFirstName() != null)
-            gpHead.getPerson().setFirstName(fieldCoordinatorInputDTO.getFirstName());
+            fieldCoordinator.getPerson().setFirstName(fieldCoordinatorInputDTO.getFirstName());
 
         if (fieldCoordinatorInputDTO.getLastName() != null)
-            gpHead.getPerson().setLastName(fieldCoordinatorInputDTO.getLastName());
+            fieldCoordinator.getPerson().setLastName(fieldCoordinatorInputDTO.getLastName());
 
         if (fieldCoordinatorInputDTO.getDateOfJoining() != null)
-            gpHead.setDateOfJoining(localDateMapper.toLocalDate(fieldCoordinatorInputDTO.getDateOfJoining()));
+            fieldCoordinator.setDateOfJoining(localDateMapper.toLocalDate(fieldCoordinatorInputDTO.getDateOfJoining()));
 
         if (fieldCoordinatorInputDTO.getGender() != null)
-            gpHead.getPerson().setGender(fieldCoordinatorInputDTO.getGender());
+            fieldCoordinator.getPerson().setGender(fieldCoordinatorInputDTO.getGender());
 
         if (fieldCoordinatorInputDTO.getPhoneNumber() != null)
-            gpHead.getPerson().setPhoneNumber(fieldCoordinatorInputDTO.getPhoneNumber());
+            fieldCoordinator.getPerson().setPhoneNumber(fieldCoordinatorInputDTO.getPhoneNumber());
 
         if (fieldCoordinatorInputDTO.getDateOfLeaving() != null)
-            gpHead.setDateOfLeaving(localDateMapper.toLocalDate(fieldCoordinatorInputDTO.getDateOfLeaving()));
+            fieldCoordinator.setDateOfLeaving(localDateMapper.toLocalDate(fieldCoordinatorInputDTO.getDateOfLeaving()));
 
-        gpHead.setPerson(gpHead.getPerson());
-        personRepo.save(gpHead.getPerson());
+        fieldCoordinator.setPerson(fieldCoordinator.getPerson());
+        personRepo.save(fieldCoordinator.getPerson());
 
-        gpHead = fieldCoordinatorRepo.save(gpHead);
-        return fieldCoordinatorMapper.toFieldCoordinatorOutputDTO(gpHead);
+        fieldCoordinator = fieldCoordinatorRepo.save(fieldCoordinator);
+        return fieldCoordinatorMapper.toFieldCoordinatorOutputDTO(fieldCoordinator);
     }
 
     @Override
     public void deleteFieldCoordinator(Long id) {
-        FieldCoordinator gpHead = fieldCoordinatorMapper.find(id);
-        gpHead.getPerson().setIsDeleted(true);
-        gpHead.getPerson().setEmail(null);
-        gpHead.setDateOfLeaving(LocalDate.now());
-        personRepo.save(gpHead.getPerson());
-        fieldCoordinatorRepo.save(gpHead);
+        FieldCoordinator fieldCoordinator = fieldCoordinatorMapper.find(id);
+        fieldCoordinator.getPerson().setIsDeleted(true);
+        fieldCoordinator.getPerson().setEmail(null);
+        fieldCoordinator.setDateOfLeaving(LocalDate.now());
+        personRepo.save(fieldCoordinator.getPerson());
+        fieldCoordinatorRepo.save(fieldCoordinator);
     }
 }
