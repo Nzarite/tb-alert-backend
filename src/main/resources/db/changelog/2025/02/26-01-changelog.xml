@@ -715,16 +715,6 @@
             <column name="placeholder" value="Go to Plivo Console"/>
         </insert>
 
-        <!-- sms_reminder_time -->
-        <insert tableName="settings">
-            <column name="key_name" value="sms_reminder_time"/>
-            <column name="value" value="08:00"/>
-            <column name="type" value="time"/>
-            <column name="category" value="SMS"/>
-            <column name="label" value="Preferred Time"/>
-            <column name="placeholder" value="Preferred time for reminder"/>
-        </insert>
-
         <!-- Insert sms_template setting -->
         <insert tableName="settings">
             <column name="key_name" value="sms_template"/>
