@@ -18,15 +18,9 @@ public class PatientUpdateInputDTO {
 
     private int age;
 
-    private String block;
-
-    private String gp;
-
     private String village;
 
-    private String district;
-
-    private String state;
+    private Long gramPachayatId;
 
     private String currentStatus;
 

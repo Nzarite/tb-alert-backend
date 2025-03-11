@@ -1,6 +1,9 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
+import com.beehyv.tbalert.tbalertbackend.entity.District;
+import com.beehyv.tbalert.tbalertbackend.entity.GramPanchayat;
+import com.beehyv.tbalert.tbalertbackend.entity.Mandal;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,20 +12,16 @@ import org.springframework.stereotype.Component;
 public class AddressMapper {
 
     private final StateMapper stateMapper;
+    private final GramPanchayatMapper gramPanchayatMapper;
 
     public <T> Address toAddress(T addressInputDTO) {
         String village = getField(addressInputDTO, "getVillage");
-        String gp = getField(addressInputDTO, "getGp");
-        String block = getField(addressInputDTO, "getBlock");
-        String district = getField(addressInputDTO, "getDistrict");
-        String stateName = getField(addressInputDTO, "getState");
+        Long gp = Long.parseLong(getField(addressInputDTO, "getGramPanchayatId"));
+        GramPanchayat gramPanchayat=gramPanchayatMapper.getGramPanchayatById(gp);
 
         return Address.builder()
                 .village(village)
-                .gp(gp)
-                .block(block)
-                .district(district)
-                .state(stateMapper.getStateByName(stateName))
+                .gramPanchayat(gramPanchayat)
                 .build();
     }
 
@@ -34,42 +33,44 @@ public class AddressMapper {
         }
     }
 
-//    public Address toAddress(PatientInputDTO addressInputDTO) {
-//        return Address.builder()
-//                .village(addressInputDTO.getVillage())
-//                .gp(addressInputDTO.getGp())
-//                .block(addressInputDTO.getBlock())
-//                .district(addressInputDTO.getDistrict())
-//                .state(stateMapper.getStateByName(addressInputDTO.getState()))
-//                .build();
-//    }
-//
-//    public Address toAddress(PersonInputDTO addressInputDTO) {
-//        return Address.builder()
-//                .village(addressInputDTO.getVillage())
-//                .gp(addressInputDTO.getGp())
-//                .block(addressInputDTO.getBlock())
-//                .district(addressInputDTO.getDistrict())
-//                .state(stateMapper.getStateByName(addressInputDTO.getState()))
-//                .build();
-//    }
-//
-//    public Address toAddress(TeleCallerInputDTO addressInputDTO) {
-//        return Address.builder()
-//                .village(addressInputDTO.getVillage())
-//                .gp(addressInputDTO.getGp())
-//                .block(addressInputDTO.getBlock())
-//                .district(addressInputDTO.getDistrict())
-//                .state(stateMapper.getStateByName(addressInputDTO.getState()))
-//                .build();
-//    }
-//    public Address toAddress(StateHeadInputDTO addressInputDTO) {
-//        return Address.builder()
-//                .village(addressInputDTO.getVillage())
-//                .gp(addressInputDTO.getGp())
-//                .block(addressInputDTO.getBlock())
-//                .district(addressInputDTO.getDistrict())
-//                .state(stateMapper.getStateByName(addressInputDTO.getState()))
-//                .build();
-//    }
+/*
+    public Address toAddress(PatientInputDTO addressInputDTO) {
+        return Address.builder()
+                .village(addressInputDTO.getVillage())
+                .gp(addressInputDTO.getGp())
+                .block(addressInputDTO.getBlock())
+                .district(addressInputDTO.getDistrict())
+                .state(stateMapper.getStateByName(addressInputDTO.getState()))
+                .build();
+    }
+
+    public Address toAddress(PersonInputDTO addressInputDTO) {
+        return Address.builder()
+                .village(addressInputDTO.getVillage())
+                .gp(addressInputDTO.getGp())
+                .block(addressInputDTO.getBlock())
+                .district(addressInputDTO.getDistrict())
+                .state(stateMapper.getStateByName(addressInputDTO.getState()))
+                .build();
+    }
+
+    public Address toAddress(TeleCallerInputDTO addressInputDTO) {
+        return Address.builder()
+                .village(addressInputDTO.getVillage())
+                .gp(addressInputDTO.getGp())
+                .block(addressInputDTO.getBlock())
+                .district(addressInputDTO.getDistrict())
+                .state(stateMapper.getStateByName(addressInputDTO.getState()))
+                .build();
+    }
+    public Address toAddress(StateHeadInputDTO addressInputDTO) {
+        return Address.builder()
+                .village(addressInputDTO.getVillage())
+                .gp(addressInputDTO.getGp())
+                .block(addressInputDTO.getBlock())
+                .district(addressInputDTO.getDistrict())
+                .state(stateMapper.getStateByName(addressInputDTO.getState()))
+                .build();
+    }
+*/
 }

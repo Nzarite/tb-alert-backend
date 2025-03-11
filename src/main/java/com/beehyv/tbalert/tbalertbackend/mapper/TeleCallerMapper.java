@@ -1,9 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
 import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Address;
-import com.beehyv.tbalert.tbalertbackend.entity.Person;
-import com.beehyv.tbalert.tbalertbackend.entity.TeleCaller;
+import com.beehyv.tbalert.tbalertbackend.entity.*;
 import com.beehyv.tbalert.tbalertbackend.repository.TeleCallerRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,6 +21,10 @@ public class TeleCallerMapper {
     {
         Person person = teleCaller.getPerson();
         Address address=person.getAddress();
+        GramPanchayat gramPanchayat=address.getGramPanchayat();
+        Mandal mandal = gramPanchayat.getMandal();
+        District district=mandal.getDistrict();
+        State state = district.getState();
 
         return TeleCallerOutputDTO.builder()
                 .teleCallerId(teleCaller.getId())
@@ -32,11 +34,11 @@ public class TeleCallerMapper {
                 .email(person.getEmail())
                 .phoneNumber(person.getPhoneNumber())
                 .gender(person.getGender())
-                .block(address.getBlock())
+                .state(state.getStateName())
+                .gp(gramPanchayat.getName())
                 .village(address.getVillage())
-                .gp(address.getGp())
-                .district(address.getDistrict())
-                .state(address.getState().getStateName())
+                .district(district.getName())
+                .block(mandal.getName())
                 .createdBy(person.getCreatedBy())
                 .createdOn(localDateMapper.toDateTime(person.getCreatedOn()))
                 .updatedBy(person.getUpdatedBy())

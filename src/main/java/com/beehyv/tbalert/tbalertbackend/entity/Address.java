@@ -17,18 +17,9 @@ public class Address {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "block")
-    private String block;
-
-    @Column(name = "gp")
-    private String gp;
-
     @Column(name = "village")
     private String village;
 
-    @Column(name = "district")
-    private String district;
-
     @ManyToOne(cascade = CascadeType.ALL)
-    private State state;
+    private GramPanchayat gramPanchayat;
 }

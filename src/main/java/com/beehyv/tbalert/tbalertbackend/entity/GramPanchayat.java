@@ -6,23 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Table(name = "state")
-public class State {
+@Table(name = "gram_panchayat")
+public class GramPanchayat {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "state_name", unique = true)
-    private String stateName;
+    @Column(nullable = false)
+    private String name;
 
-    @Column(nullable = false, name = "state_code", unique = true)
-    private String stateCode;
-
+    @ManyToOne
+    private Mandal mandal;
 }

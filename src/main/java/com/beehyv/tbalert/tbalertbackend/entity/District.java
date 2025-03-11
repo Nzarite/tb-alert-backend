@@ -10,19 +10,19 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Table(name = "state")
-public class State {
+@Table(name = "district")
+public class District {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "state_name", unique = true)
-    private String stateName;
+    @Column(nullable = false)
+    private String name;
 
-    @Column(nullable = false, name = "state_code", unique = true)
-    private String stateCode;
-
+    @ManyToOne
+    private State state;
 }

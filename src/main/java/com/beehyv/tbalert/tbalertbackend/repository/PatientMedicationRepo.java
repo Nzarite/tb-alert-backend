@@ -15,13 +15,9 @@ public interface PatientMedicationRepo extends JpaRepository<PatientMedication, 
 
     List<PatientMedication> getPatientMedicationsByPatient(Patient patient);
 
-    PatientMedication findPatientMedicationByPatientAndMedication(Patient patient, Medication medication);
-
     List<PatientMedication> findPatientMedicationByPatient(Patient patient);
 
     List<PatientMedication> findByPatientAndMedicationIn(Patient patient, List<Medication> medications);
-
-    void deleteAllByPatient_Id(String patientId);
 
     List<PatientMedication> findAllByPatient_Id(String patientId);
 }

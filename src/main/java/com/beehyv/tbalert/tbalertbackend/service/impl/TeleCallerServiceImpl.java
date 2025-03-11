@@ -69,7 +69,7 @@ public class TeleCallerServiceImpl implements TeleCallerService {
 
     @Override
     public List<TeleCallerOutputDTO> getByState(String state) {
-        List<TeleCaller> teleCallers = teleCallerRepo.findByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(state);
+        List<TeleCaller> teleCallers = teleCallerRepo.findByPerson_Address_GramPanchayat_Mandal_District_State_StateNameAndPerson_IsDeletedFalse(state);
         return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
 
@@ -136,7 +136,7 @@ public class TeleCallerServiceImpl implements TeleCallerService {
 
     @Override
     public List<TeleCallerOutputDTO> getAllByState(String state) {
-        List<TeleCaller>teleCallers=teleCallerRepo.findAllByPerson_Address_State_StateName(state);
+        List<TeleCaller>teleCallers=teleCallerRepo.findAllByPerson_Address_GramPanchayat_Mandal_District_State_StateName(state);
         return teleCallers.stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
 
@@ -147,7 +147,7 @@ public class TeleCallerServiceImpl implements TeleCallerService {
 
     @Override
     public List<TeleCallerOutputDTO> getDeletedByState(String state) {
-        return teleCallerRepo.findAllByPerson_IsDeletedTrueAndPerson_Address_State_StateName(state).stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
+        return teleCallerRepo.findAllByPerson_IsDeletedTrueAndPerson_Address_GramPanchayat_Mandal_District_State_StateName(state).stream().map(teleCallerMapper::toTeleCallerOutputDTO).toList();
     }
 
     @Override

@@ -7,7 +7,7 @@
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
 
     <!-- Create State Table -->
-    <changeSet id="1740545825496-1" author="bhcp0212">
+    <changeSet id="1740545825495-1" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="state"/>
@@ -26,6 +26,86 @@
         </createTable>
     </changeSet>
 
+    <!-- Create District Table -->
+    <changeSet id="1740545825495-2" author="bhcp0212">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="district"/>
+            </not>
+        </preConditions>
+        <createTable tableName="district">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="district_name" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="state_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="district"
+                                 baseColumnNames="state_id"
+                                 referencedTableName="state"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_district_state"/>
+    </changeSet>
+
+
+    <!-- Create Mandal Table -->
+    <changeSet id="1740545825495-3" author="bhcp0212">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="mandal"/>
+            </not>
+        </preConditions>
+        <createTable tableName="mandal">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="mandal_name" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="district_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="mandal"
+                                 baseColumnNames="district_id"
+                                 referencedTableName="district"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_mandal_district"/>
+    </changeSet>
+
+    <!-- Create GramPanchayat Table -->
+    <changeSet id="1740545825495-4" author="bhcp0212">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="gram_panchayat"/>
+            </not>
+        </preConditions>
+        <createTable tableName="gram_panchayat">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="gram_panchayat_name" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="mandal_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="gram_panchayat"
+                                 baseColumnNames="mandal_id"
+                                 referencedTableName="mandal"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_gram_panchayat_mandal"/>
+    </changeSet>
+
+
+
+
+
     <!-- Create Address Table -->
     <changeSet id="1740545825496-2" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
@@ -37,15 +117,17 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_address"/>
             </column>
-            <column name="block" type="VARCHAR(255)"/>
-            <column name="gp" type="VARCHAR(255)"/>
-            <column name="village" type="VARCHAR(255)"/>
-            <column name="district" type="VARCHAR(255)"/>
             <!-- Change state from VARCHAR to BIGINT for proper FK -->
-            <column name="state_id" type="BIGINT">
+            <column name="gram_panchayat_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="village" type="VARCHAR(255)"/>
         </createTable>
+        <addForeignKeyConstraint baseTableName="address"
+                                 baseColumnNames="gram_panchayat_id"
+                                 referencedTableName="gram_panchayat"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_address_gram_panchayat"/>
     </changeSet>
 
     <!-- Contact Screening Table -->
@@ -567,18 +649,7 @@
                                  constraintName="FK_TELECALLER_ON_PERSON" referencedColumnNames="id"
                                  referencedTableName="person"/>
     </changeSet>
-    <changeSet id="1740545825496-35" author="bhcp0212">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <foreignKeyConstraintExists foreignKeyName="fk_address_state"/>
-            </not>
-        </preConditions>
-        <addForeignKeyConstraint baseColumnNames="state_id"
-                                 baseTableName="address"
-                                 constraintName="fk_address_state"
-                                 referencedColumnNames="id"
-                                 referencedTableName="state"/>
-    </changeSet>
+
 
     <!--    Initializing default Medicines-->
     <changeSet id="1740545825496-36" author="bhcp0212">
@@ -639,17 +710,34 @@
             <column name="state_code" value="UP"/>
         </insert>
     </changeSet>
+    <changeSet id="1741699483678-1" author="bhcp0212 (generated)">
+        <insert tableName="district">
+            <column name="state_id" value="2" />
+            <column name="id" value="1" />
+            <column name="district_name" value="SA" />
+        </insert>
+
+        <insert tableName="mandal">
+            <column name="mandal_name" value="SA" />
+            <column name="id" value="1" />
+            <column name="district_id" value="1" />
+        </insert>
+
+        <insert tableName="gram_panchayat">
+            <column name="id" value="1" />
+            <column name="gram_panchayat_name" value="SA" />
+            <column name="mandal_id" value="1" />
+        </insert>
+    </changeSet>
 
     <!--    Initialize address for SuperAdmin-->
     <changeSet id="1740545825496-38" author="bhcp0212">
 
+
         <insert tableName="address">
             <column name="id" value="1"/>
-            <column name="block" value="SA"/>
-            <column name="gp" value="SA"/>
-            <column name="village" value="SA"/>
-            <column name="district" value="SA"/>
-            <column name="state_id" value="2"/>
+            <column name="village" value="SA" />
+            <column name="gram_panchayat_id" value="1" />
         </insert>
     </changeSet>
 

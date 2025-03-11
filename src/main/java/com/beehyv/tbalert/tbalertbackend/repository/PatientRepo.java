@@ -57,7 +57,7 @@ public interface PatientRepo extends JpaRepository<Patient, String>, JpaSpecific
 
     List<Patient> findAllByPerson_IsDeletedFalse();
 
-    List<Patient> findAllByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(String state);
+    List<Patient> findAllByPerson_Address_GramPanchayat_Mandal_District_State_StateNameAndPerson_IsDeletedFalse(String state);
 
     Optional<Patient> findByIdAndPerson_IsDeletedFalse(String patientId);
 
@@ -65,7 +65,7 @@ public interface PatientRepo extends JpaRepository<Patient, String>, JpaSpecific
                 SELECT p FROM Patient p
                 WHERE (LOWER(p.person.firstName) LIKE LOWER(CONCAT('%', :name, '%'))
                    OR LOWER(p.person.lastName) LIKE LOWER(CONCAT('%', :name, '%')))
-                  AND p.person.address.state.stateName = :state
+                  AND p.person.address.gramPanchayat.mandal.district.state.stateName = :state
                   AND p.person.isDeleted = false
             """)
     List<Patient> findPatientByNameAndState(@Param("name") String name, @Param("state") String state);

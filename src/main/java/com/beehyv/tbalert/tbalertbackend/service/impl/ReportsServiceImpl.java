@@ -311,7 +311,9 @@ public class ReportsServiceImpl implements ReportsService {
 
         Person person=personMapper.findEverything(teleCallerOutputDTO.getPersonId());
         reportsHelperService.createOrUpdateCell(row,1,person.getFirstName()+" "+person.getLastName(),cellStyle);
-        reportsHelperService.createOrUpdateCell(row,2,person.getAddress().getState().getStateName(),cellStyle);
+
+        State state=person.getAddress().getGramPanchayat().getMandal().getDistrict().getState();
+        reportsHelperService.createOrUpdateCell(row,2,state.getStateName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,3,person.getEmail(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,4,person.getPhoneNumber(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,5,teleCallerOutputDTO.getDateOfJoining(),cellStyle);
@@ -323,8 +325,10 @@ public class ReportsServiceImpl implements ReportsService {
         reportsHelperService.createOrUpdateCell(row,0,stateHeadOutputDTO.getStateHeadId(),cellStyle);
 
         Person person=personMapper.findEverything(stateHeadOutputDTO.getPersonId());
+        State state=person.getAddress().getGramPanchayat().getMandal().getDistrict().getState();
+
         reportsHelperService.createOrUpdateCell(row,1,person.getFirstName()+" "+person.getLastName(),cellStyle);
-        reportsHelperService.createOrUpdateCell(row,2,person.getAddress().getState().getStateName(),cellStyle);
+        reportsHelperService.createOrUpdateCell(row,2,state.getStateName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,3,person.getEmail(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,4,person.getPhoneNumber(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,5,stateHeadOutputDTO.getDateOfJoining(),cellStyle);

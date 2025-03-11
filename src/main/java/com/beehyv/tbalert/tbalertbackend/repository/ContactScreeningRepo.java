@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface ContactScreeningRepo extends JpaRepository<ContactScreening, Integer> {
 
-    void deleteByPatientId(String patientId);
-
     Optional<ContactScreening> findByPatient_Id(String patientId);
 
 }

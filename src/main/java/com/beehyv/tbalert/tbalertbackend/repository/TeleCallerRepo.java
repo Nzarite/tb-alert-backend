@@ -11,21 +11,21 @@ import java.util.List;
 @Repository
 public interface TeleCallerRepo extends JpaRepository<TeleCaller, Long> {
 
-    List<TeleCaller> findByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(String personAddressState);
+    List<TeleCaller> findByPerson_Address_GramPanchayat_Mandal_District_State_StateNameAndPerson_IsDeletedFalse(String personAddressState);
 
     List<TeleCaller> findAllByPerson_IsDeletedFalse();
 
-    List<TeleCaller> findAllByPerson_Address_State_StateName(String personAddressStateStateName);
+    List<TeleCaller> findAllByPerson_Address_GramPanchayat_Mandal_District_State_StateName(String personAddressStateStateName);
 
     List<TeleCaller> findAllByPerson_IsDeletedTrue();
 
-    List<TeleCaller> findAllByPerson_IsDeletedTrueAndPerson_Address_State_StateName(String state);
+    List<TeleCaller> findAllByPerson_IsDeletedTrueAndPerson_Address_GramPanchayat_Mandal_District_State_StateName(String state);
 
     @Query("""
                 SELECT t FROM TeleCaller t
                 WHERE (LOWER(t.person.firstName) LIKE LOWER(CONCAT('%', :name, '%'))
                    OR LOWER(t.person.lastName) LIKE LOWER(CONCAT('%', :name, '%')))
-                  AND t.person.address.state.stateName = :state
+                  AND t.person.address.gramPanchayat.mandal.district.state.stateName = :state
                   AND t.person.isDeleted = false
             """)
     List<TeleCaller> findTeleCallerByNameAndState(@Param("name") String name, @Param("state") String state);

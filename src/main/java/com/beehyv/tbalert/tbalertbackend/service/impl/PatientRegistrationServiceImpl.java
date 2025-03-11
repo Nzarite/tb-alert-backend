@@ -5,6 +5,7 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.*;
+import com.beehyv.tbalert.tbalertbackend.mapper.GramPanchayatMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.StateMapper;
@@ -43,6 +44,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private final StateMapper stateMapper;
     private final TBDetailsRepo tbDetailsRepo;
     private final UserDetailsUtil userDetailsUtil;
+    private final GramPanchayatMapper gramPanchayatMapper;
 
     @Override
     public PatientOutputDTO register(PatientInputDTO patientInputDTO) {
@@ -101,16 +103,10 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         // Address specific details
         Address address = person.getAddress();
 
-        if (patientUpdateInputDTO.getBlock() != null)
-            address.setBlock(patientUpdateInputDTO.getBlock());
-        if (patientUpdateInputDTO.getState() != null)
-            address.setState(stateMapper.getStateByName(patientUpdateInputDTO.getState()));
-        if (patientUpdateInputDTO.getGp() != null)
-            address.setGp(patientUpdateInputDTO.getGp());
-        if (patientUpdateInputDTO.getDistrict() != null)
-            address.setDistrict(patientUpdateInputDTO.getDistrict());
-        if (patientUpdateInputDTO.getVillage() != null)
-            address.setVillage(patientUpdateInputDTO.getVillage());
+        if(patientUpdateInputDTO.getGramPachayatId() != null) {
+            GramPanchayat gramPanchayat=gramPanchayatMapper.getGramPanchayatById(patientUpdateInputDTO.getGramPachayatId());
+            address.setGramPanchayat(gramPanchayat);
+        }
 
         // Patient specific details
         if (patientUpdateInputDTO.getCurrentStatus() != null)
@@ -225,7 +221,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     public List<PatientOutputDTO> getAllByState(String state) {
         log.info("Service getAllByState state: {}", state);
 
-        List<Patient> patients = patientRepo.findAllByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(state);
+        List<Patient> patients = patientRepo.findAllByPerson_Address_GramPanchayat_Mandal_District_State_StateNameAndPerson_IsDeletedFalse(state);
         return patients.stream()
                 .map(patientMapper::toPatientOutputDTO)
                 .toList();
