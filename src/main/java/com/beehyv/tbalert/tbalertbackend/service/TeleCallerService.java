@@ -2,6 +2,7 @@ package com.beehyv.tbalert.tbalertbackend.service;
 
 import com.beehyv.tbalert.tbalertbackend.dto.input.TeleCallerInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.TeleCallerOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.entity.TeleCaller;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface TeleCallerService {
     List<TeleCallerOutputDTO> getDeletedByState(String state);
 
     List<TeleCallerOutputDTO> getTelecallerByState(String state, String name);
+
+    TeleCaller getByEmail(String teleCallerEmail);
 }

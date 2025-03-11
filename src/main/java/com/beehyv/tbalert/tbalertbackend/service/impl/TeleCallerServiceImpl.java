@@ -159,4 +159,9 @@ public class TeleCallerServiceImpl implements TeleCallerService {
                 .map(teleCallerMapper::toTeleCallerOutputDTO)
                 .toList();
     }
+
+    @Override
+    public TeleCaller getByEmail(String teleCallerEmail) {
+        return teleCallerRepo.findByPerson_Email(teleCallerEmail);
+    }
 }
