@@ -16,10 +16,10 @@ public interface GPHeadRepo extends JpaRepository<GPHead, Long> {
                 SELECT t FROM GPHead t
                 WHERE (LOWER(t.person.firstName) LIKE LOWER(CONCAT('%', :name, '%'))
                    OR LOWER(t.person.lastName) LIKE LOWER(CONCAT('%', :name, '%')))
-                  AND t.person.address.state.stateName = :state
+                  AND t.person.address.gramPanchayat.mandal.district.state.stateName = :state
                   AND t.person.isDeleted = false
             """)
     List<GPHead> findGPHeadByNameAndState(@Param("name") String name, @Param("state") String state);
 
-    List<GPHead> findByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(String personAddressState);
+    List<GPHead> findByPerson_Address_GramPanchayat_Mandal_District_State_StateNameAndPerson_IsDeletedFalse(String personAddressState);
 }

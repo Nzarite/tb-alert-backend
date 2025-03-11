@@ -76,7 +76,7 @@ public class FieldCoordinatorServiceImpl implements FieldCoordinatorService {
 
     @Override
     public List<FieldCoordinatorOutputDTO> getByState(String state) {
-        List<FieldCoordinator> fieldCoordinators = fieldCoordinatorRepo.findByPerson_Address_State_StateNameAndPerson_IsDeletedFalse(state);
+        List<FieldCoordinator> fieldCoordinators = fieldCoordinatorRepo.findByPerson_Address_GramPanchayat_Mandal_District_State_StateNameAndPerson_IsDeletedFalse(state);
         return fieldCoordinators.stream().map(fieldCoordinatorMapper::toFieldCoordinatorOutputDTO).toList();
     }
 
