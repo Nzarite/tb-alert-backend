@@ -22,6 +22,7 @@ public class PatientFollowUpController {
 
     private final PatientFollowUpService patientFollowUpService;
 
+    @PreAuthorize("hasAuthority('ROLE_Telecaller') || hasAuthority('ROLE_GpHead')")
     @GetMapping("/{id}")
     public ResponseEntity<PatientFollowUpOutputForFrontEndDto> getPatientFollowUp(@PathVariable String id) {
             log.info("Controller called for getPatientFollowUp: {}", id);

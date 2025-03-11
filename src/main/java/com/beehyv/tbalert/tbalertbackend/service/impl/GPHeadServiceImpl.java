@@ -7,6 +7,7 @@ import com.beehyv.tbalert.tbalertbackend.entity.GPHead;
 import com.beehyv.tbalert.tbalertbackend.mapper.GPHeadMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
+import com.beehyv.tbalert.tbalertbackend.mapper.TeleCallerMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.GPHeadRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.PersonRepo;
 import com.beehyv.tbalert.tbalertbackend.service.GPHeadService;
@@ -34,6 +35,7 @@ public class GPHeadServiceImpl implements GPHeadService {
     private final GPHeadMapper gpHeadMapper;
     private final LocalDateMapper localDateMapper;
     private final PersonRepo personRepo;
+    private final TeleCallerMapper teleCallerMapper;
 
     @Override
     public GPHeadOutputDTO add(GPHeadInputDTO gpHeadInputDTO) {
@@ -72,6 +74,22 @@ public class GPHeadServiceImpl implements GPHeadService {
     public List<GPHeadOutputDTO> getByName(String name) {
         List<GPHead> gpHeads = gpHeadRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name);
         return gpHeads.stream().map(gpHeadMapper::toGPHeadOutputDTO).toList();
+    }
+
+    @Override
+    public List<GPHeadOutputDTO> getByState(String state) {
+        List<GPHead> gpHeads = gpHeadRepo.findByPerson_Address_State_StateNameAndPerson_IsDeletedFalse((state));
+        return gpHeads.stream().map(gpHeadMapper::toGPHeadOutputDTO).toList();
+    }
+
+    @Override
+    public List<GPHeadOutputDTO> getGPByState(String state, String name) {
+        List<GPHead> gpHeads = gpHeadRepo.findGPHeadByNameAndState(name, state);
+
+        return gpHeads
+                .stream()
+                .map(gpHeadMapper::toGPHeadOutputDTO)
+                .toList();
     }
 
     @Override

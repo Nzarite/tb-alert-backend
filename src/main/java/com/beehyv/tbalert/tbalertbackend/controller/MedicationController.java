@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/medication")
 @AllArgsConstructor
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
-@PreAuthorize("hasAuthority('ROLE_Telecaller')")
+@PreAuthorize("hasAuthority('ROLE_Telecaller') || hasAuthority('ROLE_GpHead')")
 public class MedicationController {
 
     private final MedicationService medicationService;

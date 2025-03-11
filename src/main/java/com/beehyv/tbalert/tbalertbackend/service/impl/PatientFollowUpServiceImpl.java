@@ -39,7 +39,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
     private final MissedMedicationRepo missedMedicationRepo;
     private final PatientMedicationRepo patientMedicationRepo;
     private final PatientFollowUpMapper patientFollowUpMapper;
-    private MissedMedicationService missedMedicationService;
+    private final MissedMedicationService missedMedicationService;
     private final PatientRepo patientRepo;
     private final MissedMedicationMapper missedMedicationMapper;
     private final LocalDateMapper localDateMapper;

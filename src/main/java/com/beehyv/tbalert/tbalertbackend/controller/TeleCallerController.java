@@ -40,6 +40,7 @@ public class TeleCallerController {
         return new ResponseEntity<>(personService.getByEmail(email), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_GpHead')")
     @GetMapping("/state/{name}")
     public ResponseEntity<List<TeleCallerOutputDTO>> getByState(@PathVariable String name) {
         return new ResponseEntity<>(teleCallerService.getByState(name), HttpStatus.OK);
