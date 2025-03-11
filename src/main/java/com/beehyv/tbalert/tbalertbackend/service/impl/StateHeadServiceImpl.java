@@ -96,7 +96,7 @@ public class StateHeadServiceImpl implements StateHeadService {
     @Override
     public List<StateHeadOutputDTO> getAllByState(String state) {
 
-        return stateHeadRepo.findAllByPerson_Address_State_StateName(state).stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
+        return stateHeadRepo.findAllByPerson_Address_GramPanchayat_Mandal_District_State_StateName(state).stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
     }
 
     @Override
@@ -106,12 +106,12 @@ public class StateHeadServiceImpl implements StateHeadService {
 
     @Override
     public List<StateHeadOutputDTO> getAllDeletedByState(String state) {
-        return stateHeadRepo.findAllByPerson_IsDeletedTrueAndPerson_Address_State_StateName(state).stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
+        return stateHeadRepo.findAllByPerson_IsDeletedTrueAndPerson_Address_GramPanchayat_Mandal_District_State_StateName(state).stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
     }
 
     @Override
     public List<StateHeadOutputDTO> getAllNotDeletedByState(String state) {
-        return stateHeadRepo.findAllByPerson_IsDeletedFalseAndPerson_Address_State_StateName(state).stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
+        return stateHeadRepo.findAllByPerson_IsDeletedFalseAndPerson_Address_GramPanchayat_Mandal_District_State_StateName(state).stream().map(stateHeadMapper::toStateHeadOutputDTO).toList();
     }
 
     @Override

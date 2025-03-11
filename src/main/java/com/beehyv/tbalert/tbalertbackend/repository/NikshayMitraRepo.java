@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface NikshayMitraRepo extends JpaRepository<NikshayMitra, Integer>, JpaSpecificationExecutor<NikshayMitra> {
+
     Optional<NikshayMitra> findByPatient_Id(String id);
 
-    Optional<NikshayMitra> findByNikshayId(String nikshayId);
 }

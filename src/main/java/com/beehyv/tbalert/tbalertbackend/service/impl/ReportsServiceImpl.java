@@ -28,7 +28,6 @@ public class ReportsServiceImpl implements ReportsService {
 
     private final PatientRepo patientRepo;
     private final PatientRegistrationService patientRegistrationService;
-    private final LocalDateMapper localDateMapper;
     private final ReportsHelperService reportsHelperService;
     private final TeleCallerService teleCallerService;
     private final NikshayMitraRepo nikshayMitraRepo;
@@ -38,12 +37,9 @@ public class ReportsServiceImpl implements ReportsService {
     private final PersonMapper personMapper;
     private final StateHeadService stateHeadService;
     private final PersonService personService;
-    private final PatientMapper patientMapper;
     private final PatientFollowUpRepo patientFollowUpRepo;
     private final String stateLiteral="State";
     private final String emailLiteral="Email";
-    private final StateHeadRepo stateHeadRepo;
-    private final StateHeadMapper stateHeadMapper;
 
 
     @Override
@@ -228,7 +224,7 @@ public class ReportsServiceImpl implements ReportsService {
             List<PatientFollowUp>patientFollowUps=patientFollowUpRepo.findAllByDateLessThanEqualAndPatient_IdInAndStatus(LocalDate.now(),patientIds,"Missed");
 
             Sheet sheet=reportsHelperService.createSheetWithHeader(7000,workbook,"Follow Up for Today",
-                    "Patient Id","Patient Name","Patient Phone Number","Type of TB","Follow Up Date");
+                    "Patient Id","Patient Name","Patient Phone Number","Type of TB","Follow Up Date","Allocated TeleCaller");
             sheet.setColumnWidth(0,sheet.getColumnWidth(0));
             applyFontAndPopulateSheet(patientFollowUps, workbook, sheet);
             reportsHelperService.writeWorkbookToFile(workbook, "FollowUpsForToday.xlsx");
@@ -287,6 +283,11 @@ public class ReportsServiceImpl implements ReportsService {
         if(patientFollowUp.getDate().isBefore(LocalDate.now()))
             reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getDate(),cellStyleForOlderDates);
         else reportsHelperService.createOrUpdateCell(row,ind++,patientFollowUp.getDate(),cellStyle);
+
+        String teleCallerEmail=patientFollowUp.getPatient().getPerson().getCreatedBy();
+        TeleCaller teleCaller=teleCallerService.getByEmail(teleCallerEmail);
+        String name=teleCaller!=null?teleCaller.getPerson().getFirstName()+" "+teleCaller.getPerson().getLastName():"";
+        reportsHelperService.createOrUpdateCell(row,ind++,name,cellStyle);
     }
 
     private void populatePatientFollowUpRow(Row row, PatientFollowUpOutputForFrontEndDto followUp, CellStyle cellStyle) {
@@ -310,7 +311,9 @@ public class ReportsServiceImpl implements ReportsService {
 
         Person person=personMapper.findEverything(teleCallerOutputDTO.getPersonId());
         reportsHelperService.createOrUpdateCell(row,1,person.getFirstName()+" "+person.getLastName(),cellStyle);
-        reportsHelperService.createOrUpdateCell(row,2,person.getAddress().getState().getStateName(),cellStyle);
+
+        State state=person.getAddress().getGramPanchayat().getMandal().getDistrict().getState();
+        reportsHelperService.createOrUpdateCell(row,2,state.getStateName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,3,person.getEmail(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,4,person.getPhoneNumber(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,5,teleCallerOutputDTO.getDateOfJoining(),cellStyle);
@@ -322,8 +325,10 @@ public class ReportsServiceImpl implements ReportsService {
         reportsHelperService.createOrUpdateCell(row,0,stateHeadOutputDTO.getStateHeadId(),cellStyle);
 
         Person person=personMapper.findEverything(stateHeadOutputDTO.getPersonId());
+        State state=person.getAddress().getGramPanchayat().getMandal().getDistrict().getState();
+
         reportsHelperService.createOrUpdateCell(row,1,person.getFirstName()+" "+person.getLastName(),cellStyle);
-        reportsHelperService.createOrUpdateCell(row,2,person.getAddress().getState().getStateName(),cellStyle);
+        reportsHelperService.createOrUpdateCell(row,2,state.getStateName(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,3,person.getEmail(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,4,person.getPhoneNumber(),cellStyle);
         reportsHelperService.createOrUpdateCell(row,5,stateHeadOutputDTO.getDateOfJoining(),cellStyle);

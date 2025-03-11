@@ -76,7 +76,7 @@ public class GPHeadServiceImpl implements GPHeadService {
 
     @Override
     public List<GPHeadOutputDTO> getByState(String state) {
-        List<GPHead> gpHeads = gpHeadRepo.findByPerson_Address_State_StateNameAndPerson_IsDeletedFalse((state));
+        List<GPHead> gpHeads = gpHeadRepo.findByPerson_Address_GramPanchayat_Mandal_District_State_StateNameAndPerson_IsDeletedFalse((state));
         return gpHeads.stream().map(gpHeadMapper::toGPHeadOutputDTO).toList();
     }
 

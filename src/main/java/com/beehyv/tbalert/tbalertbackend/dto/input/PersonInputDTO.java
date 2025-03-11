@@ -2,6 +2,7 @@ package com.beehyv.tbalert.tbalertbackend.dto.input;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,14 +28,8 @@ public class PersonInputDTO {
     @Email(message = "Enter valid creator email")
     private String createdBy;
 
-    private String block;
-
-    private String gp;
+    @NotNull(message = "Enter valid Gram Panchayat Id")
+    private Long gramPanchayatId;
 
     private String village;
-
-    private String district;
-
-    @NotEmpty(message = "State Name cannot be empty")
-    private String state;
 }

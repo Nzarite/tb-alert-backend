@@ -11,9 +11,7 @@ import java.util.Optional;
 public interface PersonRepo extends JpaRepository<Person, Long> {
     Optional<Person> findByEmailAndIsDeletedFalse(String email);
 
-    List<Person> findByAddress_State_StateNameAndIsDeletedFalse(String state);
-
-    int countByCreatedByAndIsDeletedFalse(String createdBy);
+    List<Person> findByAddress_GramPanchayat_Mandal_District_State_StateNameAndIsDeletedFalse(String state);
 
     Optional<Person> findByIdAndIsDeletedFalse(Long id);
 

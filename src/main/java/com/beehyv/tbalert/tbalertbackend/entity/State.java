@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -22,4 +24,5 @@ public class State {
 
     @Column(nullable = false, name = "state_code", unique = true)
     private String stateCode;
+
 }

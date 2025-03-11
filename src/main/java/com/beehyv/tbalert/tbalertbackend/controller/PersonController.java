@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/person")
-@PreAuthorize("hasAuthority('ROLE_Telecaller')")
+@PreAuthorize("hasAuthority('ROLE_Telecaller') || hasAuthority('ROLE_GpHead')")
 @AllArgsConstructor
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
 public class PersonController {

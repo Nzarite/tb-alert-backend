@@ -1,9 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
 import com.beehyv.tbalert.tbalertbackend.dto.output.FieldCoordinatorOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Address;
-import com.beehyv.tbalert.tbalertbackend.entity.FieldCoordinator;
-import com.beehyv.tbalert.tbalertbackend.entity.Person;
+import com.beehyv.tbalert.tbalertbackend.entity.*;
 import com.beehyv.tbalert.tbalertbackend.repository.FieldCoordinatorRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +23,10 @@ public class FieldCoordinatorMapper {
     public FieldCoordinatorOutputDTO toFieldCoordinatorOutputDTO(FieldCoordinator fieldCoordinator) {
         Person person = fieldCoordinator.getPerson();
         Address address = person.getAddress();
+        GramPanchayat gramPanchayat=address.getGramPanchayat();
+        Mandal mandal = gramPanchayat.getMandal();
+        District district=mandal.getDistrict();
+        State state = district.getState();
 
         return FieldCoordinatorOutputDTO.builder()
                 .id(fieldCoordinator.getId())
@@ -36,11 +38,11 @@ public class FieldCoordinatorMapper {
                 .createdBy(person.getCreatedBy())
                 .createdOn(localDateMapper.toDateTime(person.getCreatedOn()))
                 .phoneNumber(person.getPhoneNumber())
-                .state(address.getState().getStateName())
-                .gp(address.getGp())
+                .state(state.getStateName())
+                .gp(gramPanchayat.getName())
                 .village(address.getVillage())
-                .district(address.getDistrict())
-                .block(address.getBlock())
+                .district(district.getName())
+                .block(mandal.getName())
                 .updatedBy(person.getUpdatedBy())
                 .dateOfLeaving(localDateMapper.toDate(fieldCoordinator.getDateOfLeaving()))
                 .dateOfJoining(localDateMapper.toDate(fieldCoordinator.getDateOfJoining()))

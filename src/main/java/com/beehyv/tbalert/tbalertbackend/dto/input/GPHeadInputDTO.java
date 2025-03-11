@@ -26,16 +26,10 @@ public class GPHeadInputDTO {
     @Email(message = "Enter valid creator email")
     private String createdBy;
 
-    private String block;
-
-    private String gp;
+    @NotNull(message = "Enter valid Gram Panchayat Id")
+    private Long gramPanchayatId;
 
     private String village;
-
-    private String district;
-
-    @NotEmpty(message = "State Name cannot be empty")
-    private String state;
 
     @NotNull(message = "Enter Valid Date of Joining")
     private String dateOfJoining;

@@ -128,7 +128,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public List<PersonOutputDTO> getByState(String state) {
 
-        List<Person> personList = personRepo.findByAddress_State_StateNameAndIsDeletedFalse(state);
+        List<Person> personList = personRepo.findByAddress_GramPanchayat_Mandal_District_State_StateNameAndIsDeletedFalse(state);
         return personList.stream().map(personMapper::toPersonOutputDTO).toList();
     }
 

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/tbdetails")
 @AllArgsConstructor
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
-@PreAuthorize("hasAuthority('ROLE_Telecaller')")
+@PreAuthorize("hasAuthority('ROLE_Telecaller') || hasAuthority('ROLE_GpHead')")
 public class TBDetailsController {
 
     private final TBDetailsService tbDetailsService;

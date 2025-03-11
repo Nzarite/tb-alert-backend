@@ -1,9 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Address;
-import com.beehyv.tbalert.tbalertbackend.entity.Patient;
-import com.beehyv.tbalert.tbalertbackend.entity.Person;
+import com.beehyv.tbalert.tbalertbackend.entity.*;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +34,15 @@ public class PatientMapper {
 
         Person person = patient.getPerson();
         Address address = person.getAddress();
-
         if (address == null) {
             throw new IllegalArgumentException("Patient with id " + patient.getId() + " not found");
         }
+
+        GramPanchayat gramPanchayat=address.getGramPanchayat();
+        Mandal mandal = gramPanchayat.getMandal();
+        District district=mandal.getDistrict();
+        State state = district.getState();
+
         log.info("Email {}", person.getUpdatedBy());
 
         return PatientOutputDTO.builder()
@@ -50,11 +53,11 @@ public class PatientMapper {
                 .firstName(person.getFirstName())
                 .lastName(person.getLastName())
                 .email(person.getEmail())
-                .gp(address.getGp())
-                .block(address.getBlock())
+                .state(state.getStateName())
+                .gp(gramPanchayat.getName())
                 .village(address.getVillage())
-                .district(address.getDistrict())
-                .state(address.getState().getStateName())
+                .district(district.getName())
+                .block(mandal.getName())
                 .currentStatus(patient.getCurrentStatus() == null ? "alive" : patient.getCurrentStatus())
                 .cured(patient.isCured())
                 .createdBy(person.getCreatedBy())

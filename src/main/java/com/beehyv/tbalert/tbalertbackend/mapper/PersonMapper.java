@@ -1,8 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
-import com.beehyv.tbalert.tbalertbackend.entity.Address;
-import com.beehyv.tbalert.tbalertbackend.entity.Person;
+import com.beehyv.tbalert.tbalertbackend.entity.*;
 import com.beehyv.tbalert.tbalertbackend.repository.PersonRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -112,6 +111,11 @@ public class PersonMapper {
     public PersonOutputDTO toPersonOutputDTO(Person person)
     {
         Address address=person.getAddress();
+        GramPanchayat gramPanchayat=address.getGramPanchayat();
+        Mandal mandal=gramPanchayat.getMandal();
+        District district=mandal.getDistrict();
+        State state=district.getState();
+
         return PersonOutputDTO.builder()
                 .id(person.getId())
                 .firstName(person.getFirstName())
@@ -119,10 +123,10 @@ public class PersonMapper {
                 .email(person.getEmail())
                 .phoneNumber(person.getPhoneNumber())
                 .gender(person.getGender())
-                .state(address.getState().getStateName())
-                .gp(address.getGp())
-                .block(address.getBlock())
-                .district(address.getDistrict())
+                .state(state.getStateName())
+                .gp(gramPanchayat.getName())
+                .block(mandal.getName())
+                .district(district.getName())
                 .village(address.getVillage())
                 .createdBy(person.getCreatedBy())
                 .createdOn(localDateMapper.toDateTime(person.getCreatedOn()))

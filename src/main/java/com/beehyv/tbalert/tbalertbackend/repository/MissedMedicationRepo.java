@@ -16,9 +16,6 @@ public interface MissedMedicationRepo extends JpaRepository<MissedMedication, In
 
     List<MissedMedication> findAllByPatientMedication(PatientMedication patientMedication);
 
-    MissedMedication findByPatientMedication(PatientMedication patientMedication);
-
-
     List<MissedMedication> findAllByPatientMedicationInAndDate(List<PatientMedication> patientMedication, LocalDate date);
 
     List<MissedMedication> findByPatientMedicationAndDate(PatientMedication patientMedication, LocalDate date);
@@ -27,5 +24,4 @@ public interface MissedMedicationRepo extends JpaRepository<MissedMedication, In
 
     void deleteAllByPatientMedicationIn(Collection<PatientMedication> patientMedications);
 
-    List<MissedMedication> findAllByPatientMedicationInAndDateIn(List<PatientMedication> patientMedications, List<LocalDate> list);
 }

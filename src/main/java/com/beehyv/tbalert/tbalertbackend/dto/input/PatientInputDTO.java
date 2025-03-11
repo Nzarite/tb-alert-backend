@@ -31,20 +31,11 @@ public class PatientInputDTO {
     @NotNull(message = "Enter valid age")
     private int age;
 
-    @NotEmpty(message = "Block name cannot be empty")
-    private String block;
+    @NotNull(message = "Enter valid Gram Panchayat Id")
+    private Long gramPanchayatId;
 
-    @NotEmpty(message = "Gram Panchayat name cannot be empty")
-    private String gp;
-
-    @NotEmpty(message = "Village name cannot be empty")
+    @NotEmpty(message = "Enter village name")
     private String village;
-
-    @NotEmpty(message = "District name cannot be empty")
-    private String district;
-
-    @NotEmpty(message = "State name cannot be empty")
-    private String state;
 
     @NotNull(message = "Provide the patient consent for message reminders")
     private Boolean consentForMessage;
