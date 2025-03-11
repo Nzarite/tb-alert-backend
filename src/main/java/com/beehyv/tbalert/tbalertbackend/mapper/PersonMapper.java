@@ -125,7 +125,7 @@ public class PersonMapper {
                 .gender(person.getGender())
                 .state(state.getStateName())
                 .gp(gramPanchayat.getName())
-                .block(mandal.getName())
+                .mandal(mandal.getName())
                 .district(district.getName())
                 .village(address.getVillage())
                 .createdBy(person.getCreatedBy())

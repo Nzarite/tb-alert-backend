@@ -23,7 +23,7 @@ public class PatientOutputDTO {
 
     private String email;
 
-    private String block;
+    private String mandal;
 
     private String gp;
 

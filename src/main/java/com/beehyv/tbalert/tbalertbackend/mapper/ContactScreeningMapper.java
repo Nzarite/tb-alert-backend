@@ -20,7 +20,7 @@ public class ContactScreeningMapper {
     public ContactScreening toContactScreening(String patientId, ContactScreeningInputDTO contactScreeningInputDTO) {
         Patient patient = patientRepo.findById(patientId).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID: " + patientId));
 
-        if(!contactScreeningInputDTO.getContactScreeningDone()){
+        if(Boolean.FALSE.equals(contactScreeningInputDTO.getContactScreeningDone())){
             return ContactScreening.builder()
                     .contactScreeningDone(false)
                     .patient(patient)

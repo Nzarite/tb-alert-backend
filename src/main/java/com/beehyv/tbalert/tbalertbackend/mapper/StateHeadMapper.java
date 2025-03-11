@@ -42,7 +42,7 @@ public class StateHeadMapper {
                 .gp(gramPanchayat.getName())
                 .village(address.getVillage())
                 .district(district.getName())
-                .block(mandal.getName())
+                .mandal(mandal.getName())
                 .updatedBy(person.getUpdatedBy())
                 .dateOfLeaving(localDateMapper.toDate(stateHead.getDateOfLeaving()))
                 .dateOfJoining(localDateMapper.toDate(stateHead.getDateOfJoining()))
