@@ -25,6 +25,11 @@ public class GramPanchayatController {
         return new ResponseEntity<>(gramPanchayatService.addGramPanchayat(gramPanchayatInputDTO), HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<GramPanchayatOutputDTO> getGramPanchayat(@PathVariable Long id) {
+        return new ResponseEntity<>(gramPanchayatService.getById(id),HttpStatus.OK);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<GramPanchayatOutputDTO>> getAll() {
         return new ResponseEntity<>(gramPanchayatService.getAll(),HttpStatus.OK);

@@ -8,7 +8,11 @@ import java.util.List;
 public interface GramPanchayatService {
     GramPanchayatOutputDTO addGramPanchayat(GramPanchayatInputDTO gramPanchayatInputDTO);
 
+
+
     List<GramPanchayatOutputDTO> getAll();
 
     List<GramPanchayatOutputDTO> getAllByMandalId(Long id);
+
+    GramPanchayatOutputDTO getById(Long id);
 }

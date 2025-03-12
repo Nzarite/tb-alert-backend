@@ -1,16 +1,15 @@
 package com.beehyv.tbalert.tbalertbackend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
