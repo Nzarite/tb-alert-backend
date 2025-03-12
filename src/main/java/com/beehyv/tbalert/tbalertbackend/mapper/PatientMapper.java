@@ -57,7 +57,7 @@ public class PatientMapper {
                 .gp(gramPanchayat.getName())
                 .village(address.getVillage())
                 .district(district.getName())
-                .block(mandal.getName())
+                .mandal(mandal.getName())
                 .currentStatus(patient.getCurrentStatus() == null ? "alive" : patient.getCurrentStatus())
                 .cured(patient.isCured())
                 .createdBy(person.getCreatedBy())

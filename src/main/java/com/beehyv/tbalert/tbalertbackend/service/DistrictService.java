@@ -5,7 +5,13 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.DistrictInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.DistrictOutputDTO;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 public interface DistrictService {
 
     DistrictOutputDTO addDistrict(@Valid DistrictInputDTO districtInputDTO);
+
+    List<DistrictOutputDTO> getAll();
+
+    List<DistrictOutputDTO> getAllByState(Long id);
 }

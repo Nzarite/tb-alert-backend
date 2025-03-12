@@ -6,7 +6,6 @@ import com.beehyv.tbalert.tbalertbackend.entity.GramPanchayat;
 import com.beehyv.tbalert.tbalertbackend.entity.Mandal;
 import com.beehyv.tbalert.tbalertbackend.repository.GramPanchayatRepo;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,7 @@ public class GramPanchayatMapper {
         return GramPanchayat
                             .builder()
                             .mandal(mandal)
-                            .name(gramPanchayatInputDTO.getName())
+                            .name(gramPanchayatInputDTO.getGramPanchayatName())
                             .build();
     }
 

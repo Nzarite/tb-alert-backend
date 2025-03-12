@@ -609,16 +609,6 @@
                                  constraintName="FK_PATIENT_ON_PERSON" referencedColumnNames="id"
                                  referencedTableName="person"/>
     </changeSet>
-    <changeSet id="1740545825496-31" author="bhcp0212">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <foreignKeyConstraintExists foreignKeyName="FK_PERSON_ON_ADDRESS"/>
-            </not>
-        </preConditions>
-        <addForeignKeyConstraint baseColumnNames="address_id" baseTableName="person"
-                                 constraintName="FK_PERSON_ON_ADDRESS" referencedColumnNames="id"
-                                 referencedTableName="address"/>
-    </changeSet>
     <changeSet id="1740545825496-32" author="bhcp0212">
         <preConditions onFail="MARK_RAN">
             <not>

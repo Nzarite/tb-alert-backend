@@ -6,5 +6,5 @@ import lombok.Data;
 public class GramPanchayatInputDTO {
 
     private Long mandalId;
-    private String name;
+    private String gramPanchayatName;
 }

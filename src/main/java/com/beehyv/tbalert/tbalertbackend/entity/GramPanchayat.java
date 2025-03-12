@@ -18,7 +18,7 @@ public class GramPanchayat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "gram_panchayat_name", nullable = false)
     private String name;
 
     @ManyToOne

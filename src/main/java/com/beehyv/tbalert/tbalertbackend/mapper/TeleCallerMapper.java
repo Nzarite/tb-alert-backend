@@ -38,7 +38,7 @@ public class TeleCallerMapper {
                 .gp(gramPanchayat.getName())
                 .village(address.getVillage())
                 .district(district.getName())
-                .block(mandal.getName())
+                .mandal(mandal.getName())
                 .createdBy(person.getCreatedBy())
                 .createdOn(localDateMapper.toDateTime(person.getCreatedOn()))
                 .updatedBy(person.getUpdatedBy())

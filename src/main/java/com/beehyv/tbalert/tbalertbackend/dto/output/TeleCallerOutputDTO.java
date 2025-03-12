@@ -21,7 +21,7 @@ public class TeleCallerOutputDTO {
 
     private String gender;
 
-    private String block;
+    private String mandal;
 
     private String gp;
 

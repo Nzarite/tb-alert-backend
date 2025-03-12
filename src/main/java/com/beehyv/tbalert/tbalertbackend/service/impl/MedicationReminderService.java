@@ -4,7 +4,6 @@ import com.beehyv.tbalert.tbalertbackend.dao.MedicationReminderDAO;
 import com.beehyv.tbalert.tbalertbackend.dao.MedicationReminderProjection;
 import com.beehyv.tbalert.tbalertbackend.dto.MedicationDTO;
 import com.beehyv.tbalert.tbalertbackend.repository.PatientRepo;
-import com.beehyv.tbalert.tbalertbackend.repository.SettingRepo;
 import com.beehyv.tbalert.tbalertbackend.util.SMSTemplateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

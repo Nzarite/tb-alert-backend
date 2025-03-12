@@ -42,7 +42,7 @@ public class FieldCoordinatorMapper {
                 .gp(gramPanchayat.getName())
                 .village(address.getVillage())
                 .district(district.getName())
-                .block(mandal.getName())
+                .mandal(mandal.getName())
                 .updatedBy(person.getUpdatedBy())
                 .dateOfLeaving(localDateMapper.toDate(fieldCoordinator.getDateOfLeaving()))
                 .dateOfJoining(localDateMapper.toDate(fieldCoordinator.getDateOfJoining()))
