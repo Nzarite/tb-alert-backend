@@ -36,4 +36,9 @@ public class GramPanchayatImpl implements GramPanchayatService {
     public List<GramPanchayatOutputDTO> getAllByMandalId(Long id) {
         return gramPanchayatRepo.findAllByMandal_Id(id).stream().map(gramPanchayatMapper::gramPanchayatOutputDTO).toList();
     }
+
+    @Override
+    public GramPanchayatOutputDTO getById(Long id) {
+        return gramPanchayatMapper.gramPanchayatOutputDTO(gramPanchayatMapper.getGramPanchayatById(id));
+    }
 }
