@@ -14,16 +14,16 @@ public class ActivityTrackerInputDTO {
     @NotEmpty(message = "Stakeholder Email is required")
     private String stakeholderEmail;
 
-    @NotEmpty(message = "State is required")
+    @NotNull(message = "State is required")
     private Long state;
 
-    @NotEmpty(message = "District is required")
+    @NotNull(message = "District is required")
     private Long district;
 
-    @NotEmpty(message = "Mandal Taluka is required")
+    @NotNull(message = "Mandal Taluka is required")
     private Long mandal;
 
-    @NotEmpty(message = "Gram Panchayat is required")
+    @NotNull(message = "Gram Panchayat is required")
     private Long gramPanchayat;
 
     @NotEmpty(message = "Village is required")

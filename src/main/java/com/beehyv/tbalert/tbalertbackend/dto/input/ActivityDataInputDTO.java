@@ -12,6 +12,8 @@ public class ActivityDataInputDTO {
     @NotEmpty(message = "Activity type is required")
     private String activityType;
 
+    private String activityName;
+
     @NotNull(message = "Count of males is required")
     private int noOfMales;
 

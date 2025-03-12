@@ -27,7 +27,7 @@ public class ActivityTrackerController {
         return new ResponseEntity<>(activityTrackerService.getForm(id), HttpStatus.OK);
     }
 
-    @GetMapping("")
+    @GetMapping()
     @PreAuthorize("hasAuthority('ROLE_SuperAdmin')")
     public ResponseEntity<List<ActivityTracker>> getAllForms() {
         return new ResponseEntity<>(activityTrackerService.getAllForms(), HttpStatus.OK);

@@ -44,8 +44,9 @@ public class ActivityTrackerMapper {
                 .build();
     }
 
-    private List<ActivityData> toActivityDataList(ActivityTrackerInputDTO activityTrackerInputDTO) {
+    public List<ActivityData> toActivityDataList(ActivityTrackerInputDTO activityTrackerInputDTO) {
         List<ActivityData> activityData = new ArrayList<>();
+
         activityTrackerInputDTO.getActivities().forEach(activity -> {
             ActivityData activityData1 = new ActivityData();
 
@@ -55,11 +56,20 @@ public class ActivityTrackerMapper {
             activityData1.setCountOfPeople(activity.getNoOfFemales() + activity.getNoOfMales());
             activityData1.setActivityType(activity.getActivityType());
 
-            if (activity.getActivityType().equals("Supported/Conducted TB awareness meeting")) {
-                activityData1.setNoOfAwarenessCampsConducted(activity.getNoOfAwarenessCampsConducted());
-            } else if (activity.getActivityType().equals("Organized/supported TB awareness meeting")) {
-                activityData1.setNoOfXRayCampsConducted(activity.getNoOfXRayCampsConducted());
+            switch (activity.getActivityType()) {
+                case "tb_awareness_camp":
+                    activityData1.setNoOfAwarenessCampsConducted(activity.getNoOfAwarenessCampsConducted());
+                    break;
+                case "xray_camp":
+                    activityData1.setNoOfXRayCampsConducted(activity.getNoOfXRayCampsConducted());
+                    break;
+                case "other":
+                    activityData1.setActivityName(activity.getActivityName());
+                    break;
+                default:
             }
+
+            activityData.add(activityData1);
         });
         return activityData;
     }

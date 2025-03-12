@@ -21,6 +21,8 @@ public class ActivityData {
     @Column(nullable = false)
     private String activityType;
 
+    private String activityName;
+
     @Column(nullable = false)
     private int noOfMales;
 
