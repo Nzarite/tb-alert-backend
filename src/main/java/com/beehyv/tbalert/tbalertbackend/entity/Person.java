@@ -36,6 +36,8 @@ public class Person {
 
     private String updatedBy;
 
+    private LocalDateTime updatedOn;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 

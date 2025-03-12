@@ -199,6 +199,8 @@
             <column name="patient_condition" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
 
@@ -256,6 +258,9 @@
             <column name="updated_by" type="VARCHAR(255)"/>
             <column name="address_id" type="BIGINT">
                 <constraints nullable="false"/>
+            </column>
+            <column name="updated_on" type="TIMESTAMP">
+                <constraints nullable="true"/>
             </column>
             <column name="is_deleted" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>

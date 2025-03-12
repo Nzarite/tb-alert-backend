@@ -34,4 +34,6 @@ public class PersonOutputDTO {
     private String createdOn;
 
     private String updatedBy;
+
+    private String updatedOn;
 }

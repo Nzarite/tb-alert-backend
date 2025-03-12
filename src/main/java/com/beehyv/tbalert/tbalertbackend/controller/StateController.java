@@ -29,6 +29,7 @@ public class StateController {
         return new ResponseEntity<>(stateService.add(stateInputDTO), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_Telecaller') || hasAuthority('ROLE_GpHead')")
     @GetMapping("/all")
     public ResponseEntity<List<StateOutputDTO>> getAllStates() {
         log.info("Controller called for getAllStates");
