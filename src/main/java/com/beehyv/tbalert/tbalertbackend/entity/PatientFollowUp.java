@@ -33,4 +33,8 @@ public class PatientFollowUp {
 
     private int patientCondition;
 
+    private String createdBy;
+
+    private String updatedBy;
+
 }

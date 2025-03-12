@@ -20,5 +20,7 @@ public class TBDetailsInputDTO {
     @NotEmpty
     private String clinicalOrMicrobiological;
 
+    private String updatedBy;
+
     private String patientId;
 }

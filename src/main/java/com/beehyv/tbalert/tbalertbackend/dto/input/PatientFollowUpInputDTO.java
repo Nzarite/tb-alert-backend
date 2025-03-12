@@ -27,4 +27,8 @@ public class PatientFollowUpInputDTO {
 
     private String followUpStatus;
 
+    private String createdBy;
+
+    private String updatedBy;
+
 }

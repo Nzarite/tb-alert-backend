@@ -5,6 +5,7 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientUpdateInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PatientOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.*;
+import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PersonMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.StateMapper;
@@ -21,6 +22,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -87,6 +89,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         Person person = patient.getPerson();
 
         person.setUpdatedBy(patientUpdateInputDTO.getUpdatedBy());
+        person.setUpdatedOn(LocalDateTime.now());
         if (patientUpdateInputDTO.getFirstName() != null)
             person.setFirstName(patientUpdateInputDTO.getFirstName());
         if (patientUpdateInputDTO.getLastName() != null)

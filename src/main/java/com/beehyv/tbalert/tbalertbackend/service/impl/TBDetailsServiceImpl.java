@@ -6,12 +6,9 @@ import com.beehyv.tbalert.tbalertbackend.dto.input.PatientMedicationInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.input.TBDetailsInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.TBDetailsOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Patient;
-import com.beehyv.tbalert.tbalertbackend.entity.Setting;
 import com.beehyv.tbalert.tbalertbackend.entity.TBDetails;
 import com.beehyv.tbalert.tbalertbackend.mapper.LocalDateMapper;
-import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.TBDetailsMapper;
-import com.beehyv.tbalert.tbalertbackend.repository.SettingRepo;
 import com.beehyv.tbalert.tbalertbackend.repository.TBDetailsRepo;
 import com.beehyv.tbalert.tbalertbackend.service.*;
 import jakarta.transaction.Transactional;
@@ -31,14 +28,10 @@ public class TBDetailsServiceImpl implements TBDetailsService {
     private final TBDetailsRepo tbDetailsRepo;
     private final TBDetailsMapper tbDetailsMapper;
     private final LocalDateMapper localDateMapper;
-    private final PatientMapper patientMapper;
     private final PatientFollowUpService patientFollowUpService;
     private final PatientMedicationService patientMedicationService;
     private final MissedMedicationService missedMedicationService;
     private final SettingService settingService;
-    private final SettingRepo settingRepo;
-
-
 
 
     @Override
@@ -57,7 +50,7 @@ public class TBDetailsServiceImpl implements TBDetailsService {
         TBDetails tbDetails = tbDetailsMapper.toTBDetails(tbDetailsInputDTO);
         tbDetailsRepo.save(tbDetails);
 
-        Patient patient = patientMapper.find(tbDetails.getPatient().getId());
+        Patient patient = tbDetails.getPatient();
         LocalDate localDate = LocalDate.now();
         int curr = 15;
         List<PatientMedicationInputDTO> patientMedicationInputDTO = List.of(PatientMedicationInputDTO
@@ -73,16 +66,19 @@ public class TBDetailsServiceImpl implements TBDetailsService {
                 .build());
         patientMedicationService.add(patient.getId(), patientMedicationInputDTO);
 
-        String searchQuery=tbDetails.getDstbOrDrtb().equals("DS-TB")?"dstb_followup":"drtb_followup";
+        String searchQuery = tbDetails.getDstbOrDrtb().equals("DS-TB") ? "dstb_followup" : "drtb_followup";
 
-        int followUpCount = Integer.parseInt(settingService.getSettingsValue(searchQuery)!=null?settingService.getSettingsValue(searchQuery):"8");
+        int followUpCount = Integer.parseInt(settingService.getSettingsValue(searchQuery) != null ? settingService.getSettingsValue(searchQuery) : "8");
 
         for (int i = 0; i < followUpCount; i++) {
             PatientFollowUpInputDTO patientFollowUpInputDTO = PatientFollowUpInputDTO.builder()
                     .date(localDate.toString())
                     .followUpStatus("Missed")
                     .remarks("")
+                    .createdBy(patient.getPerson().getCreatedBy())
+                    .updatedBy(tbDetailsInputDTO.getUpdatedBy())
                     .build();
+
             missedMedicationService.add(patient.getId(), missedMedicationInputDTO, localDate);
             patientFollowUpService.add(patient.getId(), patientFollowUpInputDTO);
             localDate = localDate.plusDays(curr);

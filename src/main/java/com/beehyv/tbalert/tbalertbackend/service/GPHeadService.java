@@ -12,6 +12,10 @@ public interface GPHeadService {
 
     List<GPHeadOutputDTO> getByName(String name);
 
+    List<GPHeadOutputDTO> getByState(String name);
+
+    List<GPHeadOutputDTO> getGPByState(String state, String name);
+
     GPHeadOutputDTO updateGPHead(Long id, GPHeadInputDTO gpHeadInputDTO);
 
     void deleteGPHead(Long id);

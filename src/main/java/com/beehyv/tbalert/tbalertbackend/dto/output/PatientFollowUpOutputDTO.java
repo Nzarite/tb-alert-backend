@@ -18,4 +18,8 @@ public class PatientFollowUpOutputDTO {
     private String date;
 
     private String followUpStatus;
+
+    private String createdBy;
+
+    private String updatedBy;
 }

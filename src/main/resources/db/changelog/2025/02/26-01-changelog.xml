@@ -199,6 +199,8 @@
             <column name="patient_condition" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
 
@@ -256,6 +258,9 @@
             <column name="updated_by" type="VARCHAR(255)"/>
             <column name="address_id" type="BIGINT">
                 <constraints nullable="false"/>
+            </column>
+            <column name="updated_on" type="TIMESTAMP">
+                <constraints nullable="true"/>
             </column>
             <column name="is_deleted" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
@@ -545,6 +550,26 @@
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="person_id" baseTableName="state_head"
                                  constraintName="FK_STATEHEAD_ON_PERSON" referencedColumnNames="id"
+                                 referencedTableName="person"/>
+    </changeSet>
+    <changeSet id="1740545825496-41" author="bhcp0212">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_GPHEAD_ON_PERSON"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="person_id" baseTableName="gp_head"
+                                 constraintName="FK_GPHEAD_ON_PERSON" referencedColumnNames="id"
+                                 referencedTableName="person"/>
+    </changeSet>
+    <changeSet id="1740545825496-42" author="bhcp0212">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_FIELDCOORDINATOR_ON_PERSON"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="person_id" baseTableName="field_coordinator"
+                                 constraintName="FK_FIELDCOORDINATOR_ON_PERSON" referencedColumnNames="id"
                                  referencedTableName="person"/>
     </changeSet>
     <changeSet id="1740545825496-33" author="bhcp0212">

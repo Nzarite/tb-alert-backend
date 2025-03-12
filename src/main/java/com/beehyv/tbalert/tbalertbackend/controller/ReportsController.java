@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/report")
 @AllArgsConstructor
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
-@PreAuthorize("hasAuthority('ROLE_Telecaller')")
+@PreAuthorize("hasAuthority('ROLE_Telecaller') || hasAuthority('ROLE_GpHead')")
 public class ReportsController {
 
     private final ReportsService reportsService;

@@ -77,6 +77,8 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         Patient patient=patientMapper.find(id);
         List<MissedMedication> missedMedicationList = missedMedicationMapper.findMissedMedicationsByPatientandDate(patient, localDateMapper.toLocalDate(patientFollowUpInputDTO.getDate()));
         PatientFollowUp patientFollowUp = patientFollowUpMapper.toPatientFollowUp(patientFollowUpInputDTO, patient);
+        patientFollowUp.setCreatedBy(patientFollowUpInputDTO.getCreatedBy());
+        patientFollowUp.setUpdatedBy(patientFollowUpInputDTO.getUpdatedBy());
         patientFollowUpRepo.save(patientFollowUp);
         return patientFollowUpMapper.toDTO(patientFollowUp, missedMedicationList);
     }
@@ -123,6 +125,7 @@ public class PatientFollowUpServiceImpl implements PatientFollowUpService {
         patient.setCured(patientFollowUpInputDTO.getCured());
 
         patientFollowUp.setPatientCondition(patientFollowUpInputDTO.getPatientCondition());
+        patientFollowUp.setUpdatedBy(patientFollowUpInputDTO.getUpdatedBy());
         patientFollowUpRepo.save(patientFollowUp);
         List<MissedMedication> missedMedications = missedMedicationMapper.findMissedMedicationsByPatientandDate(patient, patientFollowUp.getDate());
 
