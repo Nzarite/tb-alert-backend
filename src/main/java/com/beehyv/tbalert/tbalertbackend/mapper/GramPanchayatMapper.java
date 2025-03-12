@@ -17,8 +17,7 @@ public class GramPanchayatMapper {
     private final MandalMapper mandalMapper;
     private final GramPanchayatRepo gramPanchayatRepo;
 
-    public GramPanchayat getGramPanchayatById(Long id)
-    {
+    public GramPanchayat getGramPanchayatById(Long id) {
         return gramPanchayatRepo.findById(id).orElseThrow(()->new IllegalArgumentException("Gram panchayat not found"));
     }
 
