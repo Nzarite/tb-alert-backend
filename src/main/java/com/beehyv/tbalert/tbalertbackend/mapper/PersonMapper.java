@@ -15,14 +15,11 @@ public class PersonMapper {
     private final PersonRepo personRepo;
     private final LocalDateMapper localDateMapper;
 
-    public Person find(Long id)
-    {
+    public Person find(Long id) {
         return personRepo.findByIdAndIsDeletedFalse(id).orElseThrow(()->new IllegalArgumentException("Invalid Person Id " +id));
     }
 
-
-    public Person findEverything(Long id)
-    {
+    public Person findEverything(Long id) {
         return personRepo.findById(id).orElseThrow(()->new IllegalArgumentException("Invalid Person Id " +id));
     }
 
@@ -108,8 +105,7 @@ public class PersonMapper {
 //                .build();
 //    }
 
-    public PersonOutputDTO toPersonOutputDTO(Person person)
-    {
+    public PersonOutputDTO toPersonOutputDTO(Person person) {
         Address address=person.getAddress();
         GramPanchayat gramPanchayat=address.getGramPanchayat();
         Mandal mandal=gramPanchayat.getMandal();
