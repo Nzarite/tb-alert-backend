@@ -1,6 +1,5 @@
 package com.beehyv.tbalert.tbalertbackend.dto.output;
 
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;

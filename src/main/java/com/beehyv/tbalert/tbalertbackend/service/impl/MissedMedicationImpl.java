@@ -3,7 +3,6 @@ package com.beehyv.tbalert.tbalertbackend.service.impl;
 import com.beehyv.tbalert.tbalertbackend.dto.input.MissedMedicationInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.MissedMedicationOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.*;
-import com.beehyv.tbalert.tbalertbackend.mapper.MedicationMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.MissedMedicationMapper;
 import com.beehyv.tbalert.tbalertbackend.mapper.PatientMapper;
 import com.beehyv.tbalert.tbalertbackend.repository.MedicationRepo;

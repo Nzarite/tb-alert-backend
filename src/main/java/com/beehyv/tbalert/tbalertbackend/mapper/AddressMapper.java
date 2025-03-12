@@ -1,9 +1,7 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
-import com.beehyv.tbalert.tbalertbackend.entity.District;
 import com.beehyv.tbalert.tbalertbackend.entity.GramPanchayat;
-import com.beehyv.tbalert.tbalertbackend.entity.Mandal;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
