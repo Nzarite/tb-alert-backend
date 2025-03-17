@@ -1,7 +1,6 @@
 package com.beehyv.tbalert.tbalertbackend.service.impl;
 
-import com.beehyv.tbalert.tbalertbackend.dto.input.GPHeadInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.output.GPHeadOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.StakeHolderInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.GPHead;
 import com.beehyv.tbalert.tbalertbackend.mapper.GPHeadMapper;
@@ -38,7 +37,7 @@ public class GPHeadServiceImpl implements GPHeadService {
     private final TeleCallerMapper teleCallerMapper;
 
     @Override
-    public GPHeadOutputDTO add(GPHeadInputDTO gpHeadInputDTO) {
+    public StakeHolderInputDTO add(com.beehyv.tbalert.tbalertbackend.dto.input.StakeHolderInputDTO gpHeadInputDTO) {
         String keycloakResponse = keycloakUserService.createUser(
                 gpHeadInputDTO.getEmail(),
                 "GpHead"
@@ -66,24 +65,24 @@ public class GPHeadServiceImpl implements GPHeadService {
     }
 
     @Override
-    public GPHeadOutputDTO getById(Long id) {
+    public StakeHolderInputDTO getById(Long id) {
         return gpHeadMapper.toGPHeadOutputDTO(gpHeadMapper.find(id));
     }
 
     @Override
-    public List<GPHeadOutputDTO> getByName(String name) {
+    public List<StakeHolderInputDTO> getByName(String name) {
         List<GPHead> gpHeads = gpHeadRepo.findAllByPerson_FirstNameContainingIgnoreCaseOrPerson_LastNameContainingIgnoreCase(name);
         return gpHeads.stream().map(gpHeadMapper::toGPHeadOutputDTO).toList();
     }
 
     @Override
-    public List<GPHeadOutputDTO> getByState(String state) {
+    public List<StakeHolderInputDTO> getByState(String state) {
         List<GPHead> gpHeads = gpHeadRepo.findByPerson_Address_State_StateNameAndPerson_IsDeletedFalse((state));
         return gpHeads.stream().map(gpHeadMapper::toGPHeadOutputDTO).toList();
     }
 
     @Override
-    public List<GPHeadOutputDTO> getGPByState(String state, String name) {
+    public List<StakeHolderInputDTO> getGPByState(String state, String name) {
         List<GPHead> gpHeads = gpHeadRepo.findGPHeadByNameAndState(name, state);
 
         return gpHeads
@@ -93,7 +92,7 @@ public class GPHeadServiceImpl implements GPHeadService {
     }
 
     @Override
-    public GPHeadOutputDTO updateGPHead(Long id, GPHeadInputDTO gpHeadInputDTO) {
+    public StakeHolderInputDTO updateGPHead(Long id, com.beehyv.tbalert.tbalertbackend.dto.input.StakeHolderInputDTO gpHeadInputDTO) {
         GPHead gpHead = gpHeadMapper.find(id);
 
         if (gpHeadInputDTO.getFirstName() != null)

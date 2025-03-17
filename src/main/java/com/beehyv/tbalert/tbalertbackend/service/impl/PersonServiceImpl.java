@@ -81,7 +81,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonOutputDTO add(GPHeadInputDTO gpHead) {
+    public PersonOutputDTO add(StakeHolderInputDTO gpHead) {
         log.info("Service called for Add person using gpHead input: {}", gpHead);
 
         checkForEmail(gpHead.getEmail());

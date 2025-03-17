@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class GPHeadInputDTO {
+public class StakeHolderInputDTO {
 
     @NotEmpty(message = "First name cannot be empty")
     private String firstName;

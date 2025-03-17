@@ -1,7 +1,6 @@
 package com.beehyv.tbalert.tbalertbackend.controller;
 
-import com.beehyv.tbalert.tbalertbackend.dto.input.GPHeadInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.output.GPHeadOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.StakeHolderInputDTO;
 import com.beehyv.tbalert.tbalertbackend.dto.output.PersonOutputDTO;
 import com.beehyv.tbalert.tbalertbackend.service.GPHeadService;
 import com.beehyv.tbalert.tbalertbackend.service.PersonService;
@@ -18,20 +17,20 @@ import java.util.List;
 @RestController
 @Slf4j
 @AllArgsConstructor
-@RequestMapping("/gphead")
+@RequestMapping("/stakeholder")
 @PreAuthorize("hasAuthority('ROLE_FieldCoordinator')")
-public class GPController {
+public class StakeHolderController {
 
     private final GPHeadService GPHeadService;
     private final PersonService personService;
 
     @PostMapping("/register")
-    public ResponseEntity<GPHeadOutputDTO> add(@RequestBody @Valid GPHeadInputDTO gpHeadInputDTO) {
+    public ResponseEntity<StakeHolderInputDTO> add(@RequestBody @Valid com.beehyv.tbalert.tbalertbackend.dto.input.StakeHolderInputDTO gpHeadInputDTO) {
         return new ResponseEntity<>(GPHeadService.add(gpHeadInputDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GPHeadOutputDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<StakeHolderInputDTO> getById(@PathVariable Long id) {
         return new ResponseEntity<>(GPHeadService.getById(id), HttpStatus.OK);
     }
 
@@ -41,31 +40,31 @@ public class GPController {
     }
 
     @GetMapping("/state/{name}")
-    public ResponseEntity<List<GPHeadOutputDTO>> getByState(@PathVariable String name) {
+    public ResponseEntity<List<StakeHolderInputDTO>> getByState(@PathVariable String name) {
         return new ResponseEntity<>(GPHeadService.getByState(name), HttpStatus.OK);
     }
 
     @GetMapping("/state/{state}/name/{name}")
-    public ResponseEntity<List<GPHeadOutputDTO>> getByStateAndName(@PathVariable String state, @PathVariable String name) {
+    public ResponseEntity<List<StakeHolderInputDTO>> getByStateAndName(@PathVariable String state, @PathVariable String name) {
         log.info("Controller called for Getting patient by state and name: {}", state);
 
         return new ResponseEntity<>(GPHeadService.getGPByState(state, name), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<GPHeadOutputDTO> delete(@PathVariable Long id) {
+    public ResponseEntity<StakeHolderInputDTO> delete(@PathVariable Long id) {
         log.info("Controller called for deleting gram panchayat: {}", id);
         GPHeadService.deleteGPHead(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<GPHeadOutputDTO>> getByGPName(@PathVariable String name) {
+    public ResponseEntity<List<StakeHolderInputDTO>> getByGPName(@PathVariable String name) {
         return new ResponseEntity<>(GPHeadService.getByName(name), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<GPHeadOutputDTO> updateGP(@PathVariable Long id, @RequestBody GPHeadInputDTO gpHeadInputDTO) {
+    public ResponseEntity<StakeHolderInputDTO> updateGP(@PathVariable Long id, @RequestBody com.beehyv.tbalert.tbalertbackend.dto.input.StakeHolderInputDTO gpHeadInputDTO) {
         return new ResponseEntity<>(GPHeadService.updateGPHead(id, gpHeadInputDTO), HttpStatus.OK);
     }
 }

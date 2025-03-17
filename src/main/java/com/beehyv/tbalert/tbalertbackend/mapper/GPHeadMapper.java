@@ -1,6 +1,6 @@
 package com.beehyv.tbalert.tbalertbackend.mapper;
 
-import com.beehyv.tbalert.tbalertbackend.dto.output.GPHeadOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.StakeHolderInputDTO;
 import com.beehyv.tbalert.tbalertbackend.entity.Address;
 import com.beehyv.tbalert.tbalertbackend.entity.GPHead;
 import com.beehyv.tbalert.tbalertbackend.entity.Person;
@@ -22,10 +22,10 @@ public class GPHeadMapper {
         return GPHeadRepo.findById(id).filter(gp -> !gp.getPerson().getIsDeleted()).orElseThrow(() -> new IllegalArgumentException("GP Head not found for id: " + id));
     }
 
-    public GPHeadOutputDTO toGPHeadOutputDTO(GPHead gpHead) {
+    public StakeHolderInputDTO toGPHeadOutputDTO(GPHead gpHead) {
         Person person = gpHead.getPerson();
         Address address = person.getAddress();
-        return GPHeadOutputDTO.builder()
+        return StakeHolderInputDTO.builder()
                 .id(gpHead.getId())
                 .personId(person.getId())
                 .firstName(person.getFirstName())

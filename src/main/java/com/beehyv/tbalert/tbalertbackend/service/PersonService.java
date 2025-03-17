@@ -14,7 +14,7 @@ public interface PersonService {
 
     PersonOutputDTO add(PatientInputDTO patient);
 
-    PersonOutputDTO add(GPHeadInputDTO gpHead);
+    PersonOutputDTO add(StakeHolderInputDTO gpHead);
 
     PersonOutputDTO add(FieldCoordinatorInputDTO fieldCoordinatorInputDTO);
 

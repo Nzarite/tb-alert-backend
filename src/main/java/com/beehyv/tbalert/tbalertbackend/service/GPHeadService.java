@@ -1,22 +1,21 @@
 package com.beehyv.tbalert.tbalertbackend.service;
 
-import com.beehyv.tbalert.tbalertbackend.dto.input.GPHeadInputDTO;
-import com.beehyv.tbalert.tbalertbackend.dto.output.GPHeadOutputDTO;
+import com.beehyv.tbalert.tbalertbackend.dto.output.StakeHolderInputDTO;
 
 import java.util.List;
 
 public interface GPHeadService {
-    GPHeadOutputDTO add( GPHeadInputDTO gpHeadInputDTO);
+    StakeHolderInputDTO add(com.beehyv.tbalert.tbalertbackend.dto.input.StakeHolderInputDTO gpHeadInputDTO);
 
-    GPHeadOutputDTO getById(Long id);
+    StakeHolderInputDTO getById(Long id);
 
-    List<GPHeadOutputDTO> getByName(String name);
+    List<StakeHolderInputDTO> getByName(String name);
 
-    List<GPHeadOutputDTO> getByState(String name);
+    List<StakeHolderInputDTO> getByState(String name);
 
-    List<GPHeadOutputDTO> getGPByState(String state, String name);
+    List<StakeHolderInputDTO> getGPByState(String state, String name);
 
-    GPHeadOutputDTO updateGPHead(Long id, GPHeadInputDTO gpHeadInputDTO);
+    StakeHolderInputDTO updateGPHead(Long id, com.beehyv.tbalert.tbalertbackend.dto.input.StakeHolderInputDTO gpHeadInputDTO);
 
     void deleteGPHead(Long id);
 }
